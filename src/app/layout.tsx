@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
+import { NoiseFilter } from "@/components/NoiseFilter";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -34,6 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${notoSansJP.variable} antialiased`}>
+        <NoiseFilter />
         {children}
       </body>
     </html>
