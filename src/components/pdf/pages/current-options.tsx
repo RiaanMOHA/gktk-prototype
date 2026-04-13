@@ -1,20 +1,13 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 import { PageHeader, PageFooter } from '../page-chrome';
-import { BRAND } from '../brand';
+import { shared, C } from '../page-styles';
 import { CURRENT_OPTIONS } from '@/data/dealStructure';
 
-const W = BRAND.page.width;
-const H = BRAND.page.height;
-const C = BRAND.colors;
-
 const s = StyleSheet.create({
-  page: { position: 'relative', width: W, height: H, backgroundColor: C.background },
-  content: { position: 'absolute', top: 80, left: 80, right: 80, bottom: 40 },
-  heading: { fontFamily: 'REM', fontWeight: 600, fontSize: 18, color: C.heading, marginBottom: 16 },
-  twoCol: { flexDirection: 'row', gap: 40 },
-  col: { flex: 1 },
+  ...shared,
+  heading: { ...shared.heading, marginBottom: 16 },
   subheading: { fontFamily: 'REM', fontWeight: 600, fontSize: 12, color: C.heading, marginBottom: 8 },
-  body: { fontFamily: 'Noto Sans JP', fontSize: 9, lineHeight: 1.55, color: C.body, marginBottom: 10 },
+  body: { ...shared.body, marginBottom: 10 },
   takeaway: { backgroundColor: C.amber50, borderRadius: 4, padding: 10, marginTop: 8 },
   takeawayText: { fontFamily: 'REM', fontWeight: 600, fontSize: 9, color: C.heading },
   gapHeading: { fontFamily: 'REM', fontWeight: 600, fontSize: 10, color: C.heading, marginTop: 12, marginBottom: 6 },

@@ -1,19 +1,12 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 import { PageHeader, PageFooter } from '../page-chrome';
-import { BRAND } from '../brand';
+import { shared, C } from '../page-styles';
 import { SERVICE_TIERS, PHONE_FRAMES } from '@/data/productSpecs';
 
-const W = BRAND.page.width;
-const H = BRAND.page.height;
-const C = BRAND.colors;
-
 const s = StyleSheet.create({
-  page: { position: 'relative', width: W, height: H, backgroundColor: C.background },
-  content: { position: 'absolute', top: 80, left: 80, right: 80, bottom: 40 },
-  heading: { fontFamily: 'REM', fontWeight: 600, fontSize: 18, color: C.heading, marginBottom: 6 },
+  ...shared,
+  heading: { ...shared.heading },
   subheading: { fontFamily: 'Noto Sans JP', fontSize: 9, lineHeight: 1.5, color: C.body, marginBottom: 16 },
-  twoCol: { flexDirection: 'row', gap: 40 },
-  col: { flex: 1 },
   tierYear: { fontFamily: 'REM', fontWeight: 600, fontSize: 10, color: C.heading, marginBottom: 2 },
   tierLabel: { fontFamily: 'REM', fontWeight: 600, fontSize: 8, color: C.subheading, marginBottom: 2 },
   tierPricing: { fontFamily: 'Noto Sans JP', fontSize: 7, color: C.caption, marginBottom: 4 },

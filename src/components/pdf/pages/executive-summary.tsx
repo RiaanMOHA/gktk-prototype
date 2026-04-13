@@ -1,72 +1,16 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 import { PageHeader, PageFooter } from '../page-chrome';
-import { BRAND } from '../brand';
-
-const W = BRAND.page.width;
+import { shared, C } from '../page-styles';
 
 const s = StyleSheet.create({
-  page: {
-    position: 'relative',
-    width: W,
-    height: BRAND.page.height,
-    backgroundColor: BRAND.colors.background,
-  },
-  content: {
-    position: 'absolute',
-    top: 80,
-    left: 80,
-    right: 80,
-  },
-  heading: {
-    fontFamily: 'REM',
-    fontWeight: 600,
-    fontSize: 24,
-    color: BRAND.colors.heading,
-    marginBottom: 8,
-  },
-  subheading: {
-    fontFamily: 'REM',
-    fontWeight: 600,
-    fontSize: 14,
-    color: BRAND.colors.subheading,
-    marginBottom: 20,
-  },
-  bodyCol: {
-    flexDirection: 'row',
-    gap: 40,
-  },
-  col: {
-    flex: 1,
-  },
-  body: {
-    fontFamily: 'Noto Sans JP',
-    fontSize: 10,
-    lineHeight: 1.65,
-    color: BRAND.colors.body,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 20,
-    marginTop: 24,
-  },
-  statBox: {
-    flex: 1,
-    backgroundColor: BRAND.colors.amber50,
-    borderRadius: 4,
-    padding: 14,
-  },
-  statValue: {
-    fontFamily: 'REM',
-    fontWeight: 600,
-    fontSize: 22,
-    color: BRAND.colors.heading,
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontFamily: 'Noto Sans JP',
-    fontSize: 8,
-    color: BRAND.colors.caption,
-  },
+  ...shared,
+  heading: { ...shared.heading, fontSize: 24, marginBottom: 8 },
+  subheading: { fontFamily: 'REM', fontWeight: 600, fontSize: 14, color: C.subheading, marginBottom: 20 },
+  bodyCol: { flexDirection: 'row', gap: 40 },
+  body: { ...shared.body, fontSize: 10, lineHeight: 1.65, marginBottom: 0 },
+  statsRow: { flexDirection: 'row', gap: 20, marginTop: 24 },
+  statBox: { ...shared.statBox, flex: 1, padding: 14, marginBottom: 0 },
+  statValue: { ...shared.statValue, fontSize: 22, marginBottom: 4 },
 });
 
 export default function ExecutiveSummaryPage() {
