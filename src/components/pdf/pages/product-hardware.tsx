@@ -1,18 +1,11 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 import { PageHeader, PageFooter } from '../page-chrome';
-import { BRAND } from '../brand';
+import { shared, C } from '../page-styles';
 import { HARDWARE_SPECS, INVESTMENT_PROPERTIES, VIRTUAL_TOUR_ROOMS } from '@/data/productSpecs';
 
-const W = BRAND.page.width;
-const H = BRAND.page.height;
-const C = BRAND.colors;
-
 const s = StyleSheet.create({
-  page: { position: 'relative', width: W, height: H, backgroundColor: C.background },
-  content: { position: 'absolute', top: 80, left: 80, right: 80, bottom: 40 },
-  heading: { fontFamily: 'REM', fontWeight: 600, fontSize: 18, color: C.heading, marginBottom: 16 },
-  twoCol: { flexDirection: 'row', gap: 40 },
-  col: { flex: 1 },
+  ...shared,
+  heading: { ...shared.heading, marginBottom: 16 },
   // Table
   tableHeader: { flexDirection: 'row', backgroundColor: C.amber, borderTopLeftRadius: 3, borderTopRightRadius: 3 },
   tableHeaderCell: { fontFamily: 'REM', fontWeight: 600, fontSize: 8, color: C.black, padding: 6 },

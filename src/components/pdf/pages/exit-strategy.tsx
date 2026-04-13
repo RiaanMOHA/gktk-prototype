@@ -1,19 +1,11 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 import { PageHeader, PageFooter } from '../page-chrome';
-import { BRAND } from '../brand';
+import { shared, C } from '../page-styles';
 import { EXIT_PATHS, BUILT_IN_OPTIONALITY } from '@/data/exitStrategy';
 
-const W = BRAND.page.width;
-const H = BRAND.page.height;
-const C = BRAND.colors;
-
 const s = StyleSheet.create({
-  page: { position: 'relative', width: W, height: H, backgroundColor: C.background },
-  content: { position: 'absolute', top: 80, left: 80, right: 80, bottom: 40 },
-  heading: { fontFamily: 'REM', fontWeight: 600, fontSize: 18, color: C.heading, marginBottom: 6 },
+  ...shared,
   subheading: { fontFamily: 'Noto Sans JP', fontSize: 9, color: C.caption, marginBottom: 20 },
-  twoCol: { flexDirection: 'row', gap: 40 },
-  col: { flex: 1 },
   pathBox: { backgroundColor: C.amber50, borderRadius: 4, padding: 16 },
   pathTitle: { fontFamily: 'REM', fontWeight: 600, fontSize: 11, color: C.heading, marginBottom: 8 },
   pathBody: { fontFamily: 'Noto Sans JP', fontSize: 9, lineHeight: 1.55, color: C.body },

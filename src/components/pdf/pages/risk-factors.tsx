@@ -1,19 +1,12 @@
 import { View, Text, StyleSheet } from '@react-pdf/renderer';
 import { PageHeader, PageFooter } from '../page-chrome';
-import { BRAND } from '../brand';
+import { shared, C } from '../page-styles';
 import { RISK_PANELS, HSINCHU_PARALLEL } from '@/data/riskPanels';
 
-const W = BRAND.page.width;
-const H = BRAND.page.height;
-const C = BRAND.colors;
-
 const s = StyleSheet.create({
-  page: { position: 'relative', width: W, height: H, backgroundColor: C.background },
-  content: { position: 'absolute', top: 80, left: 80, right: 80, bottom: 40 },
-  heading: { fontFamily: 'REM', fontWeight: 600, fontSize: 18, color: C.heading, marginBottom: 6 },
+  ...shared,
   subheading: { fontFamily: 'Noto Sans JP', fontSize: 8, color: C.caption, marginBottom: 12 },
   twoCol: { flexDirection: 'row', gap: 30 },
-  col: { flex: 1 },
   colHeading: { fontFamily: 'REM', fontWeight: 600, fontSize: 10, color: C.amber600, marginBottom: 8 },
   phaseYear: { fontFamily: 'REM', fontWeight: 600, fontSize: 8, color: C.heading, marginBottom: 2 },
   phaseBody: { fontFamily: 'Noto Sans JP', fontSize: 7, lineHeight: 1.45, color: C.body, marginBottom: 8 },

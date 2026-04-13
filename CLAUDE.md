@@ -131,3 +131,10 @@ visionOS is the reference. Not Apple marketing pages, but the operating system i
 3. **Depth over decoration.** Every visual element (shadow, blur, border, spacing) reinforces spatial hierarchy. Nothing is decorative. If it does not communicate depth or importance, remove it.
 4. **Amber is an event.** The only saturated color in the system appears rarely and always means something: a primary action, a key figure, a threshold crossed.
 5. **Nothing they have seen before.** This is not a deck. This is not a marketing site. Every section should make the investor feel like they are inside something new, something built specifically for this opportunity. The experience itself is part of the pitch.
+
+
+## Obsidian vault
+
+- Path: /Users/riaan/Documents/personal/obsidian-vault
+- After each session, write a handoff note to /Users/riaan/Documents/personal/obsidian-vault/sessions/
+- Use filename format: YYYY-MM-DD-[project-name]-[topic].md
