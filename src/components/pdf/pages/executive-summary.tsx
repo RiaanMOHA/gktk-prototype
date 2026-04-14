@@ -20,7 +20,7 @@ export default function ExecutiveSummaryPage() {
 
       <View style={s.content}>
         <Text style={s.heading}>Why Kumamoto, why now?</Text>
-        <Text style={s.subheading}>Kumamoto: Japan{"'"}s fastest-rising property market</Text>
+        <Text style={s.subheading}>Japan{"'"}s fastest-rising property market</Text>
 
         <View style={s.bodyCol}>
           <View style={s.col}>
@@ -30,7 +30,7 @@ export default function ExecutiveSummaryPage() {
           </View>
           <View style={s.col}>
             <Text style={s.body}>
-              The COVID-era chip shortage exposed a hard truth: semiconductor security is national security. Now, Japan is investing over 10 trillion yen to rebuild its chip industry, turning Kumamoto into Asia{"'"}s next Silicon Valley. With over 47,000 jobs being created, Kumamoto is set to attract waves of high-income engineers, fueling real estate growth for decades.
+              The COVID-era chip shortage exposed a hard truth: semiconductor security is national security. Now, Japan is investing over 10 trillion yen to rebuild its chip industry. With over 47,000 jobs being created, Kumamoto is set to attract waves of high-income engineers, fueling real estate growth for decades.
             </Text>
           </View>
         </View>
