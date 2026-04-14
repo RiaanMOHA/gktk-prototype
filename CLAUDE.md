@@ -431,7 +431,30 @@ showcase/                            -- regenerated after every commit (never de
 - Never modify files in `docs/` or `reference/`. They are read-only.
 - After every commit, update the `showcase/` folder. This is mandatory.
 - Never delete the `showcase/` folder.
-- Never put prototype files, HTML mockups, or reference files in the repo. Only production code enters the repo.
+- Never put prototype files, HTML mockups, or reference files in the repo. Only production code enters the repo. **Exception:** the playground (see "Playground" section below) is the one place where raw prototype files are permitted — `src/playground/prototypes/` for `.jsx` and `public/playground/prototypes/` for `.html`. Nowhere else.
+
+---
+
+## Playground
+
+The playground is a sealed-off testing room inside this repo where raw prototype files live before being promoted into the main experience. It lives at `/playground/prototypes` (not `/playground`, which is the existing design-tokens showcase). The playground is for local testing only — never linked from the main experience.
+
+**Folder structure:**
+- `src/playground/manifest.ts` — single source of truth for each step's status and prototype files.
+- `src/playground/prototypes/step-N-<canonical-name>/` — drawer for each step. `.jsx` prototypes live here.
+- `public/playground/prototypes/step-N-<canonical-name>/` — drawer for `.html` prototypes (served directly).
+- `src/app/playground/prototypes/page.tsx` — main playground page (left rail + iframe viewer).
+- `src/app/playground/prototypes/preview/[step]/[file]/page.tsx` — sandboxed single-prototype route, loaded inside the playground's iframe.
+
+**Rules:**
+1. **Isolation.** Real step components in `src/components/steps/` never import from `src/playground/`. The playground never imports from real step components.
+2. **Naming.** Step drawers always use the canonical step name (`step-1-opening-transition`, etc.). Prototype filenames are kept exactly as authored — never renamed.
+3. **Iterations coexist.** Multiple prototype files per drawer are allowed (v5, v6, v7, etc.). Never auto-delete an older prototype. Remove a prototype only when the user explicitly asks.
+4. **Frames.** Prototypes bring their own iPhone 17 Pro frame. The playground viewer adds no frame chrome — it just renders the prototype as-is inside an iframe.
+5. **Variant chips.** Each prototype file carries its own internal variant selector. The playground's chips only switch between prototype *files*, never between variants inside a file.
+6. **Status.** Every step has one status: `locked`, `blocked`, `blocked-3d`, `available`, or `in-test`. Updated in `manifest.ts` when the user reports a change.
+7. **Promotion.** When the user says "promote step N", read the playground prototype, follow `docs/prototype-workflow.md` (strip the phone frame, translate animations to GSAP/Framer Motion, adapt per the Responsive breakpoints table using iOS + visionOS HIG via the `@apple` skill), write into `src/components/steps/step-N-…/`. **The playground file is never touched or deleted during promotion** — it stays as reference.
+8. **Visual language of the playground chrome itself** follows iOS + visionOS HIG (frosted glass, noise grain, left-aligned text, amber accents only).
 
 ---
 
