@@ -74,14 +74,12 @@ export default function Step15TransitionV4(){
   };
 
   return(
-    <div style={{minHeight:"100vh",background:"#0A0A0C",display:"flex",flexDirection:"column",alignItems:"center",
-      paddingTop:32,paddingBottom:48,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",
+      padding:24,fontFamily:"'Noto Sans JP',sans-serif"}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
         @keyframes tapPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
       `}</style>
-      <div style={{color:"#5B616E",fontSize:13,fontWeight:500,marginBottom:4}}>step-15-section-8-transition</div>
-      <div style={{color:"#8E8F8F",fontSize:11,marginBottom:20}}>B: the precision (locked)</div>
 
       {/* iPhone 17 Pro */}
       <div style={{position:"relative",width:393,height:852,borderRadius:55,overflow:"hidden",background:"#1A1A1E",
@@ -136,10 +134,6 @@ export default function Step15TransitionV4(){
         <div style={{position:"absolute",left:-2.5,top:240,width:3,height:60,borderRadius:"2px 0 0 2px",background:"#2A2A2E"}}/>
         <div style={{position:"absolute",left:-2.5,top:310,width:3,height:60,borderRadius:"2px 0 0 2px",background:"#2A2A2E"}}/>
         <div style={{position:"absolute",right:-2.5,top:260,width:3,height:80,borderRadius:"0 2px 2px 0",background:"#2A2A2E"}}/>
-      </div>
-
-      <div style={{color:"#5B616E",fontSize:11,marginTop:20,textAlign:"center",maxWidth:300,lineHeight:1.5}}>
-        Tap the screen to play. Tap again to reset.
       </div>
     </div>
   );
