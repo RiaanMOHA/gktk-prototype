@@ -44,6 +44,14 @@ const Step1OpeningTransition = dynamic(
   { ssr: false }
 );
 
+const Step15Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-15-section-8-transition/gktk-step15-transition.jsx"
+    ),
+  { ssr: false }
+);
+
 export const STEPS: StepDrawer[] = [
   {
     index: 1,
@@ -153,8 +161,14 @@ export const STEPS: StepDrawer[] = [
     index: 15,
     id: "step-15-section-8-transition",
     label: "Section 8 — transition",
-    status: "available",
-    prototypes: [],
+    status: "in-test",
+    prototypes: [
+      {
+        filename: "gktk-step15-transition.jsx",
+        kind: "jsx",
+        component: Step15Transition,
+      },
+    ],
   },
   {
     index: 16,
