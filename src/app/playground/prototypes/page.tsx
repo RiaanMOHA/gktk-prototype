@@ -36,6 +36,15 @@ export default function PrototypePlayground() {
     return step.prototypes.find((p) => p.filename === fileName) ?? null;
   }, [step, fileName]);
 
+  const [variantId, setVariantId] = useState<string | null>(
+    activeFile?.variants?.[0]?.id ?? null
+  );
+
+  // Reset variant selection whenever the active file changes.
+  useEffect(() => {
+    setVariantId(activeFile?.variants?.[0]?.id ?? null);
+  }, [activeFile?.filename]);
+
   function selectStep(id: string) {
     const next = STEPS.find((s) => s.id === id);
     if (!next) return;
@@ -46,7 +55,9 @@ export default function PrototypePlayground() {
   const previewUrl = activeFile
     ? `/playground/prototypes/preview/${encodeURIComponent(
         step.id
-      )}/${encodeURIComponent(activeFile.filename)}`
+      )}/${encodeURIComponent(activeFile.filename)}${
+        variantId ? `?variant=${encodeURIComponent(variantId)}` : ""
+      }`
     : null;
 
   // iPhone 17 Pro logical viewport + breathing room for the frame bezel.
@@ -238,6 +249,7 @@ export default function PrototypePlayground() {
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
+          overflow: "hidden",
         }}
       >
         {/* Step header + file chips */}
@@ -318,6 +330,35 @@ export default function PrototypePlayground() {
               })
             )}
           </div>
+
+          {/* Variant chips — only shown when the active file declares variants */}
+          {activeFile?.variants && activeFile.variants.length > 0 && (
+            <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {activeFile.variants.map((v) => {
+                const active = v.id === variantId;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setVariantId(v.id)}
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: 9999,
+                      border: "none",
+                      background: active ? "#FBB931" : "rgba(0,0,0,0.06)",
+                      color: active ? "#1A1A1E" : "#5B616E",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "background 120ms ease, color 120ms ease",
+                    }}
+                  >
+                    {v.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Viewer area */}
@@ -329,81 +370,40 @@ export default function PrototypePlayground() {
             position: "relative",
             padding: 24,
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center",
+            overflow: "auto",
             background: "#EDEEF1",
           }}
         >
           {previewUrl ? (
             <>
-              <iframe
-                key={`${previewUrl}#${resetNonce}`}
-                src={previewUrl}
-                title={activeFile?.filename ?? "prototype"}
+              <div
                 style={{
-                  width: FRAME_W,
-                  height: FRAME_H,
-                  border: "none",
-                  borderRadius: 0,
-                  background: "#EDEEF1",
-                  transform: `scale(${fitScale})`,
-                  transformOrigin: "center center",
+                  width: FRAME_W * fitScale,
+                  height: FRAME_H * fitScale,
+                  position: "relative",
                   flexShrink: 0,
                 }}
-              />
-              <button
-                onClick={() => setResetNonce((n) => n + 1)}
-                title="Reset prototype"
-                aria-label="Reset prototype"
-                style={{
-                  position: "absolute",
-                  top: 16,
-                  right: 16,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  padding: "8px 14px",
-                  borderRadius: 9999,
-                  border: "1px solid rgba(255,255,255,0.85)",
-                  background: "rgba(255,255,255,0.7)",
-                  backdropFilter: "blur(20px) saturate(1.4)",
-                  WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-                  boxShadow:
-                    "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
-                  color: "#25272C",
-                  fontFamily: "inherit",
-                  fontSize: 12,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  transition: "background 120ms ease, transform 120ms ease",
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.transform = "scale(0.96)";
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
               >
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-                  <path
-                    d="M13.5 8a5.5 5.5 0 1 1-1.611-3.889"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M13.5 2.5v2.8h-2.8"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Reset
-              </button>
+                <iframe
+                  key={`${previewUrl}#${resetNonce}`}
+                  src={previewUrl}
+                  title={activeFile?.filename ?? "prototype"}
+                  style={{
+                    width: FRAME_W,
+                    height: FRAME_H,
+                    border: "none",
+                    borderRadius: 0,
+                    background: "#EDEEF1",
+                    transform: `scale(${fitScale})`,
+                    transformOrigin: "top left",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                />
+              </div>
             </>
           ) : (
             <div
@@ -420,6 +420,64 @@ export default function PrototypePlayground() {
             </div>
           )}
         </div>
+
+        {/* Reset button anchored to main pane so it stays visible while viewer scrolls */}
+        {previewUrl && (
+          <button
+            onClick={() => setResetNonce((n) => n + 1)}
+            title="Reset prototype"
+            aria-label="Reset prototype"
+            style={{
+              position: "absolute",
+              top: "calc(90px + 16px)",
+              right: 16,
+              zIndex: 3,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 14px",
+              borderRadius: 9999,
+              border: "1px solid rgba(255,255,255,0.85)",
+              background: "rgba(255,255,255,0.7)",
+              backdropFilter: "blur(20px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+              boxShadow:
+                "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
+              color: "#25272C",
+              fontFamily: "inherit",
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: "pointer",
+              transition: "background 120ms ease, transform 120ms ease",
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = "scale(0.96)";
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+              <path
+                d="M13.5 8a5.5 5.5 0 1 1-1.611-3.889"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+              <path
+                d="M13.5 2.5v2.8h-2.8"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Reset
+          </button>
+        )}
       </main>
     </div>
   );

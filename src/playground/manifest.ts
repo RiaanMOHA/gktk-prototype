@@ -1,6 +1,13 @@
 import type { ComponentType } from "react";
 import dynamic from "next/dynamic";
 
+export type PrototypeVariant = {
+  /** URL-safe id passed to the prototype via ?variant=<id>. */
+  id: string;
+  /** Chip label shown in the playground header. */
+  label: string;
+};
+
 /* ───────────────────────────────────────────────────────
    Playground manifest
    Single source of truth for every step's status and
@@ -22,10 +29,18 @@ export type PrototypeFile = {
   filename: string;
   /** "jsx" renders as a mounted React component. "html" iframes a static file in /public. */
   kind: "jsx" | "html";
-  /** Only for kind === "jsx". Lazy component loader. */
-  component?: ComponentType;
+  /** Only for kind === "jsx". Lazy component loader. May accept a `variant` prop. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component?: ComponentType<any>;
   /** Only for kind === "html". Absolute URL path under /public. */
   publicPath?: string;
+  /**
+   * Optional variant list. When present the playground renders chips in its
+   * header and passes the selected id to the prototype via ?variant=<id>.
+   * The prototype is responsible for reading the prop and rendering the
+   * matching variant. Internal chips inside the prototype should be removed.
+   */
+  variants?: PrototypeVariant[];
 };
 
 export type StepDrawer = {
@@ -188,6 +203,10 @@ export const STEPS: StepDrawer[] = [
         filename: "gktk-step16-financials.jsx",
         kind: "jsx",
         component: Step16Financials,
+        variants: [
+          { id: "A", label: "A: the beacon" },
+          { id: "C", label: "C: the ledger" },
+        ],
       },
     ],
   },

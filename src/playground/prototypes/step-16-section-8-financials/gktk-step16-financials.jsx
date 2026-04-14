@@ -1,10 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
-const VARIANTS = [
-  { id: "A", label: "A: the beacon" },
-  { id: "C", label: "C: the ledger" },
-];
-
 const DATA = {
   bull:   { 3:{ip:18.29,ipo:14.89,ep:1.62,epo:1.50,rp:1624447742,rpo:1496935513}, 4:{ip:15.06,ipo:12.31,ep:1.70,epo:1.56,rp:1700303136,rpo:1557301236}, 5:{ip:13.16,ipo:10.77,ep:1.78,epo:1.62,rp:1776285098,rpo:1617767681}, 6:{ip:11.90,ipo:9.76,ep:1.85,epo:1.68,rp:1853120274,rpo:1678913114} },
   normal: { 3:{ip:14.77,ipo:12.00,ep:1.50,epo:1.40,rp:1496447742,rpo:1395073113}, 4:{ip:12.15,ipo:9.91,ep:1.56,epo:1.44,rp:1556303136,rpo:1442706036}, 5:{ip:10.60,ipo:8.66,ep:1.62,epo:1.49,rp:1616285098,rpo:1490439681}, 6:{ip:9.57,ipo:7.84,ep:1.68,epo:1.54,rp:1677120274,rpo:1538852314} },
@@ -417,28 +412,18 @@ const IPhoneFrame = ({children})=>(
   </div>
 );
 
-export default function Step16FinancialsV3(){
-  const [variant,setVariant]=useState("A");
-  const C={A:VariantA,C:VariantC}[variant];
+export default function Step16FinancialsV3({variant}={}){
+  const resolved=variant==="C"?"C":"A";
+  const C={A:VariantA,C:VariantC}[resolved];
   return(
-    <div style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-      padding:24,gap:24,fontFamily:"'Noto Sans JP',sans-serif"}}>
+    <div style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",
+      padding:24,fontFamily:"'Noto Sans JP',sans-serif"}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
         @keyframes bearFade{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
         ::-webkit-scrollbar{display:none} *{scrollbar-width:none}
       `}</style>
-      <div style={{display:"flex",gap:8}}>
-        {VARIANTS.map(v=>(
-          <button key={v.id} onClick={()=>setVariant(v.id)} style={{
-            padding:"8px 16px",borderRadius:20,border:"none",cursor:"pointer",
-            fontSize:12,fontWeight:500,fontFamily:"'Noto Sans JP',sans-serif",
-            background:variant===v.id?"#FBB931":"rgba(0,0,0,0.06)",
-            color:variant===v.id?"#1A1A1E":"#5B616E",transition:"all 0.2s",
-          }}>{v.label}</button>
-        ))}
-      </div>
-      <IPhoneFrame key={variant}><C/></IPhoneFrame>
+      <IPhoneFrame key={resolved}><C/></IPhoneFrame>
     </div>
   );
 }

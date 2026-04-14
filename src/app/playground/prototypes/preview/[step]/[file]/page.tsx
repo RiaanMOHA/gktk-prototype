@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { findPrototype } from "@/playground/manifest";
 
 /* ───────────────────────────────────────────────────────
@@ -13,8 +13,10 @@ import { findPrototype } from "@/playground/manifest";
 
 export default function PrototypePreviewPage() {
   const params = useParams<{ step: string; file: string }>();
+  const search = useSearchParams();
   const step = decodeURIComponent(params.step);
   const file = decodeURIComponent(params.file);
+  const variant = search.get("variant") ?? undefined;
 
   const proto = findPrototype(step, file);
 
@@ -43,7 +45,7 @@ export default function PrototypePreviewPage() {
     return (
       <>
         <style>{`html, body { background: #EDEEF1 !important; }`}</style>
-        <Proto />
+        <Proto variant={variant} />
       </>
     );
   }
