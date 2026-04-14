@@ -8,7 +8,7 @@ All approved copy, data, and component structures for the GKTK experience. This 
 
 **Heading:** Why Kumamoto, why now?
 
-**Subheading:** Kumamoto: Japan's fastest-rising property market
+**Subheading:** Japan's fastest-rising property market
 
 **Body (original paragraph form):** High-yield serviced apartments in Kumamoto's TSMC / JASM semiconductor hub, housing Taiwanese engineers, targeting 12-15% IRR in 4-5 years.
 
@@ -25,7 +25,9 @@ All approved copy, data, and component structures for the GKTK experience. This 
 
 ## Section 2: bridge
 
-The COVID-era chip shortage exposed a hard truth: semiconductor security is national security. Now, Japan is investing over 10 trillion yen to rebuild its chip industry, turning Kumamoto into Asia's next Silicon Valley. With over 47,000 jobs being created, Kumamoto is set to attract waves of high-income engineers, fueling real estate growth for decades.
+**Primary:** The COVID-era chip shortage exposed a hard truth: semiconductor security is national security. Now, Japan is investing over 10 trillion yen to rebuild its chip industry.
+
+**Secondary (hide on tight mobile viewports):** With over 47,000 jobs being created, Kumamoto is set to attract waves of high-income engineers, fueling real estate growth for decades.
 
 ---
 
@@ -127,13 +129,13 @@ Kumamoto is building a dedicated science park zone and expanding its airport. Th
 ### Option 2: Closest competitor
 
 **Label:** Closest competitor
-**Heading:** Formosa Hills: hardware without software
+**Heading:** Current options: housing without solutions
 **Body:** 14-story building, 65 units, all 3LDK (70 to 80 sqm). 80% Taiwanese business guests. From 20,000 yen per night with long-term lease options. Services: bilingual property management, mail handling, meeting facilities, airport transfers.
 
 **Gap analysis:**
-- What DoMo offers: a roof, basic bilingual admin, and parking.
-- What DoMo does not offer: medical navigation, mental health support, education integration, spouse career support, data-driven HR dashboards, or any of the "software" that keeps families stable and engineers productive.
-- Their model is accommodation. Ours is retention infrastructure.
+- What current options offer: a place to live, basic bilingual admin, and parking.
+- What they do not solve: medical navigation, mental health support, education integration, spouse career support, or the operational friction that drives early repatriation.
+- These are accommodations. They do not solve the problem. MoreHarvest is retention infrastructure.
 
 ---
 

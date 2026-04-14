@@ -5,8 +5,8 @@ export const CURRENT_OPTIONS = {
     takeaway: 'The B2B bulk-lease model works. Demand is proven.',
   },
   closestCompetitor: {
-    heading: 'Formosa Hills: hardware without software.',
+    heading: 'Current options: housing without solutions.',
     body: '14-story building, 65 units, all 3LDK (70 to 80 sqm). 80% Taiwanese business guests. From 20,000 yen per night with long-term lease options. Services: bilingual property management, mail handling, meeting facilities, airport transfers.',
-    gapAnalysis: "What DoMo offers: a roof, basic bilingual admin, and parking. What DoMo does not offer: medical navigation, mental health support, education integration, spouse career support, data-driven HR dashboards, or any of the 'software' that keeps families stable and engineers productive. Their model is accommodation. Ours is retention infrastructure.",
+    gapAnalysis: 'What current options offer: a place to live, basic bilingual admin, and parking. What they do not solve: medical navigation, mental health support, education integration, spouse career support, or the operational friction that drives early repatriation. These are accommodations. They do not solve the problem. MoreHarvest is retention infrastructure.',
   },
 } as const;
