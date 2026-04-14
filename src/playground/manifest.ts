@@ -52,6 +52,14 @@ const Step15Transition = dynamic(
   { ssr: false }
 );
 
+const Step16Financials = dynamic(
+  () =>
+    import(
+      "./prototypes/step-16-section-8-financials/gktk-step16-financials.jsx"
+    ),
+  { ssr: false }
+);
+
 export const STEPS: StepDrawer[] = [
   {
     index: 1,
@@ -174,8 +182,14 @@ export const STEPS: StepDrawer[] = [
     index: 16,
     id: "step-16-section-8-financials",
     label: "Section 8 — financials",
-    status: "available",
-    prototypes: [],
+    status: "in-test",
+    prototypes: [
+      {
+        filename: "gktk-step16-financials.jsx",
+        kind: "jsx",
+        component: Step16Financials,
+      },
+    ],
   },
   {
     index: 17,
