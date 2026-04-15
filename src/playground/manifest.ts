@@ -59,6 +59,54 @@ const Step1OpeningTransition = dynamic(
   { ssr: false }
 );
 
+const Step2EntryTransitions = dynamic(
+  () =>
+    import(
+      "./prototypes/step-2-section-1-entry/gktk-entry-transitions-5.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step3Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-3-section-2-transition/gktk-step3-transition-v1.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step4Bridge = dynamic(
+  () =>
+    import(
+      "./prototypes/step-4-section-2-bridge/gktk-bridge-v11.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step7Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-7-section-4-transition/gktk-step7-transition-v6.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step9Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-9-section-5-transition/gktk-step9-transition-v6.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step10CurrentOptions = dynamic(
+  () =>
+    import(
+      "./prototypes/step-10-section-5-current-options/gktk-step10-current-options-v6.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step15Transition = dynamic(
   () =>
     import(
@@ -94,21 +142,56 @@ export const STEPS: StepDrawer[] = [
     id: "step-2-section-1-entry",
     label: "Section 1 — entry",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-entry-transitions-5.jsx",
+        kind: "jsx",
+        component: Step2EntryTransitions,
+        variants: [
+          { id: "A", label: "A: the warmth" },
+          { id: "B", label: "B: the layers" },
+          { id: "C", label: "C: the signal" },
+          { id: "D", label: "D: the stagger" },
+        ],
+      },
+    ],
   },
   {
     index: 3,
     id: "step-3-section-2-transition",
     label: "Section 2 — transition",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-step3-transition-v1.jsx",
+        kind: "jsx",
+        component: Step3Transition,
+        variants: [
+          { id: "1", label: "1: the sweep" },
+          { id: "2", label: "2: the scatter" },
+          { id: "3", label: "3: the dissolve" },
+          { id: "4", label: "4: the drop" },
+        ],
+      },
+    ],
   },
   {
     index: 4,
     id: "step-4-section-2-bridge",
     label: "Section 2 — bridge",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-bridge-v11.jsx",
+        kind: "jsx",
+        component: Step4Bridge,
+        variants: [
+          { id: "A", label: "A: the counter" },
+          { id: "F", label: "F: the ticker" },
+          { id: "G", label: "G: the presence" },
+        ],
+      },
+    ],
   },
   {
     index: 5,
@@ -129,7 +212,17 @@ export const STEPS: StepDrawer[] = [
     id: "step-7-section-4-transition",
     label: "Section 4 — transition",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-step7-transition-v6.jsx",
+        kind: "jsx",
+        component: Step7Transition,
+        variants: [
+          { id: "B", label: "B: the descent" },
+          { id: "D", label: "D: the warp" },
+        ],
+      },
+    ],
   },
   {
     index: 8,
@@ -143,14 +236,30 @@ export const STEPS: StepDrawer[] = [
     id: "step-9-section-5-transition",
     label: "Section 5 — transition",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-step9-transition-v6.jsx",
+        kind: "jsx",
+        component: Step9Transition,
+      },
+    ],
   },
   {
     index: 10,
     id: "step-10-section-5-current-options",
     label: "Section 5 — current options",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-step10-current-options-v6.jsx",
+        kind: "jsx",
+        component: Step10CurrentOptions,
+        variants: [
+          { id: "B", label: "B: the stack" },
+          { id: "D", label: "D: the divide" },
+        ],
+      },
+    ],
   },
   {
     index: 11,
