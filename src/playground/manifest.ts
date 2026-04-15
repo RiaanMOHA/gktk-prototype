@@ -169,6 +169,14 @@ const Step19Transition = dynamic(
   { ssr: false }
 );
 
+const Step20ExitStrategy = dynamic(
+  () =>
+    import(
+      "./prototypes/step-20-section-10-exit-strategy/gktk-step20-exit-strategy-v9.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step18RiskFactors = dynamic(
   () =>
     import(
@@ -470,8 +478,18 @@ export const STEPS: StepDrawer[] = [
     index: 20,
     id: "step-20-section-10-exit-strategy",
     label: "Section 10 — exit strategy",
-    status: "in-progress",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step20-exit-strategy-v9.jsx",
+        kind: "jsx",
+        component: Step20ExitStrategy,
+        variants: [
+          { id: "A", label: "A: the reveal" },
+          { id: "C", label: "C: the depth" },
+        ],
+      },
+    ],
   },
 ];
 
