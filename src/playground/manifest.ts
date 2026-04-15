@@ -59,6 +59,14 @@ const Step1OpeningTransition = dynamic(
   { ssr: false }
 );
 
+const Step2EntryTransitions = dynamic(
+  () =>
+    import(
+      "./prototypes/step-2-section-1-entry/gktk-entry-transitions-5.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step15Transition = dynamic(
   () =>
     import(
@@ -94,7 +102,13 @@ export const STEPS: StepDrawer[] = [
     id: "step-2-section-1-entry",
     label: "Section 1 — entry",
     status: "locked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-entry-transitions-5.jsx",
+        kind: "jsx",
+        component: Step2EntryTransitions,
+      },
+    ],
   },
   {
     index: 3,
