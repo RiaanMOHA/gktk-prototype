@@ -129,6 +129,14 @@ const Step13Transition = dynamic(
   { ssr: false }
 );
 
+const Step14ProductSoftware = dynamic(
+  () =>
+    import(
+      "./prototypes/step-14-section-7-product-software/gktk-step14-product-software-v3.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step15Transition = dynamic(
   () =>
     import(
@@ -157,6 +165,14 @@ const Step19Transition = dynamic(
   () =>
     import(
       "./prototypes/step-19-section-10-transition/gktk-step19-transition-v6.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step20ExitStrategy = dynamic(
+  () =>
+    import(
+      "./prototypes/step-20-section-10-exit-strategy/gktk-step20-exit-strategy-v9.jsx"
     ),
   { ssr: false }
 );
@@ -364,8 +380,18 @@ export const STEPS: StepDrawer[] = [
     index: 14,
     id: "step-14-section-7-product-software",
     label: "Section 7 — product software",
-    status: "in-progress",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step14-product-software-v3.jsx",
+        kind: "jsx",
+        component: Step14ProductSoftware,
+        variants: [
+          { id: "A", label: "A: the lock screen" },
+          { id: "B", label: "B: the thread" },
+        ],
+      },
+    ],
   },
   {
     index: 15,
@@ -452,8 +478,18 @@ export const STEPS: StepDrawer[] = [
     index: 20,
     id: "step-20-section-10-exit-strategy",
     label: "Section 10 — exit strategy",
-    status: "in-progress",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step20-exit-strategy-v9.jsx",
+        kind: "jsx",
+        component: Step20ExitStrategy,
+        variants: [
+          { id: "A", label: "A: the reveal" },
+          { id: "C", label: "C: the depth" },
+        ],
+      },
+    ],
   },
 ];
 
