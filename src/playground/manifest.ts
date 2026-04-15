@@ -129,6 +129,14 @@ const Step13Transition = dynamic(
   { ssr: false }
 );
 
+const Step14ProductSoftware = dynamic(
+  () =>
+    import(
+      "./prototypes/step-14-section-7-product-software/gktk-step14-product-software-v3.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step15Transition = dynamic(
   () =>
     import(
@@ -365,7 +373,17 @@ export const STEPS: StepDrawer[] = [
     id: "step-14-section-7-product-software",
     label: "Section 7 — product software",
     status: "in-progress",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-step14-product-software-v3.jsx",
+        kind: "jsx",
+        component: Step14ProductSoftware,
+        variants: [
+          { id: "A", label: "A: the lock screen" },
+          { id: "B", label: "B: the thread" },
+        ],
+      },
+    ],
   },
   {
     index: 15,
