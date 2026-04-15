@@ -123,6 +123,14 @@ const Step16Financials = dynamic(
   { ssr: false }
 );
 
+const Step18RiskFactors = dynamic(
+  () =>
+    import(
+      "./prototypes/step-18-section-9-risk-factors/gktk-step18-risk-factors-v8.jsx"
+    ),
+  { ssr: false }
+);
+
 export const STEPS: StepDrawer[] = [
   {
     index: 1,
@@ -331,7 +339,17 @@ export const STEPS: StepDrawer[] = [
     id: "step-18-section-9-risk-factors",
     label: "Section 9 — risk factors",
     status: "available",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "gktk-step18-risk-factors-v8.jsx",
+        kind: "jsx",
+        component: Step18RiskFactors,
+        variants: [
+          { id: "A", label: "A: the crescendo" },
+          { id: "D", label: "D: the parallax" },
+        ],
+      },
+    ],
   },
   {
     index: 19,
