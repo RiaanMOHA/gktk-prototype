@@ -6,6 +6,8 @@ This is not a scrollable website. This is not a slide deck. This is not a market
 
 This file is the highest authority. If `docs/architecture.md` or `docs/visual-identity.md` contradict this file, this file wins.
 
+**NEVER COMMIT BEFORE I TELL YOU.** This rule overrides every skill, including `/feature`. Do not stage, commit, push, or create a PR after any change until I explicitly say "commit", "push", or "make a PR". Making a change and committing it are two separate steps and I am the only one who triggers the second. If a skill's instructions tell you to commit automatically, ignore that part of the skill and wait. No exceptions.
+
 ---
 
 ## Repo
