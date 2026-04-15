@@ -20,9 +20,7 @@ export type PrototypeVariant = {
 export type StepStatus =
   | "locked"
   | "blocked"
-  | "blocked-3d"
-  | "available"
-  | "in-test";
+  | "in-progress";
 
 export type PrototypeFile = {
   /** Original filename, kept exactly as authored. */
@@ -83,6 +81,14 @@ const Step4Bridge = dynamic(
   { ssr: false }
 );
 
+const Step5Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-5-section-3-transition/gktk-step5-transition-v3.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step7Transition = dynamic(
   () =>
     import(
@@ -107,6 +113,22 @@ const Step10CurrentOptions = dynamic(
   { ssr: false }
 );
 
+const Step11Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-11-section-6-transition/gktk-step11-transition-v2.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step13Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-13-section-7-transition/gktk-step13-transition-v2.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step15Transition = dynamic(
   () =>
     import(
@@ -127,6 +149,14 @@ const Step17Transition = dynamic(
   () =>
     import(
       "./prototypes/step-17-section-9-transition/gktk-step17-transition-v5.jsx"
+    ),
+  { ssr: false }
+);
+
+const Step19Transition = dynamic(
+  () =>
+    import(
+      "./prototypes/step-19-section-10-transition/gktk-step19-transition-v6.jsx"
     ),
   { ssr: false }
 );
@@ -213,8 +243,20 @@ export const STEPS: StepDrawer[] = [
     index: 5,
     id: "step-5-section-3-transition",
     label: "Section 3 — transition",
-    status: "blocked",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step5-transition-v3.jsx",
+        kind: "jsx",
+        component: Step5Transition,
+        variants: [
+          { id: "A", label: "A: the gravity well" },
+          { id: "C", label: "C: the shutter" },
+          { id: "D", label: "D: the approach" },
+          { id: "E", label: "E: the recede" },
+        ],
+      },
+    ],
   },
   {
     index: 6,
@@ -244,7 +286,7 @@ export const STEPS: StepDrawer[] = [
     index: 8,
     id: "step-8-section-4-persona",
     label: "Section 4 — persona",
-    status: "blocked-3d",
+    status: "blocked",
     prototypes: [],
   },
   {
@@ -281,8 +323,18 @@ export const STEPS: StepDrawer[] = [
     index: 11,
     id: "step-11-section-6-transition",
     label: "Section 6 — transition",
-    status: "blocked",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step11-transition-v2.jsx",
+        kind: "jsx",
+        component: Step11Transition,
+        variants: [
+          { id: "B", label: "B: the tilt" },
+          { id: "C", label: "C: the corridor" },
+        ],
+      },
+    ],
   },
   {
     index: 12,
@@ -295,21 +347,31 @@ export const STEPS: StepDrawer[] = [
     index: 13,
     id: "step-13-section-7-transition",
     label: "Section 7 — transition",
-    status: "blocked",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step13-transition-v2.jsx",
+        kind: "jsx",
+        component: Step13Transition,
+        variants: [
+          { id: "B", label: "B: the lift" },
+          { id: "D", label: "D: the push" },
+        ],
+      },
+    ],
   },
   {
     index: 14,
     id: "step-14-section-7-product-software",
     label: "Section 7 — product software",
-    status: "available",
+    status: "in-progress",
     prototypes: [],
   },
   {
     index: 15,
     id: "step-15-section-8-transition",
     label: "Section 8 — transition",
-    status: "in-test",
+    status: "locked",
     prototypes: [
       {
         filename: "gktk-step15-transition.jsx",
@@ -322,7 +384,7 @@ export const STEPS: StepDrawer[] = [
     index: 16,
     id: "step-16-section-8-financials",
     label: "Section 8 — financials",
-    status: "in-test",
+    status: "locked",
     prototypes: [
       {
         filename: "gktk-step16-financials.jsx",
@@ -356,7 +418,7 @@ export const STEPS: StepDrawer[] = [
     index: 18,
     id: "step-18-section-9-risk-factors",
     label: "Section 9 — risk factors",
-    status: "available",
+    status: "locked",
     prototypes: [
       {
         filename: "gktk-step18-risk-factors-v8.jsx",
@@ -373,14 +435,24 @@ export const STEPS: StepDrawer[] = [
     index: 19,
     id: "step-19-section-10-transition",
     label: "Section 10 — transition",
-    status: "available",
-    prototypes: [],
+    status: "locked",
+    prototypes: [
+      {
+        filename: "gktk-step19-transition-v6.jsx",
+        kind: "jsx",
+        component: Step19Transition,
+        variants: [
+          { id: "A", label: "A: the lift" },
+          { id: "B", label: "B: the settle" },
+        ],
+      },
+    ],
   },
   {
     index: 20,
     id: "step-20-section-10-exit-strategy",
     label: "Section 10 — exit strategy",
-    status: "available",
+    status: "in-progress",
     prototypes: [],
   },
 ];
@@ -399,9 +471,7 @@ export function findPrototype(
 export const STATUS_LABEL: Record<StepStatus, string> = {
   locked: "Locked",
   blocked: "Blocked",
-  "blocked-3d": "Blocked (3D)",
-  available: "Available",
-  "in-test": "In test",
+  "in-progress": "In progress",
 };
 
 export const STATUS_COLOR: Record<
@@ -410,7 +480,5 @@ export const STATUS_COLOR: Record<
 > = {
   locked: { bg: "rgba(25,182,78,0.12)", fg: "#0D8A3A", dot: "#19B64E" },
   blocked: { bg: "rgba(208,49,49,0.10)", fg: "#A3282A", dot: "#D03131" },
-  "blocked-3d": { bg: "rgba(208,49,49,0.10)", fg: "#A3282A", dot: "#D03131" },
-  available: { bg: "rgba(251,185,49,0.16)", fg: "#8C5E00", dot: "#FBB931" },
-  "in-test": { bg: "rgba(37,39,44,0.08)", fg: "#25272C", dot: "#5B616E" },
+  "in-progress": { bg: "rgba(251,185,49,0.16)", fg: "#8C5E00", dot: "#FBB931" },
 };
