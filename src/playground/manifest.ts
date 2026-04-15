@@ -372,7 +372,7 @@ export const STEPS: StepDrawer[] = [
     index: 14,
     id: "step-14-section-7-product-software",
     label: "Section 7 — product software",
-    status: "in-progress",
+    status: "locked",
     prototypes: [
       {
         filename: "gktk-step14-product-software-v3.jsx",
