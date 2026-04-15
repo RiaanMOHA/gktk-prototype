@@ -113,6 +113,14 @@ const Step10CurrentOptions = dynamic(
   { ssr: false }
 );
 
+const Step10CurrentOptionsV19 = dynamic(
+  () =>
+    import(
+      "./prototypes/step-10-section-5-current-options/gktk-step10-current-options-v19.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step11Transition = dynamic(
   () =>
     import(
@@ -279,7 +287,14 @@ export const STEPS: StepDrawer[] = [
     id: "step-6-section-3-map",
     label: "Section 3 — map",
     status: "blocked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "map-prototype-v1.html",
+        kind: "html",
+        publicPath:
+          "/playground/prototypes/step-6-section-3-map/map-prototype-v1/index.html?embed=1&lang=en&steps=government-support,corporate-investment,transport-access,future-outlook",
+      },
+    ],
   },
   {
     index: 7,
@@ -325,6 +340,17 @@ export const STEPS: StepDrawer[] = [
     status: "locked",
     prototypes: [
       {
+        filename: "gktk-step10-current-options-v19.jsx",
+        kind: "jsx",
+        component: Step10CurrentOptionsV19,
+        variants: [
+          { id: "A", label: "A: the flip" },
+          { id: "B", label: "B: the cascade" },
+          { id: "C", label: "C: the card" },
+          { id: "D", label: "D: the sweep" },
+        ],
+      },
+      {
         filename: "gktk-step10-current-options-v6.jsx",
         kind: "jsx",
         component: Step10CurrentOptions,
@@ -357,7 +383,14 @@ export const STEPS: StepDrawer[] = [
     id: "step-12-section-6-product-hardware",
     label: "Section 6 — product hardware",
     status: "blocked",
-    prototypes: [],
+    prototypes: [
+      {
+        filename: "map-prototype-v1.html",
+        kind: "html",
+        publicPath:
+          "/playground/prototypes/step-12-section-6-product-hardware/map-prototype-v1/index.html?embed=1&lang=en&steps=properties",
+      },
+    ],
   },
   {
     index: 13,
