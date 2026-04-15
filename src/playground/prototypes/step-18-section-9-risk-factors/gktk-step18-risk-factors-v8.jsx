@@ -34,7 +34,7 @@ export default function Step18RiskFactorsV8({variant}={}){
   const resolved=VARIANTS[variant]?variant:"A";
   const Cur=VARIANTS[resolved].c;
   return(
-    <div style={{minHeight:"100vh",background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",padding:24,fontFamily:F.b}}>
+    <div style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",padding:24,fontFamily:F.b}}>
       <Noise/>
       <Phone><Cur key={resolved}/></Phone>
     </div>

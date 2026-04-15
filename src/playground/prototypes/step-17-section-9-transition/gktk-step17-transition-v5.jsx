@@ -613,7 +613,7 @@ export default function Step17TransitionV5({ variant } = {}) {
         justifyContent: "center",
         padding: 24,
         minHeight: "100vh",
-        background: COLORS.base,
+        background: "#EDEEF1",
         fontFamily: "'Noto Sans JP', 'Inter', system-ui, sans-serif",
       }}
     >
