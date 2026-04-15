@@ -184,9 +184,11 @@ function ScatterDots() {
 }
 
 /* ── Main component ── */
-export default function GKTKEntryTransitions() {
-  const [entryIdx, setEntryIdx] = useState(0);
-  const [transIdx, setTransIdx] = useState(0);
+const ENTRY_BY_VARIANT = { A: 0, B: 1, C: 2, D: 3 };
+
+export default function GKTKEntryTransitions({ variant } = {}) {
+  const entryIdx = ENTRY_BY_VARIANT[variant] ?? 0;
+  const transIdx = 0; // sweep — default transition
   const [phase, setPhase] = useState("entry"); // entry | transitioning | bridge
   const [holdProgress, setHoldProgress] = useState(0);
   const [holding, setHolding] = useState(false);
@@ -251,7 +253,7 @@ export default function GKTKEntryTransitions() {
   const dashOffset = CIRCUMFERENCE * (1 - holdProgress);
 
   return (
-    <div style={{ fontFamily: "'Noto Sans JP',sans-serif", background: N[100], minHeight: "100vh", display: "flex", justifyContent: "center", padding: "16px 0" }}>
+    <div style={{ fontFamily: "'Noto Sans JP',sans-serif", background: N[100], minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
 
@@ -284,35 +286,11 @@ export default function GKTKEntryTransitions() {
         @keyframes particle1 { to { transform: translate(100px, -90px) scale(0); opacity: 0; } }
         @keyframes particle2 { to { transform: translate(-60px, 110px) scale(0); opacity: 0; } }
         @keyframes particle3 { to { transform: translate(90px, 80px) scale(0); opacity: 0; } }
-
-        .sel-btn { padding: 6px 10px; border: 1px solid ${N[200]}; border-radius: 8px; background: #fff; font-size: 11px; font-family: 'Noto Sans JP', sans-serif; color: ${N[800]}; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
-        .sel-btn:hover { border-color: #aaa; }
-        .sel-btn.active { background: ${N[950]}; border-color: ${N[950]}; color: #fff; }
       `}</style>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        {/* Entry selector */}
-        <div style={{ marginBottom: 8, textAlign: "center" }}>
-          <div style={{ fontSize: 11, color: N[600], marginBottom: 6, fontWeight: 500, letterSpacing: "0.01em" }}>Entry layout</div>
-          <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap" }}>
-            {ENTRIES.map((e, i) => (
-              <button key={e.key} className={`sel-btn${i === entryIdx ? " active" : ""}`} onClick={() => { setEntryIdx(i); resetToEntry(); }}>{e.label}</button>
-            ))}
-          </div>
-        </div>
-
-        {/* Transition selector */}
-        <div style={{ marginBottom: 12, textAlign: "center" }}>
-          <div style={{ fontSize: 11, color: N[600], marginBottom: 6, fontWeight: 500, letterSpacing: "0.01em" }}>Transition</div>
-          <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap" }}>
-            {TRANSITIONS.map((tr, i) => (
-              <button key={tr.key} className={`sel-btn${i === transIdx ? " active" : ""}`} onClick={() => { setTransIdx(i); resetToEntry(); }}>{tr.label}</button>
-            ))}
-          </div>
-        </div>
-
         {/* iPhone device frame */}
-        <div style={{ position: "relative", width: 413, height: 892, flexShrink: 0 }}>
+        <div style={{ position: "relative", width: 393, height: 852, flexShrink: 0 }}>
           {/* Outer shell */}
           <div style={{ position: "absolute", inset: 0, borderRadius: 54, background: "#1A1A1C", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>
             {/* Metallic edge */}
@@ -325,7 +303,7 @@ export default function GKTKEntryTransitions() {
           </div>
 
           {/* Screen */}
-          <div style={{ position: "absolute", top: 10, left: 10, right: 10, bottom: 10, borderRadius: 44, overflow: "hidden", background: "#F9F9F9" }}>
+          <div style={{ position: "absolute", top: 6, left: 6, right: 6, bottom: 6, borderRadius: 49, overflow: "hidden", background: "#F9F9F9" }}>
             {/* Dynamic Island */}
             <div style={{ position: "absolute", top: 11, left: "50%", transform: "translateX(-50%)", width: 126, height: 37, background: "#000", borderRadius: 20, zIndex: 20 }}>
               <div style={{ position: "absolute", top: "50%", right: 18, transform: "translateY(-50%)", width: 11, height: 11, borderRadius: "50%", background: "radial-gradient(circle at 40% 40%, #1E2028 0%, #0A0A0C 50%, #1A1A1E 100%)", boxShadow: "0 0 0 1.5px #0D0D0F, 0 0 3px rgba(255,255,255,0.06) inset" }} />
