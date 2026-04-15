@@ -52,16 +52,20 @@ export default function PrototypePreviewPage() {
 
   if (proto.kind === "html" && proto.publicPath) {
     return (
-      <iframe
-        src={proto.publicPath}
-        style={{
-          border: "none",
-          width: "100vw",
-          height: "100vh",
-          display: "block",
-        }}
-        title={file}
-      />
+      <>
+        <style>{`html, body { background: #EDEEF1 !important; margin: 0; }`}</style>
+        <iframe
+          src={proto.publicPath}
+          style={{
+            border: "none",
+            width: "100vw",
+            height: "100vh",
+            display: "block",
+            background: "#EDEEF1",
+          }}
+          title={file}
+        />
+      </>
     );
   }
 
