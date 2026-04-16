@@ -7,7 +7,7 @@ const NEUTRAL_600 = "#5B616E";
 const NEUTRAL_200 = "#D8DBDF";
 const BASE_BG = "#F9F9F9";
 
-const mkNoise = (f, o) => `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='${f}' numOctaves='4' stitchTiles='stitch'/></filter><rect width='300' height='300' filter='url(#n)' opacity='${o}'/></svg>`)}")`;
+const mkNoise = (f, o) => `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' aria-hidden="true"><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='${f}' numOctaves='4' stitchTiles='stitch'/></filter><rect width='300' height='300' filter='url(#n)' opacity='${o}'/></svg>`)}")`;
 const NOISE = mkNoise(0.75, 0.04);
 const BG_NOISE = mkNoise(0.6, 0.03);
 const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
@@ -18,7 +18,7 @@ function MeshBG({ phase = 0 }) {
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: BASE_BG }} />
-      <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 80% 60% at 25% 18%, rgba(254,242,201,${w}) 0%, transparent 70%), radial-gradient(ellipse 55% 75% at 78% 72%, rgba(251,185,49,${w * 0.5}) 0%, transparent 60%), radial-gradient(ellipse 90% 45% at 45% 55%, rgba(255,148,36,${w * 0.25}) 0%, transparent 65%), radial-gradient(ellipse 65% 65% at 62% 28%, rgba(255,255,255,0.45) 0%, transparent 50%)`, transition: "background 1.5s ease" }} />
+      <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 80% 60% at 25% 18%, rgba(254,242,201,${w}) 0%, transparent 70%), radial-gradient(ellipse 55% 75% at 78% 72%, rgba(251,185,49,${w * 0.5}) 0%, transparent 60%), radial-gradient(ellipse 90% 45% at 45% 55%, rgba(255,148,36,${w * 0.25}) 0%, transparent 65%), radial-gradient(ellipse 65% 65% at 62% 28%, rgba(255,255,255,0.45) 0%, transparent 50%)`, transition: "background 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />
       <div style={{ position: "absolute", inset: 0, backgroundImage: BG_NOISE, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.6, pointerEvents: "none" }} />
     </div>
   );
@@ -38,7 +38,7 @@ function Glass({ children, level = 2, z = 30, rx = 0, ry = 0, style = {} }) {
       border: `1px solid ${L2 ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.85)"}`,
       boxShadow: `0 ${8 + z * 0.2}px ${32 + z}px rgba(0,0,0,${0.08 + z * 0.001}), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)`,
       borderRadius: "16px", overflow: "hidden",
-      transition: "transform 0.7s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.7s ease, opacity 0.5s ease",
+      transition: "transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       ...style,
     }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: L2 ? "2px" : "1.5px", background: "linear-gradient(90deg, rgba(255,255,255,0) 5%, rgba(255,255,255,0.92) 30%, rgba(255,255,255,0.96) 50%, rgba(255,255,255,0.92) 70%, rgba(255,255,255,0) 95%)", pointerEvents: "none" }} />
@@ -51,7 +51,7 @@ function Glass({ children, level = 2, z = 30, rx = 0, ry = 0, style = {} }) {
 
 function DNum({ children, arrived = false, glow = false, z = 50, style = {} }) {
   return (
-    <div style={{ transform: `translateZ(${arrived ? z : z - 20}px) scale(${arrived ? 1 : 0.88})`, transformStyle: "preserve-3d", transition: "transform 0.65s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease, filter 0.5s ease", opacity: arrived ? 1 : 0, filter: arrived ? "none" : "blur(2px)", position: "relative" }}>
+    <div style={{ transform: `translateZ(${arrived ? z : z - 20}px) scale(${arrived ? 1 : 0.88})`, transformStyle: "preserve-3d", transition: "transform 0.65s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)", opacity: arrived ? 1 : 0, filter: arrived ? "none" : "blur(2px)", position: "relative" }}>
       <span style={{ display: "inline-block", fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: NEUTRAL_950, textShadow: arrived ? "0 1px 0 rgba(255,255,255,0.5), 0 4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.04)" : "none", ...style }}>{children}</span>
       {glow && <span style={{ position: "absolute", inset: "-24px", borderRadius: "50%", background: "radial-gradient(circle, rgba(251,185,49,0.22) 0%, transparent 70%)", pointerEvents: "none", animation: "bloomPulse 0.9s ease-out forwards" }} />}
     </div>
@@ -60,7 +60,7 @@ function DNum({ children, arrived = false, glow = false, z = 50, style = {} }) {
 
 function Cap({ children, vis = false, delay = 0, z = 10, style = {} }) {
   return (
-    <div style={{ transform: `translateZ(${z}px) translateY(${vis ? 0 : 5}px)`, transformStyle: "preserve-3d", opacity: vis ? 1 : 0, transition: `opacity 0.4s ease ${delay}s, transform 0.5s ease ${delay}s` }}>
+    <div style={{ transform: `translateZ(${z}px) translateY(${vis ? 0 : 5}px)`, transformStyle: "preserve-3d", opacity: vis ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s, transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s` }}>
       <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 400, fontSize: "0.875rem", lineHeight: 1.6, color: NEUTRAL_600, letterSpacing: "0.015em", margin: 0, ...style }}>{children}</p>
     </div>
   );
@@ -91,7 +91,7 @@ function AmberScreen({ visible }) {
       background: `linear-gradient(135deg, ${AMBER}, #FF9424)`,
       opacity: visible ? 1 : 0,
       transform: visible ? "translateY(0)" : "translateY(100%)",
-      transition: "opacity 0.4s ease, transform 0.5s cubic-bezier(0.34,1.4,0.64,1)",
+      transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
       display: "flex", flexDirection: "column", alignItems: "flex-start",
       justifyContent: "center", padding: "48px 28px",
     }}>
@@ -115,7 +115,7 @@ function TriggerTap({ visible, onFire }) {
     <div style={{
       position: "absolute", bottom: "28px", right: "24px", zIndex: 35,
       opacity: visible ? 1 : 0, transform: `scale(${visible ? 1 : 0.6})`,
-      transition: "opacity 0.4s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)",
+      transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.5s cubic-bezier(0.34,1.56,0.64,1)",
       pointerEvents: visible ? "auto" : "none",
     }}>
       <div
@@ -166,7 +166,7 @@ function TriggerSwipe({ visible, onFire }) {
       onTouchEnd={onE} onTouchCancel={onE}
       style={{
         position: "absolute", bottom: 0, left: 0, right: 0, height: "120px", zIndex: 35,
-        opacity: visible ? 1 : 0, transition: "opacity 0.4s ease",
+        opacity: visible ? 1 : 0, transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         pointerEvents: visible ? "auto" : "none",
         cursor: "grab", touchAction: "none", userSelect: "none",
       }}
@@ -174,7 +174,7 @@ function TriggerSwipe({ visible, onFire }) {
       <div style={{ position: "absolute", bottom: "16px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
         <div style={{
           transform: `translateY(${-displayY * 0.25}px)`,
-          transition: dragging ? "none" : "transform 0.35s cubic-bezier(0.34,1.4,0.64,1)",
+          transition: dragging ? "none" : "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
           animation: visible && !dragging ? "chevronBounce 1.5s ease-in-out infinite" : "none",
         }}>
           <svg width="28" height="14" viewBox="0 0 24 14" fill="none">
@@ -219,7 +219,7 @@ function TriggerAuto({ visible, onFire }) {
     <div style={{
       position: "absolute", bottom: "28px", right: "24px", zIndex: 35,
       opacity: visible ? 1 : 0, transform: `scale(${visible ? 1 : 0.6})`,
-      transition: "opacity 0.4s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)",
+      transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.5s cubic-bezier(0.34,1.56,0.64,1)",
       display: "flex", flexDirection: "column", alignItems: "center", gap: "5px",
     }}>
       <div style={{ position: "relative", width: "44px", height: "44px" }}>
@@ -271,7 +271,7 @@ function TriggerPull({ visible, onFire }) {
         height: `${displayY * 1.2}px`,
         background: "linear-gradient(180deg, rgba(237,238,241,0.95), rgba(249,249,249,1))",
         borderTop: displayY > 2 ? "1px solid rgba(255,255,255,0.8)" : "none",
-        transition: dragging ? "none" : "height 0.35s cubic-bezier(0.34,1.4,0.64,1)",
+        transition: dragging ? "none" : "height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
         overflow: "hidden", display: "flex", alignItems: "center", padding: "0 24px",
       }}>
         {displayY > 15 && (
@@ -293,7 +293,7 @@ function TriggerPull({ visible, onFire }) {
         onTouchEnd={onE} onTouchCancel={onE}
         style={{
           position: "absolute", bottom: 0, left: 0, right: 0, height: "80px", zIndex: 35,
-          opacity: visible ? 1 : 0, transition: "opacity 0.4s ease",
+          opacity: visible ? 1 : 0, transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           pointerEvents: visible ? "auto" : "none",
           cursor: "grab", touchAction: "none", userSelect: "none",
           display: "flex", flexDirection: "column", alignItems: "center",
@@ -343,15 +343,19 @@ function BridgeA({ playing, onDone }) {
   return (
     <div style={{ padding: "48px 24px 90px", display: "flex", flexDirection: "column", gap: "20px", height: "100%", justifyContent: "center", perspective: "1200px", perspectiveOrigin: "50% 45%", transformStyle: "preserve-3d" }}>
       <Glass level={2} z={40} rx={1.2} ry={-0.5} style={{ padding: "24px" }}>
-        <DNum arrived={beat >= 1} glow={beat === 1 && count10 === 10} z={55}>{count10 > 0 ? `${count10}` : "0"}</DNum>
-        <Cap vis={beat >= 1} delay={0.2} z={12} style={{ marginTop: "8px" }}>trillion yen. Japan is rebuilding its chip industry.</Cap>
+        <div role="group" aria-live="polite" aria-label={`${count10} trillion yen. Japan is rebuilding its chip industry.`}>
+          <DNum arrived={beat >= 1} glow={beat === 1 && count10 === 10} z={55}>{count10 > 0 ? `${count10}` : "0"}</DNum>
+          <Cap vis={beat >= 1} delay={0.2} z={12} style={{ marginTop: "8px" }}>trillion yen. Japan is rebuilding its chip industry.</Cap>
+        </div>
       </Glass>
       <Glass level={2} z={25} rx={0.8} ry={0.4} style={{ padding: "24px", opacity: beat >= 2 ? 1 : 0 }}>
-        <DNum arrived={beat >= 3} glow={beat === 3} z={50}>{count47.toLocaleString()}</DNum>
-        <Cap vis={beat >= 3} delay={0.15} z={10} style={{ marginTop: "8px" }}>jobs being created. Kumamoto is set to attract waves of high-income engineers.</Cap>
+        <div role="group" aria-live="polite" aria-label={`${count47.toLocaleString()} jobs being created. Kumamoto is set to attract waves of high-income engineers.`}>
+          <DNum arrived={beat >= 3} glow={beat === 3} z={50}>{count47.toLocaleString()}</DNum>
+          <Cap vis={beat >= 3} delay={0.15} z={10} style={{ marginTop: "8px" }}>jobs being created. Kumamoto is set to attract waves of high-income engineers.</Cap>
+        </div>
       </Glass>
       <ZLayer z={10}>
-        <div style={{ opacity: beat >= 4 ? 1 : 0, transform: beat >= 4 ? "translateY(0)" : "translateY(14px)", transition: "all 0.7s ease", paddingLeft: "4px" }}>
+        <div style={{ opacity: beat >= 4 ? 1 : 0, transform: beat >= 4 ? "translateY(0)" : "translateY(14px)", transition: "all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)", paddingLeft: "4px" }}>
           <ALine progress={lineP} width="60%" z={5} />
           <Cap vis={beat >= 4} delay={0.3} z={5} style={{ marginTop: "12px" }}>High-income engineers are arriving. Housing demand will follow.</Cap>
         </div>
@@ -413,15 +417,19 @@ function BridgeF({ playing, onDone }) {
   return (
     <div style={{ padding: "48px 24px 90px", display: "flex", flexDirection: "column", gap: "20px", height: "100%", justifyContent: "center", perspective: "1200px", perspectiveOrigin: "50% 45%", transformStyle: "preserve-3d" }}>
       <Glass level={2} z={45} rx={1} ry={-0.3} style={{ padding: "24px", opacity: beat >= 1 ? 1 : 0 }}>
-        <DNum arrived={beat >= 2} z={60}><TN value="10" rolling={beat >= 1} /></DNum>
-        <Cap vis={beat >= 2} delay={0.1} z={15} style={{ marginTop: "8px" }}><TW text="trillion yen committed to semiconductor sovereignty." active={beat >= 2} delay={200} /></Cap>
+        <div role="group" aria-live="polite" aria-label="10 trillion yen committed to semiconductor sovereignty.">
+          <DNum arrived={beat >= 2} z={60}><TN value="10" rolling={beat >= 1} /></DNum>
+          <Cap vis={beat >= 2} delay={0.1} z={15} style={{ marginTop: "8px" }}><TW text="trillion yen committed to semiconductor sovereignty." active={beat >= 2} delay={200} /></Cap>
+        </div>
       </Glass>
       <Glass level={2} z={30} rx={0.6} ry={0.5} style={{ padding: "24px", opacity: beat >= 3 ? 1 : 0 }}>
-        <DNum arrived={beat >= 4} z={50}><TN value="47,000" rolling={beat >= 3} /></DNum>
-        <Cap vis={beat >= 4} delay={0.1} z={10} style={{ marginTop: "8px" }}><TW text="new jobs. The largest workforce migration in decades." active={beat >= 4} delay={200} /></Cap>
+        <div role="group" aria-live="polite" aria-label="47,000 new jobs. The largest workforce migration in decades.">
+          <DNum arrived={beat >= 4} z={50}><TN value="47,000" rolling={beat >= 3} /></DNum>
+          <Cap vis={beat >= 4} delay={0.1} z={10} style={{ marginTop: "8px" }}><TW text="new jobs. The largest workforce migration in decades." active={beat >= 4} delay={200} /></Cap>
+        </div>
       </Glass>
       <ZLayer z={12}>
-        <div style={{ opacity: beat >= 5 ? 1 : 0, transition: "opacity 0.5s ease", paddingLeft: "4px" }}>
+        <div style={{ opacity: beat >= 5 ? 1 : 0, transition: "opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)", paddingLeft: "4px" }}>
           <div style={{ width: "100%", height: "3px", background: NEUTRAL_200, borderRadius: "2px", overflow: "hidden" }}>
             <div style={{ width: `${barP * 100}%`, height: "100%", background: `linear-gradient(90deg, transparent, ${AMBER})`, borderRadius: "2px", boxShadow: "0 0 8px rgba(251,185,49,0.4)" }} />
           </div>
@@ -469,12 +477,14 @@ function BridgeG({ playing, onDone }) {
                     <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.75rem", fontWeight: 500, color: NEUTRAL_600, letterSpacing: "0.02em" }}>{sl.label}</span>
                   </div>
                 </ZLayer>
-                {sl.number && (
-                  <DNum arrived={act} glow={act} z={40}>
-                    {sl.number}{sl.suffix && <span style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "2rem", color: NEUTRAL_800, marginLeft: "4px" }}>{sl.suffix}</span>}
-                  </DNum>
-                )}
-                <Cap vis={act} delay={0.2} z={8}>{sl.text}</Cap>
+                <div role="group" aria-live="polite" aria-label={sl.number ? `${sl.number}${sl.suffix || ""}. ${sl.text}` : sl.text}>
+                  {sl.number && (
+                    <DNum arrived={act} glow={act} z={40}>
+                      {sl.number}{sl.suffix && <span style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "2rem", color: NEUTRAL_800, marginLeft: "4px" }}>{sl.suffix}</span>}
+                    </DNum>
+                  )}
+                  <Cap vis={act} delay={0.2} z={8}>{sl.text}</Cap>
+                </div>
               </Glass>
             </div>
           );
@@ -505,7 +515,20 @@ export default function App({ variant } = {}) {
   const handleFire = useCallback(() => setTransitioned(true), []);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Noto Sans JP', sans-serif" }}>
+    <div data-proto="step-4" style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Noto Sans JP', sans-serif" }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-4"] *,
+          [data-proto="step-4"] *::before,
+          [data-proto="step-4"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
         @keyframes bloomPulse { 0%{opacity:0;transform:scale(0.5)} 40%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.4)} }

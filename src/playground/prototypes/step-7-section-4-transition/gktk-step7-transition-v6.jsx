@@ -7,11 +7,11 @@ import { useState, useRef, useEffect } from "react";
    ─────────────────────────────────────────────────────── */
 
 const EASING = {
-  gentle: "cubic-bezier(0.23, 0.86, 0.39, 0.96)",
-  settle: "cubic-bezier(0.22, 1, 0.36, 1)",
+  gentle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+  settle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-  power: "cubic-bezier(0.16, 1, 0.3, 1)",
-  heavy: "cubic-bezier(0.7, 0, 0.3, 1)",
+  power: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+  heavy: "cubic-bezier(0.4, 0, 0.2, 1)",
 };
 
 const C = {
@@ -27,7 +27,7 @@ const an = (el, kf, opts) => {
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 const Noise = () => (
-  <svg width="0" height="0" style={{position:"absolute"}}>
+  <svg width="0" height="0" style={{position:"absolute"}} aria-hidden="true">
     <defs>
       <filter id="ng">
         <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
@@ -44,7 +44,7 @@ const MeshBg = () => (
     position:"absolute",inset:0,zIndex:0,
     background:`
       radial-gradient(ellipse 80% 50% at 20% 80%,rgba(251,185,49,0.06) 0%,transparent 60%),
-      radial-gradient(ellipse 60% 70% at 80% 20%,rgba(200,210,230,0.08) 0%,transparent 50%),
+      radial-gradient(ellipse 60% 70% at 80% 20%,rgba(237, 238, 241, 0.08) 0%,transparent 50%),
       radial-gradient(ellipse 120% 80% at 50% 60%,${C.amber100}33 0%,transparent 40%),
       linear-gradient(180deg,#FAFAFA 0%,${C.bg} 100%)
     `,
@@ -156,13 +156,13 @@ const MapFace = ({ style={} }) => (
     <svg viewBox="0 0 390 844" style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0.13}}>
       {[100,180,260,340,420,500,580,660,740].map((y,i)=>(
         <path key={i} d={`M 0 ${y} Q ${90+i*18} ${y-25-i*7} 195 ${y-10+i*4} T 390 ${y+8}`}
-          fill="none" stroke="#6B7280" strokeWidth={0.8} />
+          fill="none" stroke="#5B616E" strokeWidth={0.8} />
       ))}
     </svg>
     <svg viewBox="0 0 390 844" style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0.15}}>
       <path d="M 50 0 L 50 280 Q 50 310 80 310 L 180 310 Q 210 310 210 340 L 210 844" fill="none" stroke="#9CA3AF" strokeWidth={2} />
       <path d="M 0 420 L 390 420" fill="none" stroke="#9CA3AF" strokeWidth={2.5} />
-      <path d="M 280 0 L 280 180 Q 280 210 260 230 L 180 380" fill="none" stroke="#6B7280" strokeWidth={1} />
+      <path d="M 280 0 L 280 180 Q 280 210 260 230 L 180 380" fill="none" stroke="#5B616E" strokeWidth={1} />
     </svg>
     <div style={{position:"absolute",top:"28%",left:"15%",width:"55%",height:"22%",
       background:"rgba(251,185,49,0.08)",border:"1px solid rgba(251,185,49,0.25)",borderRadius:8}} />
@@ -376,7 +376,7 @@ const Descent = ({ resolveRef, tapRef, headingRef, bodyRef, started }) => {
             position: "absolute", inset: 0,
             background: `
               radial-gradient(ellipse 80% 50% at 20% 80%,rgba(251,185,49,0.06) 0%,transparent 60%),
-              radial-gradient(ellipse 60% 70% at 80% 20%,rgba(200,210,230,0.08) 0%,transparent 50%),
+              radial-gradient(ellipse 60% 70% at 80% 20%,rgba(237, 238, 241, 0.08) 0%,transparent 50%),
               linear-gradient(180deg, rgba(251,185,49,0.06) 0%, ${C.bg} 25%)
             `,
           }} />
@@ -631,15 +631,35 @@ export default function Step7V6({ variant } = {}) {
   const tap = () => { if (!go) setGo(true); };
 
   return (
-    <div style={{
+    <div data-proto="step-7" style={{
       minHeight:"100vh",background:"#EDEEF1",display:"flex",flexDirection:"column",
       alignItems:"center",justifyContent:"center",padding:24,
       fontFamily:"Noto Sans JP,sans-serif",
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-7"] *,
+          [data-proto="step-7"] *::before,
+          [data-proto="step-7"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <Noise />
       <Phone key={`${variant ?? "B"}-${k}`}>
         {v===0 && (
-          <div style={{position:"absolute",inset:0}} onClick={tap}>
+          <div
+            style={{position:"absolute",inset:0}}
+            onClick={tap}
+            role="button"
+            tabIndex={0}
+            aria-label="Continue"
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tap(); } }}
+          >
             <MeshBg />
             <Descent resolveRef={rB} tapRef={tB} headingRef={hB} bodyRef={bB} started={go} />
             <Resolve innerRef={rB} headingRef={hB} bodyRef={bB} />
@@ -648,7 +668,14 @@ export default function Step7V6({ variant } = {}) {
           </div>
         )}
         {v===1 && (
-          <div style={{position:"absolute",inset:0}} onClick={tap}>
+          <div
+            style={{position:"absolute",inset:0}}
+            onClick={tap}
+            role="button"
+            tabIndex={0}
+            aria-label="Continue"
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tap(); } }}
+          >
             <MeshBg />
             <Warp resolveRef={rD} tapRef={tD} headingRef={hD} bodyRef={bD} started={go} />
             <Resolve innerRef={rD} headingRef={hD} bodyRef={bD} />

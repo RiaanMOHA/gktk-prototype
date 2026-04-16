@@ -11,14 +11,14 @@ const fmtEm = v=>`${v.toFixed(2)}x`;
 const fmtYen = v=>`Â¥${(v/1e9).toFixed(2)}B`;
 
 const EASE = {
-  gentle:"cubic-bezier(0.23,0.86,0.39,0.96)",
-  settle:"cubic-bezier(0.22,1,0.36,1)",
+  gentle:"cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+  settle:"cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   smooth:"cubic-bezier(0.25,0.46,0.45,0.94)",
   spring:"cubic-bezier(0.34,1.56,0.64,1)",
 };
 
 const NoiseGrain = ({opacity=0.035,id="nf"})=>(
-  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none",mixBlendMode:"overlay",opacity,zIndex:90}}>
+  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none",mixBlendMode:"overlay",opacity,zIndex:90}} aria-hidden="true">
     <filter id={id}><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/></filter>
     <rect width="100%" height="100%" filter={`url(#${id})`}/>
   </svg>
@@ -54,14 +54,14 @@ const Glass = ({level=1,children,style={}})=>{
 const ScenarioTabs = ({scenario,set})=>(
   <div style={{display:"flex",gap:6}}>
     {["bull","normal","bear"].map(s=>(
-      <button key={s} onClick={()=>set(s)} style={{
+      <button className="step-16-tab" key={s} onClick={()=>set(s)} style={{
         padding:"7px 18px",borderRadius:12,border:"none",cursor:"pointer",
         fontSize:12,fontWeight:500,fontFamily:"'Noto Sans JP',sans-serif",textTransform:"capitalize",
         background:scenario===s?"rgba(255,255,255,0.88)":"transparent",
         color:scenario===s?"#25272C":"#8E8F8F",
         backdropFilter:scenario===s?"blur(12px)":"none",
         boxShadow:scenario===s?"0 2px 8px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8)":"none",
-        transition:"all 0.25s cubic-bezier(0.22,1,0.36,1)",
+        transition:"all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       }}>{s}</button>
     ))}
   </div>
@@ -89,29 +89,40 @@ const YearSlider = ({year,set})=>{
     return()=>{window.removeEventListener("mouseup",up);window.removeEventListener("touchend",up);};
   },[]);
 
+  const onKey=(e)=>{
+    if(e.key==="ArrowLeft"||e.key==="ArrowDown"){e.preventDefault();if(idx>0)set(years[idx-1]);}
+    else if(e.key==="ArrowRight"||e.key==="ArrowUp"){e.preventDefault();if(idx<years.length-1)set(years[idx+1]);}
+    else if(e.key==="Home"){e.preventDefault();set(years[0]);}
+    else if(e.key==="End"){e.preventDefault();set(years[years.length-1]);}
+  };
+
   return(
     <div style={{padding:"0 4px"}}>
       <div ref={trackRef} onMouseDown={onDown} onMouseMove={onMove} onMouseUp={onUp}
         onTouchStart={onDown} onTouchMove={onMove} onTouchEnd={onUp}
-        style={{position:"relative",height:40,cursor:"pointer",touchAction:"none",userSelect:"none"}}>
+        role="slider" tabIndex={0} onKeyDown={onKey}
+        aria-label="Holding period, years"
+        aria-valuemin={years[0]} aria-valuemax={years[years.length-1]} aria-valuenow={year}
+        aria-valuetext={`${year} years`}
+        style={{position:"relative",height:40,cursor:"pointer",touchAction:"none",userSelect:"none",outline:"none"}}>
         <div style={{position:"absolute",top:16,left:0,right:0,height:4,borderRadius:2,background:"rgba(0,0,0,0.06)"}}/>
         <div style={{position:"absolute",top:16,left:0,width:`${pct}%`,height:4,borderRadius:2,
           background:"linear-gradient(90deg,#FBB931 0%,rgba(251,185,49,0.6) 100%)",
           boxShadow:"0 0 6px rgba(251,185,49,0.2)",
-          transition:"width 0.25s cubic-bezier(0.22,1,0.36,1)"}}/>
+          transition:"width 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)"}}/>
         <div style={{
           position:"absolute",top:6,left:`${pct}%`,transform:"translateX(-50%)",
           width:24,height:24,borderRadius:12,
           background:"#FBB931",border:"3px solid #FEFEFE",
           boxShadow:"0 2px 10px rgba(251,185,49,0.4),0 1px 3px rgba(0,0,0,0.1)",
-          transition:"left 0.25s cubic-bezier(0.22,1,0.36,1)",
+          transition:"left 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}/>
         {years.map((y,i)=>(
           <div key={y} style={{
             position:"absolute",top:30,left:`${i/(years.length-1)*100}%`,transform:"translateX(-50%)",
             fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,fontWeight:year===y?600:400,
             color:year===y?"#25272C":"#8E8F8F",
-            transition:"all 0.25s cubic-bezier(0.22,1,0.36,1)",
+            transition:"all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           }}>{y}Y</div>
         ))}
       </div>
@@ -157,9 +168,9 @@ const BearReveal = ({scenario,data})=>{
 /* ââ deal terms (50% reduced, merged) ââ */
 const DealTerms = ({expanded,set})=>(
   <div style={{marginTop:12}}>
-    <button onClick={()=>set(!expanded)} style={{background:"none",border:"none",cursor:"pointer",
+    <button className="step-16-deal" onClick={()=>set(!expanded)} style={{background:"none",border:"none",cursor:"pointer",
       fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#5B616E",display:"flex",alignItems:"center",gap:4,padding:0}}>
-      <span style={{transform:expanded?"rotate(90deg)":"rotate(0)",transition:"transform 0.25s cubic-bezier(0.22,1,0.36,1)",display:"inline-block",fontSize:8}}>&#9654;</span>
+      <span style={{transform:expanded?"rotate(90deg)":"rotate(0)",transition:"transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)",display:"inline-block",fontSize:8}}>&#9654;</span>
       Fund terms and structure
     </button>
     {expanded&&(
@@ -301,31 +312,37 @@ const VariantA = ()=>{
         <div style={{marginBottom:24}}><YearSlider year={year} set={setYear}/></div>
 
         <Glass level={2} style={{padding:"28px 24px",borderRadius:24,marginBottom:16}}>
-          <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#5B616E",marginBottom:8}}>Estimated IRR (pre-tax)</div>
-          <AnimVal value={fmtIrr(d.ip)} size={56}/>
-          <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:12,color:"#5B616E",marginTop:8,fontVariantNumeric:"tabular-nums",
-            transition:"all 0.15s"}}>
-            {fmtIrr(d.ipo)} post-tax
+          <div role="group" aria-label={`Estimated IRR (pre-tax): ${fmtIrr(d.ip)} percent. ${fmtIrr(d.ipo)} percent post-tax.`}>
+            <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#5B616E",marginBottom:8}}>Estimated IRR (pre-tax)</div>
+            <AnimVal value={fmtIrr(d.ip)} size={56}/>
+            <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:12,color:"#5B616E",marginTop:8,fontVariantNumeric:"tabular-nums",
+              transition:"all 0.15s"}}>
+              {fmtIrr(d.ipo)} post-tax
+            </div>
           </div>
           <div style={{marginTop:18,height:3,borderRadius:2,
             width:`${Math.min(d.ip/20*100,100)}%`,
             background:"linear-gradient(90deg,#FBB931 0%,rgba(251,185,49,0.3) 100%)",
             boxShadow:"0 0 8px rgba(251,185,49,0.2)",
-            transition:"width 0.35s cubic-bezier(0.22,1,0.36,1)"}}/>
+            transition:"width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)"}}/>
         </Glass>
 
         <div style={{display:"flex",gap:8,marginBottom:10}}>
           <Glass level={1} style={{flex:1,padding:"14px 16px",borderRadius:14}}>
-            <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#5B616E",marginBottom:4}}>Equity multiple</div>
-            <AnimVal value={fmtEm(d.ep)} size={20}/>
-            <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#8E8F8F",marginTop:3,fontVariantNumeric:"tabular-nums",
-              transition:"all 0.15s"}}>{fmtEm(d.epo)} post-tax</div>
+            <div role="group" aria-label={`Equity multiple: ${fmtEm(d.ep)}. ${fmtEm(d.epo)} post-tax.`}>
+              <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#5B616E",marginBottom:4}}>Equity multiple</div>
+              <AnimVal value={fmtEm(d.ep)} size={20}/>
+              <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#8E8F8F",marginTop:3,fontVariantNumeric:"tabular-nums",
+                transition:"all 0.15s"}}>{fmtEm(d.epo)} post-tax</div>
+            </div>
           </Glass>
           <Glass level={1} style={{flex:1,padding:"14px 16px",borderRadius:14}}>
-            <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#5B616E",marginBottom:4}}>Total return</div>
-            <AnimVal value={fmtYen(d.rp)} size={20}/>
-            <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#8E8F8F",marginTop:3,fontVariantNumeric:"tabular-nums",
-              transition:"all 0.15s"}}>{fmtYen(d.rpo)} post-tax</div>
+            <div role="group" aria-label={`Total return: ${fmtYen(d.rp)} JPY. ${fmtYen(d.rpo)} JPY post-tax.`}>
+              <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#5B616E",marginBottom:4}}>Total return</div>
+              <AnimVal value={fmtYen(d.rp)} size={20}/>
+              <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#8E8F8F",marginTop:3,fontVariantNumeric:"tabular-nums",
+                transition:"all 0.15s"}}>{fmtYen(d.rpo)} post-tax</div>
+            </div>
           </Glass>
         </div>
 
@@ -366,7 +383,7 @@ const VariantC = ()=>{
             <div style={{width:80,textAlign:"right",fontFamily:"'Noto Sans JP',sans-serif",fontSize:10,color:"#8E8F8F"}}>Post-tax</div>
           </div>
           {rows.map((r,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"center",
+            <div key={i} role="group" aria-label={`${r.label}: ${r.pre} pre-tax, ${r.post} post-tax.`} style={{display:"flex",alignItems:"center",
               padding:r.hero?"14px 18px":"10px 18px",
               background:r.hero?"rgba(251,185,49,0.06)":"transparent",
               borderBottom:i<rows.length-1?"1px solid rgba(0,0,0,0.04)":"none",
@@ -416,8 +433,25 @@ export default function Step16FinancialsV3({variant}={}){
   const resolved=variant==="C"?"C":"A";
   const C={A:VariantA,C:VariantC}[resolved];
   return(
-    <div style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",
+    <div data-proto="step-16" style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",
       padding:24,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-16"] *,
+          [data-proto="step-16"] *::before,
+          [data-proto="step-16"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+        .step-16-tab { transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .step-16-tab:active { transform: scale(0.97); }
+        .step-16-deal { transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-16-deal:active { transform: scale(0.97); }
+      `}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
         @keyframes bearFade{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}

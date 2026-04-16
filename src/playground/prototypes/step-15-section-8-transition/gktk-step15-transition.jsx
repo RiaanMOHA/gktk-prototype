@@ -1,14 +1,14 @@
 import { useState, useRef, useCallback } from "react";
 
 const EASE = {
-  gentle:"cubic-bezier(0.23,0.86,0.39,0.96)",
-  settle:"cubic-bezier(0.22,1,0.36,1)",
+  gentle:"cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+  settle:"cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   smooth:"cubic-bezier(0.25,0.46,0.45,0.94)",
   spring:"cubic-bezier(0.34,1.56,0.64,1)",
 };
 
 const NoiseGrain = ({opacity=0.035,id="ng"})=>(
-  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none",mixBlendMode:"overlay",opacity,zIndex:90}}>
+  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none",mixBlendMode:"overlay",opacity,zIndex:90}} aria-hidden="true">
     <filter id={id}><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/></filter>
     <rect width="100%" height="100%" filter={`url(#${id})`}/>
   </svg>
@@ -74,8 +74,21 @@ export default function Step15TransitionV4(){
   };
 
   return(
-    <div style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",
+    <div data-proto="step-15" style={{minHeight:"100vh",background:"#EDEEF1",display:"flex",alignItems:"center",justifyContent:"center",
       padding:24,fontFamily:"'Noto Sans JP',sans-serif"}}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-15"] *,
+          [data-proto="step-15"] *::before,
+          [data-proto="step-15"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
         @keyframes tapPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
@@ -92,7 +105,14 @@ export default function Step15TransitionV4(){
           <div style={{position:"absolute",top:12,left:"50%",transform:"translateX(-50%)",width:126,height:37,borderRadius:20,background:"#000",zIndex:100}}/>
 
           {/* content */}
-          <div style={{position:"absolute",inset:0}} onClick={phase==="ready"?play:reset}>
+          <div
+            style={{position:"absolute",inset:0}}
+            onClick={phase==="ready"?play:reset}
+            role="button"
+            tabIndex={0}
+            aria-label={phase==="ready"?"Tap to continue":"Reset"}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (phase==="ready") play(); else reset(); } }}
+          >
             <MeshGradient warm={phase==="ready"}/>
             <NoiseGrain opacity={0.035} id="nB"/>
 
@@ -119,7 +139,7 @@ export default function Step15TransitionV4(){
             </div>
 
             {/* tap indicator */}
-            <div style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:30,opacity:showTap?1:0,transition:"opacity 0.4s",display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+            <div aria-live="polite" style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:30,opacity:showTap?1:0,transition:"opacity 0.4s",display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
               <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#8E8F8F",letterSpacing:"0.015em"}}>Tap to continue</div>
               <div style={{width:4,height:4,borderRadius:"50%",background:"#FBB931",boxShadow:"0 0 8px rgba(251,185,49,0.4)",animation:"tapPulse 2s ease-in-out infinite"}}/>
             </div>
