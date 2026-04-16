@@ -286,7 +286,7 @@ export const STEPS: StepDrawer[] = [
     index: 6,
     id: "step-6-section-3-map",
     label: "Section 3 — map",
-    status: "blocked",
+    status: "locked",
     prototypes: [
       {
         filename: "map-prototype-v1.html",
@@ -382,7 +382,7 @@ export const STEPS: StepDrawer[] = [
     index: 12,
     id: "step-12-section-6-product-hardware",
     label: "Section 6 — product hardware",
-    status: "blocked",
+    status: "locked",
     prototypes: [
       {
         filename: "map-prototype-v1.html",

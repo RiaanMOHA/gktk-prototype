@@ -10,7 +10,7 @@ const C = {
   eSh: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
 };
 const F = { h: "'REM', sans-serif", b: "'Noto Sans JP', sans-serif" };
-const E = { s: "cubic-bezier(0.22,1,0.36,1)" };
+const E = { s: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" };
 const GAPS = ["Medical navigation", "Mental health support", "Education integration", "Spouse career support", "Operational friction"];
 const VARIANTS = [
   { id: "A", label: "A: the flip" },
@@ -19,7 +19,7 @@ const VARIANTS = [
   { id: "D", label: "D: the sweep" },
 ];
 
-function NoiseDef() { return (<svg width="0" height="0" style={{ position: "absolute" }}><defs><filter id="n10"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer><feBlend in="SourceGraphic" mode="overlay" /></filter></defs></svg>); }
+function NoiseDef() { return (<svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true"><defs><filter id="n10"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer><feBlend in="SourceGraphic" mode="overlay" /></filter></defs></svg>); }
 function Glass({ children, style, elev, innerRef }) {
   const b = elev ? { background: C.eBg, border: `1px solid ${C.eBd}`, boxShadow: C.eSh } : { background: C.pBg, border: `1px solid ${C.pBd}`, boxShadow: C.pSh };
   return (<div ref={innerRef} style={{ borderRadius: 16, backdropFilter: "blur(20px) saturate(1.4)", WebkitBackdropFilter: "blur(20px) saturate(1.4)", position: "relative", overflow: "hidden", ...b, ...style }}>
@@ -33,7 +33,7 @@ function Phone({ children }) {
   return (<div style={{ width: 375, height: 812, borderRadius: 54, background: "#1A1A1E", padding: 10, position: "relative", boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.12)" }}>
     <div style={{ position: "absolute", inset: 0, borderRadius: 54, border: "1.5px solid rgba(255,255,255,0.08)", pointerEvents: "none", zIndex: 10 }} />
     <div style={{ position: "absolute", left: -2.5, top: 140, width: 3, height: 32, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", left: -2.5, top: 185, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", left: -2.5, top: 245, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", right: -2.5, top: 185, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} />
-    <div style={{ width: "100%", height: "100%", borderRadius: 44, overflow: "hidden", position: "relative", background: `radial-gradient(ellipse 130% 70% at 20% 20%,rgba(200,210,230,0.30) 0%,transparent 50%),radial-gradient(ellipse 100% 60% at 80% 80%,rgba(220,200,180,0.20) 0%,transparent 50%),${C.bg}` }}>
+    <div style={{ width: "100%", height: "100%", borderRadius: 44, overflow: "hidden", position: "relative", background: `radial-gradient(ellipse 130% 70% at 20% 20%,rgba(237, 238, 241, 0.3) 0%,transparent 50%),radial-gradient(ellipse 100% 60% at 80% 80%,rgba(254, 242, 201, 0.2) 0%,transparent 50%),${C.bg}` }}>
       <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 126, height: 36, background: "#000", borderRadius: 20, zIndex: 50 }} />
       {children}
     </div>
@@ -46,7 +46,7 @@ function Img({ label, h, innerRef, style }) {
 }
 function an(el, kf, o) { if (!el) return Promise.resolve(); return el.animate(kf, { fill: "forwards", ...o }).finished; }
 function w(ms) { return new Promise(r => setTimeout(r, ms)); }
-function Dots({ b, t }) { return (<div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, zIndex: 41 }}>{Array.from({ length: t }).map((_, i) => (<div key={i} style={{ width: i === b ? 8 : 5, height: i === b ? 8 : 5, borderRadius: 99, background: i === b ? C.n800 : C.n200, transition: "all 0.25s ease" }} />))}</div>); }
+function Dots({ b, t }) { return (<div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, zIndex: 41 }}>{Array.from({ length: t }).map((_, i) => (<div key={i} style={{ width: i === b ? 8 : 5, height: i === b ? 8 : 5, borderRadius: 99, background: i === b ? C.n800 : C.n200, transition: "all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />))}</div>); }
 function XMark() { return (<span style={{ fontFamily: F.b, fontSize: 14, fontWeight: 600, color: C.n400, lineHeight: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, borderRadius: 6, background: C.n100, flexShrink: 0 }}>{"\u2715"}</span>); }
 function AmberDot({ size = 10 }) { return (<div style={{ width: size, height: size, borderRadius: 99, background: C.amber, flexShrink: 0, boxShadow: "0 0 6px rgba(251,185,49,0.35)" }} />); }
 
@@ -54,7 +54,7 @@ function AmberDot({ size = 10 }) { return (<div style={{ width: size, height: si
 function CtaButton({ innerRef }) {
   return (
     <div ref={innerRef} style={{ opacity: 0 }}>
-      <button style={{ width: "100%", padding: "14px 0", borderRadius: 14, border: "none", background: C.amber, fontFamily: F.h, fontSize: 15, fontWeight: 600, color: C.n950, cursor: "pointer", letterSpacing: "-0.01em" }}>
+      <button className="step-10-cta" style={{ width: "100%", padding: "14px 0", borderRadius: 14, border: "none", background: C.amber, fontFamily: F.h, fontSize: 15, fontWeight: 600, color: C.n950, cursor: "pointer", letterSpacing: "-0.01em" }}>
         View Moha Map
       </button>
     </div>
@@ -105,8 +105,10 @@ function renderB1(s) {
       <Img label="Kusunoki apartment complex" h={200} innerRef={s("1i")} style={{ opacity: 0 }} />
       <div ref={s("1s")} style={{ opacity: 0, position: "absolute", bottom: -20, right: 12 }}>
         <Glass elev style={{ padding: "8px 16px", borderRadius: 14, display: "flex", alignItems: "baseline", gap: 6 }}>
-          <span style={{ fontFamily: F.h, fontSize: 40, fontWeight: 600, color: C.n950, lineHeight: 1, letterSpacing: "-0.03em" }}>42</span>
-          <span style={{ fontFamily: F.b, fontSize: 13, fontWeight: 500, color: C.n600 }}>units</span>
+          <span role="group" aria-label="42 units" style={{ display: "contents" }}>
+            <span style={{ fontFamily: F.h, fontSize: 40, fontWeight: 600, color: C.n950, lineHeight: 1, letterSpacing: "-0.03em" }}>42</span>
+            <span style={{ fontFamily: F.b, fontSize: 13, fontWeight: 500, color: C.n600 }}>units</span>
+          </span>
         </Glass>
       </div>
     </div>
@@ -128,12 +130,16 @@ function renderB2(s) {
       <Img label="Formosa Hills" h={300} innerRef={s("2i")} style={{ opacity: 0 }} />
       <div ref={s("2s")} style={{ opacity: 0, position: "absolute", bottom: -18, left: 12, right: 12, display: "flex", gap: 8 }}>
         <Glass elev style={{ padding: "8px 12px", flex: 1, borderRadius: 12 }}>
-          <span style={{ fontFamily: F.h, fontSize: 28, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>65</span>
-          <span style={{ fontFamily: F.b, fontSize: 10, color: C.n600, fontWeight: 500 }}>units</span>
+          <span role="group" aria-label="65 units" style={{ display: "contents" }}>
+            <span style={{ fontFamily: F.h, fontSize: 28, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>65</span>
+            <span style={{ fontFamily: F.b, fontSize: 10, color: C.n600, fontWeight: 500 }}>units</span>
+          </span>
         </Glass>
         <Glass elev style={{ padding: "8px 12px", flex: 1, borderRadius: 12 }}>
-          <span style={{ fontFamily: F.h, fontSize: 28, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>80%</span>
-          <span style={{ fontFamily: F.b, fontSize: 10, color: C.n600, fontWeight: 500 }}>Taiwanese guests</span>
+          <span role="group" aria-label="80 percent Taiwanese guests" style={{ display: "contents" }}>
+            <span style={{ fontFamily: F.h, fontSize: 28, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>80%</span>
+            <span style={{ fontFamily: F.b, fontSize: 10, color: C.n600, fontWeight: 500 }}>Taiwanese guests</span>
+          </span>
         </Glass>
       </div>
     </div>
@@ -158,7 +164,7 @@ function TransformBeat({ solved, onSolve, s, variant, ctaRef }) {
       </div>
 
       {/* heading: unsolved is visible by default, solved fades in on top */}
-      <div style={{ position: "relative", marginBottom: 16, minHeight: 28 }}>
+      <div aria-live="polite" style={{ position: "relative", marginBottom: 16, minHeight: 28 }}>
         <p ref={s("thOld")} style={{ fontFamily: F.b, fontSize: 12, fontWeight: 500, color: C.n600, margin: 0, letterSpacing: "0.02em", position: "absolute", top: 0, left: 0 }}>What they do not solve</p>
         <p ref={s("thNew")} style={{ opacity: 0, fontFamily: F.h, fontSize: 20, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.2, position: "absolute", top: 0, left: 0 }}>MoreHarvest solves all five.</p>
       </div>
@@ -181,7 +187,15 @@ function TransformBeat({ solved, onSolve, s, variant, ctaRef }) {
 
       {/* tap to transform — only when unsolved */}
       {!solved && (
-        <div onClick={onSolve} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}>
+        <div
+          className="step-10-tap"
+          onClick={onSolve}
+          role="button"
+          tabIndex={0}
+          aria-label="Tap to continue"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSolve(e); } }}
+          style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}
+        >
           <span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span>
         </div>
       )}
@@ -253,7 +267,15 @@ function VA({ playing }) {
     <>
       <Dots b={Math.min(beat, totalDots - 1)} t={totalDots} />
       {beat < 3 && (
-        <div onClick={advanceBeat} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}>
+        <div
+          className="step-10-tap"
+          onClick={advanceBeat}
+          role="button"
+          tabIndex={0}
+          aria-label="Tap to continue"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }}
+          style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}
+        >
           <span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span>
         </div>
       )}
@@ -290,7 +312,7 @@ function VB({ playing }) {
   })(); }, [playing, beat, solved]);
   if (!playing) return null;
   return (<><Dots b={Math.min(beat, 3)} t={4} />
-    {beat < 3 && <div onClick={advanceBeat} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
+    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
     {beat === 0 && renderB0(s)}{beat === 1 && renderB1(s)}{beat === 2 && renderB2(s)}
     {beat === 3 && <TransformBeat solved={solved} onSolve={handleSolve} s={s} variant="B" ctaRef={(el) => { r.current["4cta"] = el; }} />}
   </>);
@@ -319,7 +341,7 @@ function VC({ playing }) {
   })(); }, [playing, beat, solved]);
   if (!playing) return null;
   return (<><Dots b={Math.min(beat, 3)} t={4} />
-    {beat < 3 && <div onClick={advanceBeat} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
+    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
     {beat === 0 && renderB0(s)}{beat === 1 && renderB1(s)}{beat === 2 && renderB2(s)}
     {beat === 3 && <TransformBeat solved={solved} onSolve={handleSolve} s={s} variant="C" ctaRef={(el) => { r.current["4cta"] = el; }} />}
   </>);
@@ -348,7 +370,7 @@ function VD({ playing }) {
   })(); }, [playing, beat, solved]);
   if (!playing) return null;
   return (<><Dots b={Math.min(beat, 3)} t={4} />
-    {beat < 3 && <div onClick={advanceBeat} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
+    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
     {beat === 0 && renderB0(s)}{beat === 1 && renderB1(s)}{beat === 2 && renderB2(s)}
     {beat === 3 && <TransformBeat solved={solved} onSolve={handleSolve} s={s} variant="D" ctaRef={(el) => { r.current["4cta"] = el; }} />}
   </>);
@@ -364,7 +386,24 @@ export default function Step10V19({ variant }) {
   const v = variant && MAP[variant] ? variant : "A";
   const Comp = MAP[v];
   return (
-    <div style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 0, fontFamily: F.b }}>
+    <div data-proto="step-10" style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 0, fontFamily: F.b }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-10"] *,
+          [data-proto="step-10"] *::before,
+          [data-proto="step-10"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+        .step-10-cta { transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-10-cta:active { transform: scale(0.97); }
+        .step-10-tap { transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-10-tap:active { transform: scale(0.97); }
+      `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet" />
       <Phone><NoiseDef /><Comp key={v} playing={true} /></Phone>
     </div>

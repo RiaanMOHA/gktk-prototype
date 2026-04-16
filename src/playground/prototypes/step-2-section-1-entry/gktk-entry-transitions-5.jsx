@@ -253,7 +253,20 @@ export default function GKTKEntryTransitions({ variant } = {}) {
   const dashOffset = CIRCUMFERENCE * (1 - holdProgress);
 
   return (
-    <div style={{ fontFamily: "'Noto Sans JP',sans-serif", background: N[100], minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div data-proto="step-2" style={{ fontFamily: "'Noto Sans JP',sans-serif", background: N[100], minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-2"] *,
+          [data-proto="step-2"] *::before,
+          [data-proto="step-2"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
 
@@ -325,7 +338,14 @@ export default function GKTKEntryTransitions({ variant } = {}) {
                 </div>
               )}
               {phase === "bridge" && (
-                <div style={{ position: "absolute", inset: 0, animation: `${t.key}In 0.5s ease-out forwards`, cursor: "pointer" }} onClick={resetToEntry}>
+                <div
+                  style={{ position: "absolute", inset: 0, animation: `${t.key}In 0.5s ease-out forwards`, cursor: "pointer" }}
+                  onClick={resetToEntry}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Reset"
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); resetToEntry(e); } }}
+                >
                   <BridgeContent />
                 </div>
               )}
@@ -340,9 +360,9 @@ export default function GKTKEntryTransitions({ variant } = {}) {
                 onPointerLeave={onHoldEnd}
                 onPointerCancel={onHoldEnd}
               >
-                <div style={{ position: "absolute", inset: 0, borderRadius: "50%", ...glass1, boxShadow: holding ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" : glass1.boxShadow, transition: "box-shadow 0.2s ease" }} />
+                <div style={{ position: "absolute", inset: 0, borderRadius: "50%", ...glass1, boxShadow: holding ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" : glass1.boxShadow, transition: "box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />
                 <svg style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)" }} width="56" height="56">
-                  <circle cx="28" cy="28" r="26" fill="none" stroke={AMBER} strokeWidth="2.5" strokeDasharray={CIRCUMFERENCE} strokeDashoffset={dashOffset} strokeLinecap="round" style={{ transition: holding ? "none" : "stroke-dashoffset 0.3s ease" }} />
+                  <circle cx="28" cy="28" r="26" fill="none" stroke={AMBER} strokeWidth="2.5" strokeDasharray={CIRCUMFERENCE} strokeDashoffset={dashOffset} strokeLinecap="round" style={{ transition: holding ? "none" : "stroke-dashoffset 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />
                 </svg>
                 <svg style={{ position: "absolute", top: 18, left: 18 }} width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M7 4l6 6-6 6" stroke={N[950]} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

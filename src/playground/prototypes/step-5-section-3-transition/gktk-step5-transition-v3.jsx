@@ -6,8 +6,8 @@ const C = {
   amber: "#FBB931", amber100: "#FEF2C9", orange: "#FF9424",
 };
 
-const GENTLE = "cubic-bezier(0.23, 0.86, 0.39, 0.96)";
-const SETTLE = "cubic-bezier(0.22, 1, 0.36, 1)";
+const GENTLE = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+const SETTLE = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
 const an = (el, kf, opts) => {
   if (!el) return Promise.resolve();
@@ -17,7 +17,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
 const NOISE_ID = "gktk-noise";
 const NoiseDefs = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }}>
+  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
     <defs>
       <filter id={NOISE_ID}>
         <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -320,7 +320,7 @@ function GravityWellTransition({ onComplete }) {
     <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}
       onClick={phase === "ready" ? startCollapse : undefined} role="button" tabIndex={0}>
       {(phase === "ready" || phase === "collapsing") && (
-        <div style={{ position: "absolute", inset: 0, opacity: phase === "collapsing" ? 0 : 1, transition: "opacity 1.2s ease" }}>
+        <div style={{ position: "absolute", inset: 0, opacity: phase === "collapsing" ? 0 : 1, transition: "opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}>
           <GhostBridge />
         </div>
       )}
@@ -527,7 +527,7 @@ function ApproachTransition({ onComplete }) {
     <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}
       onClick={phase === "ready" ? startWarp : undefined} role="button" tabIndex={0}>
       {(phase === "ready" || phase === "warping") && (
-        <div style={{ position: "absolute", inset: 0, opacity: phase === "warping" ? 0 : 1, transition: "opacity 1.4s ease" }}>
+        <div style={{ position: "absolute", inset: 0, opacity: phase === "warping" ? 0 : 1, transition: "opacity 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }}>
           <GhostBridge />
         </div>
       )}
@@ -631,11 +631,24 @@ export default function Step5TransitionV3({ variant } = {}) {
   const current = VARIANTS.find(v => v.key === resolved);
 
   return (
-    <div style={{
+    <div data-proto="step-5" style={{
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       padding: 24, fontFamily: "'Noto Sans JP', sans-serif",
       background: "#EDEEF1", minHeight: "100vh",
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-5"] *,
+          [data-proto="step-5"] *::before,
+          [data-proto="step-5"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <NoiseDefs />
       <IPhoneFrame>
         <current.Component key={`${resolved}-${flowKey}`} onComplete={() => setFlowKey(k => k + 1)} />

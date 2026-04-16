@@ -13,12 +13,12 @@ const C = {
 };
 
 const EASING = {
-  gentle: "cubic-bezier(0.23, 0.86, 0.39, 0.96)",
-  settle: "cubic-bezier(0.22, 1, 0.36, 1)",
+  gentle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+  settle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
 };
 
 const NoiseGrain = ({ id = "noise" }) => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }}>
+  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
     <defs>
       <filter id={id}>
         <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -76,12 +76,16 @@ const GhostBridge = ({ containerRef }) => (
     <div style={{ position: "relative", zIndex: 1 }}>
       <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, fontWeight: 500, color: C.n600, letterSpacing: "0.01em", marginBottom: 16, textAlign: "left" }}>The investment</div>
       <Glass level={2} style={{ padding: "20px 16px", marginBottom: 12 }}>
-        <div style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 28, color: C.n950, letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "left" }}>10 trillion yen</div>
-        <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: C.n800, lineHeight: 1.5, marginTop: 6, textAlign: "left" }}>Total semiconductor investment committed to Kumamoto prefecture</div>
+        <div role="group" aria-label="10 trillion yen. Total semiconductor investment committed to Kumamoto prefecture.">
+          <div style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 28, color: C.n950, letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "left" }}>10 trillion yen</div>
+          <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: C.n800, lineHeight: 1.5, marginTop: 6, textAlign: "left" }}>Total semiconductor investment committed to Kumamoto prefecture</div>
+        </div>
       </Glass>
       <Glass level={1} style={{ padding: "14px 16px" }}>
-        <div style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 20, color: C.n950, letterSpacing: "-0.015em", textAlign: "left" }}>47,000 jobs</div>
-        <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: C.n800, lineHeight: 1.5, marginTop: 4, textAlign: "left" }}>New positions projected by 2030</div>
+        <div role="group" aria-label="47,000 jobs. New positions projected by 2030.">
+          <div style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 20, color: C.n950, letterSpacing: "-0.015em", textAlign: "left" }}>47,000 jobs</div>
+          <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: C.n800, lineHeight: 1.5, marginTop: 4, textAlign: "left" }}>New positions projected by 2030</div>
+        </div>
       </Glass>
     </div>
   </div>
@@ -118,7 +122,7 @@ const MapDestination = ({ containerRef }) => (
 );
 
 const TapPrompt = ({ containerRef }) => (
-  <div ref={containerRef} style={{ position: "absolute", bottom: 36, left: 0, right: 0, textAlign: "center", opacity: 0, visibility: "hidden" }}>
+  <div ref={containerRef} aria-live="polite" style={{ position: "absolute", bottom: 36, left: 0, right: 0, textAlign: "center", opacity: 0, visibility: "hidden" }}>
     <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.4)", letterSpacing: "0.02em" }}>Tap to continue</div>
   </div>
 );
@@ -261,7 +265,12 @@ export default function Step11TransitionV2({ variant } = {}) {
 
   return (
     <div
+      data-proto="step-11"
       onClick={replay}
+      role="button"
+      tabIndex={0}
+      aria-label="Replay"
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && done) { e.preventDefault(); replay(); } }}
       style={{
         minHeight: "100vh", background: "#EDEEF1",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
@@ -269,6 +278,19 @@ export default function Step11TransitionV2({ variant } = {}) {
         cursor: done ? "pointer" : "default",
       }}
     >
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-11"] *,
+          [data-proto="step-11"] *::before,
+          [data-proto="step-11"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <NoiseGrain />
       <PhoneFrame>
         <div key={`${resolved}-${key}`} style={{ position: "absolute", inset: 0, borderRadius: 34, overflow: "hidden" }}>

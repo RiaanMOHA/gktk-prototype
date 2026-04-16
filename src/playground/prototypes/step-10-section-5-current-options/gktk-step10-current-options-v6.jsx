@@ -10,7 +10,7 @@ const C = {
 /* ── visionOS material primitives ── */
 const NOISE_ID = "gktk-noise-s10";
 const NoiseDefs = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }}>
+  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
     <defs>
       <filter id={NOISE_ID}>
         <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -135,7 +135,7 @@ function DetailView({ index, onBack }) {
       <div style={{
         opacity: phase ? 1 : 0,
         transform: phase ? "translateZ(0) scale(1)" : "translateZ(-60px) scale(0.85)",
-        transition: "all 0.7s cubic-bezier(0.23, 1, 0.32, 1)", marginBottom: 20,
+        transition: "all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)", marginBottom: 20,
         willChange: "transform, opacity",
       }}>
         <span style={{
@@ -152,20 +152,20 @@ function DetailView({ index, onBack }) {
       <span style={{
         fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 12,
         color: C.n600, letterSpacing: "0.01em", display: "block", marginBottom: 6,
-        opacity: phase ? 1 : 0, transition: "opacity 0.4s ease 0.1s",
+        opacity: phase ? 1 : 0, transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s",
       }}>{d.label}</span>
 
       <h2 style={{
         fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 22,
         lineHeight: 1.15, color: C.n950, letterSpacing: "-0.02em", margin: "0 0 14px 0",
         opacity: phase ? 1 : 0, transform: phase ? "translateY(0)" : "translateY(10px)",
-        transition: "all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.15s",
+        transition: "all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s",
       }}>{d.heading}</h2>
 
       <p style={{
         fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 400, fontSize: 14,
         lineHeight: 1.65, color: C.n800, margin: "0 0 24px 0", maxWidth: 310,
-        opacity: phase ? 1 : 0, transition: "opacity 0.5s ease 0.25s",
+        opacity: phase ? 1 : 0, transition: "opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.25s",
       }}>{d.body}</p>
 
       {d.takeaway && (
@@ -173,7 +173,7 @@ function DetailView({ index, onBack }) {
           padding: "16px 20px",
           opacity: phase ? 1 : 0,
           transform: phase ? "translateY(0) translateZ(10px)" : "translateY(20px) translateZ(-30px)",
-          transition: "all 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.35s",
+          transition: "all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.35s",
         }}>
           <p style={{
             fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 600, fontSize: 15,
@@ -193,7 +193,7 @@ function DetailView({ index, onBack }) {
                 transform: i < vCount
                   ? "translateY(0) translateZ(0) scale(1)"
                   : "translateY(24px) translateZ(-50px) scale(0.93)",
-                transition: "all 0.7s cubic-bezier(0.23, 1, 0.32, 1)",
+                transition: "all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
               }}>
                 <p style={{
                   fontFamily: "'Noto Sans JP', sans-serif",
@@ -228,7 +228,7 @@ function ChoiceB({ onSelectDetail }) {
         fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 13,
         color: C.n400, marginBottom: 20,
         opacity: entered ? 1 : 0,
-        transition: "opacity 0.5s ease 0.2s",
+        transition: "opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s",
       }}>
         Choose a path to explore.
       </p>
@@ -240,9 +240,13 @@ function ChoiceB({ onSelectDetail }) {
           transform: entered
             ? "translateY(0) translateZ(0)"
             : "translateY(40px) translateZ(-60px)",
-          transition: `opacity 0.5s ease ${300 + i * 150}ms, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1) ${300 + i * 150}ms`,
+          transition: `opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${300 + i * 150}ms, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${300 + i * 150}ms`,
           willChange: "transform, opacity",
-        }} onClick={() => onSelectDetail(i)}>
+        }} onClick={() => onSelectDetail(i)}
+        role="button"
+        tabIndex={0}
+        aria-label={d.heading || d.label || `Option ${i + 1}`}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelectDetail(i); } }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <span style={{
@@ -294,7 +298,7 @@ function ChoiceD({ onSelectDetail }) {
       <div style={{
         padding: "56px 24px 0",
         opacity: entered ? 1 : 0,
-        transition: "opacity 0.5s ease 0.15s",
+        transition: "opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s",
       }}>
         <p style={{
           fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 13,
@@ -314,6 +318,10 @@ function ChoiceD({ onSelectDetail }) {
             <div
               key={i}
               onClick={() => onSelectDetail(i)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Option ${i + 1}`}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelectDetail(i); } }}
               onMouseEnter={() => setHoveredSide(i)}
               onMouseLeave={() => setHoveredSide(null)}
               style={{
@@ -323,21 +331,21 @@ function ChoiceD({ onSelectDetail }) {
                 transform: entered
                   ? "translateY(0) scale(1)"
                   : `translateX(${i === 0 ? -20 : 20}px) scale(0.95)`,
-                transition: `opacity 0.6s ease ${250 + i * 120}ms, transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) ${250 + i * 120}ms`,
+                transition: `opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${250 + i * 120}ms, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${250 + i * 120}ms`,
                 willChange: "transform, opacity",
               }}
             >
               <div style={{
                 position: "absolute", inset: 0,
                 background: sides[i].gradient,
-                transition: "opacity 0.3s ease",
+                transition: "opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
               }} />
 
               <div style={{
                 position: "absolute", inset: 0,
                 background: sides[i].hoverGlow,
                 opacity: isHovered ? 1 : 0,
-                transition: "opacity 0.4s ease",
+                transition: "opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                 pointerEvents: "none",
               }} />
 
@@ -350,7 +358,7 @@ function ChoiceD({ onSelectDetail }) {
                 boxShadow: isHovered
                   ? "0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)"
                   : "0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.4)",
-                transition: "box-shadow 0.3s ease",
+                transition: "box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
               }} />
 
               <div style={{
@@ -376,7 +384,7 @@ function ChoiceD({ onSelectDetail }) {
                     textShadow: "0 2px 12px rgba(0,0,0,0.05)",
                     opacity: entered ? 1 : 0,
                     transform: entered ? "translateY(0)" : "translateY(12px)",
-                    transition: `all 0.6s ease ${450 + i * 100}ms`,
+                    transition: `all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${450 + i * 100}ms`,
                   }}>{d.stat}</span>
                 </div>
 
@@ -385,19 +393,19 @@ function ChoiceD({ onSelectDetail }) {
                     fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 11,
                     color: C.n600, letterSpacing: "0.01em", display: "block", marginBottom: 4,
                     opacity: entered ? 1 : 0,
-                    transition: `opacity 0.5s ease ${550 + i * 100}ms`,
+                    transition: `opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${550 + i * 100}ms`,
                   }}>{d.label}</span>
                   <span style={{
                     fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 15,
                     color: C.n950, letterSpacing: "-0.01em", lineHeight: 1.25,
                     display: "block", marginBottom: 12,
                     opacity: entered ? 1 : 0,
-                    transition: `opacity 0.5s ease ${600 + i * 100}ms`,
+                    transition: `opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${600 + i * 100}ms`,
                   }}>{d.heading}</span>
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 5,
                     opacity: entered ? 1 : 0,
-                    transition: `opacity 0.5s ease ${700 + i * 100}ms`,
+                    transition: `opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${700 + i * 100}ms`,
                   }}>
                     <span style={{
                       fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, fontWeight: 500, color: C.n400,
@@ -442,11 +450,24 @@ export default function Step10CurrentOptionsPlayground({ variant } = {}) {
   }, []);
 
   return (
-    <div style={{
+    <div data-proto="step-10-v6" style={{
       minHeight: "100vh", background: "#EDEEF1",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, fontFamily: "'Noto Sans JP', sans-serif",
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-10-v6"] *,
+          [data-proto="step-10-v6"] *::before,
+          [data-proto="step-10-v6"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet" />
       <NoiseDefs />
       <div style={{ position: "relative", width: 393, height: 852, borderRadius: 55, overflow: "hidden", background: "#1A1A1E", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>

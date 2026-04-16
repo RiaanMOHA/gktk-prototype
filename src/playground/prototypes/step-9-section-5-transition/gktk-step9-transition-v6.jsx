@@ -10,7 +10,7 @@ const C = {
 /* ── visionOS material primitives ── */
 const NOISE_ID = "gktk-noise-s9";
 const NoiseDefs = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }}>
+  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
     <defs>
       <filter id={NOISE_ID}>
         <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -71,6 +71,10 @@ function Step9Transition({ onAdvance }) {
   return (
     <div
       onClick={beat >= 3 ? onAdvance : undefined}
+      role="button"
+      tabIndex={0}
+      aria-label="Tap to continue"
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && beat >= 3) { e.preventDefault(); onAdvance(e); } }}
       style={{
         position: "absolute", inset: 0,
         display: "flex", flexDirection: "column",
@@ -89,23 +93,23 @@ function Step9Transition({ onAdvance }) {
       }} />
 
       {/* the question — word by word stagger feel via opacity + translateY */}
-      <p style={{
+      <h1 aria-live="polite" style={{
         fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 28,
         lineHeight: 1.15, color: C.n950, letterSpacing: "-0.025em",
         margin: 0, maxWidth: 280,
         opacity: beat >= 1 ? 1 : 0,
         transform: beat >= 1 ? "translateY(0)" : "translateY(24px)",
-        transition: "opacity 0.8s ease, transform 1s cubic-bezier(0.23, 1, 0.32, 1)",
+        transition: "opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       }}>
         So what does a real solution look like?
-      </p>
+      </h1>
 
       {/* tap prompt */}
-      <div style={{
+      <div aria-live="polite" style={{
         position: "absolute", bottom: 48, left: 32, right: 32,
         display: "flex", alignItems: "center", gap: 8,
         opacity: beat >= 3 ? 1 : 0,
-        transition: "opacity 0.6s ease",
+        transition: "opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       }}>
         <GlowDot size={5} />
         <span style={{
@@ -130,11 +134,24 @@ export default function Step9TransitionPlayground() {
   const replay = () => setKey(k => k + 1);
 
   return (
-    <div style={{
+    <div data-proto="step-9" style={{
       minHeight: "100vh", background: "#EDEEF1",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, fontFamily: "'Noto Sans JP', sans-serif",
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-9"] *,
+          [data-proto="step-9"] *::before,
+          [data-proto="step-9"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet" />
       <NoiseDefs />
       <div style={{ position: "relative", width: 393, height: 852, borderRadius: 55, overflow: "hidden", background: "#1A1A1E", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>

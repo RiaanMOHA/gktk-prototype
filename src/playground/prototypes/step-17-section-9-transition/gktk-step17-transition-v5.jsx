@@ -20,14 +20,14 @@ const COLORS = {
 };
 
 const EASING = {
-  gentle: "cubic-bezier(0.23, 0.86, 0.39, 0.96)",
+  gentle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-  settle: "cubic-bezier(0.22, 1, 0.36, 1)",
+  settle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   sharp: "cubic-bezier(0.4, 0, 0.2, 1)",
 };
 
 const NoiseFilter = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }}>
+  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
     <defs>
       <filter id="noise-grain">
         <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
@@ -278,6 +278,7 @@ const ResolveContent = () => (
 
 const TapPrompt = ({ visible, label = "Tap to continue" }) => (
   <div
+    aria-live="polite"
     style={{
       position: "absolute",
       bottom: 32,
@@ -362,6 +363,10 @@ const VariantRecede = () => {
     <div
       style={{ position: "absolute", inset: 0, cursor: "pointer" }}
       onClick={!running.current ? run : undefined}
+      role="button"
+      tabIndex={0}
+      aria-label="Tap to continue"
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !running.current) { e.preventDefault(); run(); } }}
     >
       <MeshGradientBg />
       <NoiseOverlay />
@@ -473,6 +478,10 @@ const VariantShutter = () => {
     <div
       style={{ position: "absolute", inset: 0, cursor: "pointer" }}
       onClick={!running.current ? run : undefined}
+      role="button"
+      tabIndex={0}
+      aria-label="Tap to continue"
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !running.current) { e.preventDefault(); run(); } }}
     >
       <MeshGradientBg />
       <NoiseOverlay />
@@ -606,6 +615,7 @@ export default function Step17TransitionV5({ variant } = {}) {
 
   return (
     <div
+      data-proto="step-17"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -617,6 +627,19 @@ export default function Step17TransitionV5({ variant } = {}) {
         fontFamily: "'Noto Sans JP', 'Inter', system-ui, sans-serif",
       }}
     >
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-17"] *,
+          [data-proto="step-17"] *::before,
+          [data-proto="step-17"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <NoiseFilter />
 
       <IPhoneFrame>

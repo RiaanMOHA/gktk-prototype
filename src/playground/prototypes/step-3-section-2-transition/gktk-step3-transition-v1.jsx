@@ -40,7 +40,7 @@ function MeshBG({ warm }) {
 /* ── noise grain overlay ── */
 function Noise({ opacity = 0.04, id = "n3" }) {
   return (
-    <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", mixBlendMode: "overlay", opacity, zIndex: 90 }}>
+    <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", mixBlendMode: "overlay", opacity, zIndex: 90 }} aria-hidden="true">
       <filter id={id}><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /></filter>
       <rect width="100%" height="100%" filter={`url(#${id})`} />
     </svg>
@@ -73,13 +73,13 @@ function BridgeSnapshot({ visible }) {
         boxShadow: "0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(8px)",
-        transition: "opacity 500ms ease 120ms, transform 600ms cubic-bezier(0.22,1,0.36,1) 120ms",
+        transition: "opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 120ms, transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 120ms",
       }}>
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg,transparent 5%,rgba(255,255,255,0.92) 50%,transparent 95%)", pointerEvents: "none" }} />
         <div style={{ fontFamily: "'REM',sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: N[950] }}>10</div>
         <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: "0.875rem", color: N[600], margin: "8px 0 0", lineHeight: 1.6 }}>trillion yen. Japan is rebuilding its chip industry.</p>
       </div>
-      <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 12, color: N.dis, marginTop: 24, opacity: visible ? 1 : 0, transition: "opacity 400ms ease 700ms" }}>Tap to replay</p>
+      <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 12, color: N.dis, marginTop: 24, opacity: visible ? 1 : 0, transition: "opacity 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 700ms" }}>Tap to replay</p>
     </div>
   );
 }
@@ -140,7 +140,20 @@ export default function Step3TransitionV1({ variant } = {}) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: N[100], display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Noto Sans JP',sans-serif" }}>
+    <div data-proto="step-3" style={{ minHeight: "100vh", background: N[100], display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Noto Sans JP',sans-serif" }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-3"] *,
+          [data-proto="step-3"] *::before,
+          [data-proto="step-3"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
 
@@ -164,7 +177,14 @@ export default function Step3TransitionV1({ variant } = {}) {
           zIndex: 50, pointerEvents: "none" }} />
 
         {/* screen */}
-        <div onClick={onTap} style={{ position: "absolute", top: 6, left: 6, right: 6, bottom: 6, borderRadius: 49, overflow: "hidden", background: "#F9F9F9", cursor: phase === "bridge" ? "pointer" : "default" }}>
+        <div
+          onClick={onTap}
+          role="button"
+          tabIndex={0}
+          aria-label="Tap to continue"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTap(e); } }}
+          style={{ position: "absolute", top: 6, left: 6, right: 6, bottom: 6, borderRadius: 49, overflow: "hidden", background: "#F9F9F9", cursor: phase === "bridge" ? "pointer" : "default" }}
+        >
           {/* dynamic island */}
           <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", width: 126, height: 37, borderRadius: 20, background: "#000", zIndex: 100 }} />
 

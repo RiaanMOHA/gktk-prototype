@@ -21,7 +21,7 @@ const C = {
 
 // ─── SVG noise filter ───
 const NoiseFilter = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }}>
+  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
     <filter id="noise">
       <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
       <feColorMatrix type="saturate" values="0" />
@@ -205,7 +205,7 @@ const Step1Content = ({ onBlank }) => {
     }}>
       <Logo id="splash" size={1.3} />
 
-      <p style={{
+      <h1 style={{
         fontFamily: "'Noto Sans JP', sans-serif",
         fontSize: 14,
         fontWeight: 500,
@@ -213,7 +213,7 @@ const Step1Content = ({ onBlank }) => {
         margin: "20px 0 48px",
       }}>
         Enter MoreHarvest World
-      </p>
+      </h1>
 
       {/* Hold-to-confirm button */}
       <div
@@ -229,7 +229,7 @@ const Step1Content = ({ onBlank }) => {
           height: 88,
           cursor: "pointer",
           transform: pressing ? "scale(0.92)" : "scale(1)",
-          transition: "transform 0.15s ease",
+          transition: "transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
           userSelect: "none",
           WebkitUserSelect: "none",
           touchAction: "none",
@@ -303,7 +303,7 @@ export default function Step1OpeningTransition() {
   const [blank, setBlank] = useState(false);
 
   return (
-    <div style={{
+    <div data-proto="step-1" style={{
       minHeight: "100vh",
       display: "flex",
       alignItems: "center",
@@ -312,6 +312,19 @@ export default function Step1OpeningTransition() {
       padding: 24,
       fontFamily: "'Noto Sans JP', sans-serif",
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-1"] *,
+          [data-proto="step-1"] *::before,
+          [data-proto="step-1"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <NoiseFilter />
       <PhoneFrame>
         <div style={{
@@ -319,7 +332,7 @@ export default function Step1OpeningTransition() {
           inset: 0,
           opacity: blank ? 0 : 1,
           transform: blank ? "scale(0.97)" : "scale(1)",
-          transition: "opacity 350ms ease, transform 350ms ease",
+          transition: "opacity 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}>
           <MeshBg />
           <Step1Content onBlank={() => setBlank(true)} />

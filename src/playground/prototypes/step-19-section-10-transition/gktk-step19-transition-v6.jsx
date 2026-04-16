@@ -19,9 +19,9 @@ const F = {
 };
 
 const E = {
-  gentle: "cubic-bezier(0.23, 0.86, 0.39, 0.96)",
+  gentle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   smooth: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-  settle: "cubic-bezier(0.22, 1, 0.36, 1)",
+  settle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
   spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
 };
 
@@ -55,8 +55,8 @@ const MeshBg = () => (
   <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
     <div style={{ position: "absolute", inset: 0, background: C.bg }} />
     <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${C.n100} 0%, ${C.bg} 50%)` }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 90% 50% at 15% 85%, rgba(190,195,210,0.35) 0%, transparent 60%)" }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 40% at 85% 15%, rgba(200,205,220,0.25) 0%, transparent 55%)" }} />
+    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 90% 50% at 15% 85%, rgba(237, 238, 241, 0.35) 0%, transparent 60%)" }} />
+    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 40% at 85% 15%, rgba(237, 238, 241, 0.3) 0%, transparent 55%)" }} />
     <div style={{ position: "absolute", inset: 0, filter: "url(#pg)", opacity: 0.025, pointerEvents: "none", background: "rgba(128,128,128,0.08)" }} />
   </div>
 );
@@ -111,7 +111,7 @@ const ResolveContent = ({ resolveRef }) => (
 );
 
 const TapPrompt = ({ visible, label = "Tap to continue" }) => (
-  <div style={{ position: "absolute", bottom: 32, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 10, opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(8px)", transition: `opacity 500ms ${E.smooth}, transform 500ms ${E.smooth}`, pointerEvents: "none" }}>
+  <div aria-live="polite" style={{ position: "absolute", bottom: 32, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 10, opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(8px)", transition: `opacity 500ms ${E.smooth}, transform 500ms ${E.smooth}`, pointerEvents: "none" }}>
     <span style={{ fontFamily: F.b, fontSize: 13, fontWeight: 500, letterSpacing: "0.01em", color: C.n600 }}>{label}</span>
   </div>
 );
@@ -167,7 +167,14 @@ const VariantA = () => {
   }, []);
 
   return (
-    <div style={{ position: "absolute", inset: 0, cursor: "pointer" }} onClick={!running.current ? run : undefined}>
+    <div
+      style={{ position: "absolute", inset: 0, cursor: "pointer" }}
+      onClick={!running.current ? run : undefined}
+      role="button"
+      tabIndex={0}
+      aria-label="Tap to continue"
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !running.current) { e.preventDefault(); run(); } }}
+    >
       <MeshBg />
       <GhostFaq containerRef={containerRef} cardRefs={cardRefs} />
       {resolveVisible && <ResolveContent resolveRef={resolveRef} />}
@@ -239,7 +246,14 @@ const VariantB = () => {
   }, []);
 
   return (
-    <div style={{ position: "absolute", inset: 0, cursor: "pointer" }} onClick={!running.current ? run : undefined}>
+    <div
+      style={{ position: "absolute", inset: 0, cursor: "pointer" }}
+      onClick={!running.current ? run : undefined}
+      role="button"
+      tabIndex={0}
+      aria-label="Tap to continue"
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !running.current) { e.preventDefault(); run(); } }}
+    >
       <MeshBg />
       <GhostFaq containerRef={containerRef} cardRefs={cardRefs} />
       {resolveVisible && <ResolveContent resolveRef={resolveRef} />}
@@ -279,11 +293,24 @@ export default function Step19TransitionV6({ variant } = {}) {
   const Cur = VARIANTS[resolved].c;
 
   return (
-    <div style={{
+    <div data-proto="step-19" style={{
       minHeight: "100vh", background: "#EDEEF1",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       padding: 24, fontFamily: F.b,
     }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-19"] *,
+          [data-proto="step-19"] *::before,
+          [data-proto="step-19"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+      `}</style>
       <Noise />
       <Phone>
         <Cur key={resolved} />

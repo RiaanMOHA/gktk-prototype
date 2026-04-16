@@ -46,7 +46,7 @@ const ALL_YEARS = [YEAR_1, YEAR_2, YEAR_3];
 
 // ─── shared components ──────────────────────────────────────────────
 const NoiseGrain = ({ opacity = 0.035, id = "ng" }) => (
-  <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 2 }}>
+  <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 2 }} aria-hidden="true">
     <filter id={`noise-${id}`}>
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch" />
       <feColorMatrix type="saturate" values="0" />
@@ -77,7 +77,7 @@ const MeshGradient = () => (
     position: "absolute", inset: 0, zIndex: 0,
     background: `
       radial-gradient(ellipse 80% 50% at 20% 80%, rgba(251,185,49,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(100,140,200,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(251, 185, 49, 0.04) 0%, transparent 50%),
       radial-gradient(ellipse 90% 60% at 50% 50%, rgba(251,185,49,0.03) 0%, transparent 70%),
       linear-gradient(180deg, #F9F9F9 0%, #FFFBEc 100%)
     `,
@@ -117,7 +117,7 @@ const useNotifEntrance = (ref, visible) => {
       { opacity: 0.4, transform: "translateY(12px) scale(0.99)", filter: "blur(2px)", offset: 0.35 },
       { opacity: 0.85, transform: "translateY(4px) scale(0.998)", filter: "blur(0.5px)", offset: 0.7 },
       { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
-    ], { duration: 600, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" });
+    ], { duration: 600, easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)", fill: "forwards" });
   }, [visible]);
 };
 
@@ -131,7 +131,7 @@ const useMsgEntrance = (ref, visible, fromRight = false) => {
       { opacity: 0, transform: `translateY(16px) translateX(${x}px) scale(0.96)`, filter: "blur(3px)" },
       { opacity: 0.5, transform: `translateY(6px) translateX(${x * 0.3}px) scale(0.985)`, filter: "blur(1px)", offset: 0.4 },
       { opacity: 1, transform: "translateY(0) translateX(0) scale(1)", filter: "blur(0px)" },
-    ], { duration: 550, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" });
+    ], { duration: 550, easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)", fill: "forwards" });
   }, [visible]);
 };
 
@@ -172,7 +172,7 @@ const IntroScreen = ({ onContinue }) => (
       </div>
     </div>
     <div style={{ position: "absolute", bottom: 40, left: 24, right: 24, zIndex: 10 }}>
-      <button onClick={onContinue} style={{ width: "100%", padding: "14px 0", borderRadius: 14, border: "none", background: AMBER, color: N950, fontFamily: "'REM', sans-serif", fontSize: 15, fontWeight: 600, cursor: "pointer", boxShadow: "0 2px 12px rgba(251,185,49,0.3)" }}>
+      <button className="step-14-cta" onClick={onContinue} style={{ width: "100%", padding: "14px 0", borderRadius: 14, border: "none", background: AMBER, color: N950, fontFamily: "'REM', sans-serif", fontSize: 15, fontWeight: 600, cursor: "pointer", boxShadow: "0 2px 12px rgba(251,185,49,0.3)" }}>
         See it in action
       </button>
     </div>
@@ -280,7 +280,7 @@ const ChatBubbleSec = ({ text, noiseId }) => {
   const ref = useRef(null);
   useMsgEntrance(ref, true, false);
   return (
-    <div ref={ref} style={{ opacity: 0, maxWidth: "82%", marginRight: "auto" }}>
+    <div ref={ref} aria-live="polite" style={{ opacity: 0, maxWidth: "82%", marginRight: "auto" }}>
       <GlassPanel style={{ padding: "9px 12px", borderRadius: "14px 14px 14px 4px" }} noiseId={noiseId}>
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: N800, margin: 0, lineHeight: 1.5 }}>{text}</p>
       </GlassPanel>
@@ -292,7 +292,7 @@ const ChatBubbleTen = ({ text, id }) => {
   const ref = useRef(null);
   useMsgEntrance(ref, true, true);
   return (
-    <div ref={ref} style={{ opacity: 0, maxWidth: "78%", marginLeft: "auto" }}>
+    <div ref={ref} aria-live="polite" style={{ opacity: 0, maxWidth: "78%", marginLeft: "auto" }}>
       <div style={{ padding: "9px 12px", borderRadius: "14px 14px 4px 14px", background: AMBER, position: "relative", overflow: "hidden" }}>
         <NoiseGrain opacity={0.04} id={`bt-${id}`} />
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: N950, margin: 0, lineHeight: 1.5, position: "relative", zIndex: 2 }}>{text}</p>
@@ -402,7 +402,22 @@ export default function Step14ProductSoftware({ variant } = {}) {
   const Variant = VARIANT_MAP[resolved];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 16px", fontFamily: "'Noto Sans JP', sans-serif" }}>
+    <div data-proto="step-14" style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 16px", fontFamily: "'Noto Sans JP', sans-serif" }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          [data-proto="step-14"] *,
+          [data-proto="step-14"] *::before,
+          [data-proto="step-14"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            transition-delay: 0ms !important;
+          }
+        }
+        .step-14-cta { transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-14-cta:active { transform: scale(0.97); }
+      `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <IPhoneFrame>
         {screen === "intro" && <IntroScreen onContinue={() => setScreen("demo")} />}
