@@ -1,6 +1,6 @@
 # gktk-prototype
 
-A full-viewport, tap-driven investment pitch experience for MoreHarvest. 20 steps. iPhone 17 Pro is the primary device. Apple HIG is the interaction standard. The visual language is visionOS: frosted glass surfaces, spatial depth, layered z-planes, mesh gradient backgrounds, noise grain, specular edges, compound shadows. This is the locked aesthetic. Do not substitute other Apple references, data-dashboard styles, or any other design language.
+A full-viewport, tap-driven investment pitch experience for MoreHarvest. 20 steps. iPhone 17 Pro is the primary device. Apple HIG is the interaction standard. The visual language is flat and neutral: a single base background (`#F9F9F9`), solid panels with thin borders and subtle shadows for hierarchy, and a restrained neutral type scale. No blurs. No frosted glass. No mesh-gradient surface tints. Amber is the only saturated color and appears only at the accent points defined below.
 
 This is not a scrollable website. This is not a slide deck. This is not a marketing page. Every section occupies the entire viewport. Navigation is taps, swipes, and CTAs. There is no scroll anywhere in the experience.
 
@@ -171,24 +171,16 @@ The full specification is in `docs/visual-identity.md`. Key values are inline he
 
 ### Surface hierarchy
 
-| Level | Background | Backdrop filter | Border | Shadow |
-|-------|-----------|----------------|--------|--------|
-| 0 | `#F9F9F9` | -- | -- | -- |
-| 1 | `rgba(255,255,255,0.70)` | `blur(20px) saturate(1.4)` | `1px solid rgba(255,255,255,0.85)` | `0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)` |
-| 2 | `rgba(255,255,255,0.88)` | `blur(24px) saturate(1.6)` | `1px solid rgba(255,255,255,0.95)` | `0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)` |
-| 3 | `#FEFEFE` | -- | `1px solid #EDEEF1` | `0 20px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)` |
+Flat design. Every surface — base, panels, cards — uses `#F9F9F9` as its fill. Hierarchy comes from border and shadow only. No frosted glass. No backdrop filters. No tinted white alpha fills. No mesh gradients on surfaces.
 
-### Full material stack (mandatory for all Level 1 and Level 2 surfaces)
+| Level | Background | Border | Shadow |
+|-------|-----------|--------|--------|
+| 0 (base) | `#F9F9F9` | -- | -- |
+| 1 (panel) | `#F9F9F9` | `1px solid rgba(0,0,0,0.06)` | `0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)` |
+| 2 (elevated) | `#F9F9F9` | `1px solid rgba(0,0,0,0.08)` | `0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)` |
+| 3 (modal) | `#F9F9F9` | `1px solid rgba(0,0,0,0.10)` | `0 20px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)` |
 
-Every glass surface must include all five layers. This is the visionOS material language. No shortcuts.
-
-1. Base fill (rgba + backdrop-filter from table above).
-2. Noise grain: SVG `<feTurbulence>` overlay. Implementation is in `src/components/shared/NoiseGrain.tsx` (created during foundation phase). If that file does not exist yet, ask the product owner for noise grain values before proceeding.
-3. Specular top edge: 1.5px (L1) or 2px (L2) white-to-transparent gradient along top.
-4. Inner top glow: radial gradient at top edge.
-5. Compound border: CSS border + inset box-shadow.
-
-No flat white rectangles. Every surface communicates material.
+**Banned everywhere:** `backdrop-filter`, `-webkit-backdrop-filter`, `backdropFilter`, `WebkitBackdropFilter`, noise-grain SVG overlays on surfaces, specular top-edge gradients, inner-top-glow radial gradients, `rgba(255,255,255,0.XX)` panel fills, `#FEFEFE` panel fills. The only exception is the dark phone shell itself (`#1A1A1E`), which is the physical device frame.
 
 ### Colors
 

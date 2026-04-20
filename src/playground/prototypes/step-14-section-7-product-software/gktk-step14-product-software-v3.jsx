@@ -56,14 +56,13 @@ const NoiseGrain = ({ opacity = 0.035, id = "ng" }) => (
 );
 
 const GlassPanel = ({ children, style = {}, level = 1, noiseId = "gp" }) => {
-  const bg = level === 2 ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.70)";
-  const blur = level === 2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)";
-  const bdr = level === 2 ? "1px solid rgba(255,255,255,0.95)" : "1px solid rgba(255,255,255,0.85)";
+  const bg = "#F9F9F9";
+  const bdr = "1px solid rgba(0,0,0,0.06)";
   const shd = level === 2
     ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)"
     : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)";
   return (
-    <div style={{ borderRadius: 16, overflow: "hidden", position: "relative", background: bg, backdropFilter: blur, WebkitBackdropFilter: blur, border: bdr, boxShadow: shd, ...style }}>
+    <div style={{ borderRadius: 16, overflow: "hidden", position: "relative", background: bg, border: bdr, boxShadow: shd, ...style }}>
       <NoiseGrain opacity={0.03} id={noiseId} />
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.9) 70%, rgba(255,255,255,0) 100%)", zIndex: 3 }} />
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, background: "linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)", zIndex: 3 }} />
@@ -95,12 +94,12 @@ const StatusBar = () => (
 );
 
 const IPhoneFrame = ({ children }) => (
-  <div style={{ width: 375, height: 812, borderRadius: 55, position: "relative", overflow: "hidden", background: "#1a1a1a", boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.12)", flexShrink: 0 }}>
+  <div style={{ width: 393, height: 852, borderRadius: 55, position: "relative", overflow: "hidden", background: "#1A1A1E", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset", flexShrink: 0 }}>
     <div style={{ position: "absolute", left: -3, top: 160, width: 3, height: 32, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
     <div style={{ position: "absolute", left: -3, top: 110, width: 3, height: 24, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
     <div style={{ position: "absolute", right: -3, top: 140, width: 3, height: 50, background: "#2a2a2a", borderRadius: "0 2px 2px 0" }} />
-    <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "1px solid rgba(255,255,255,0.1)", pointerEvents: "none", zIndex: 50 }} />
-    <div style={{ position: "absolute", inset: 4, borderRadius: 51, overflow: "hidden", background: BG }}>
+    <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "1px solid rgba(0,0,0,0.06)", pointerEvents: "none", zIndex: 50 }} />
+    <div style={{ position: "absolute", inset: 6, borderRadius: 49, overflow: "hidden", background: BG }}>
       <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 126, height: 37, background: "#000", borderRadius: 24, zIndex: 40 }} />
       {children}
     </div>
@@ -312,7 +311,7 @@ const ChatDate = ({ text }) => {
   }, []);
   return (
     <div ref={ref} style={{ opacity: 0, textAlign: "center", padding: "8px 0 3px" }}>
-      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: N600, background: "rgba(255,255,255,0.6)", borderRadius: 8, padding: "3px 10px" }}>{text}</span>
+      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: N600, background:"#F9F9F9", borderRadius: 8, padding: "3px 10px" }}>{text}</span>
     </div>
   );
 };
@@ -357,7 +356,7 @@ const VariantB = ({ active }) => {
     <div style={{ position: "absolute", inset: 0, zIndex: 10, opacity: active ? 1 : 0, transition: "opacity 400ms" }}>
       <MeshGradient />
       <StatusBar />
-      <div style={{ position: "absolute", top: 54, left: 0, right: 0, zIndex: 20, padding: "10px 16px", borderBottom: `1px solid ${N100}`, background: "rgba(249,249,249,0.85)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
+      <div style={{ position: "absolute", top: 54, left: 0, right: 0, zIndex: 20, padding: "10px 16px", borderBottom: `1px solid ${N100}`, background: "rgba(249,249,249,0.85)", }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: 18, background: `linear-gradient(135deg, ${AMBER} 0%, #F5A500 100%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#fff", fontWeight: 700, fontFamily: "'REM', sans-serif" }}>M</div>
           <div>

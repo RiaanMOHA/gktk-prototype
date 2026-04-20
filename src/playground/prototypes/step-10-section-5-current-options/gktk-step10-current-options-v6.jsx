@@ -48,10 +48,8 @@ function GlassPanel({ level = 1, borderRadius = 20, children, style = {}, ...pro
   return (
     <div style={{
       position: "relative", borderRadius,
-      background: isL2 ? "rgba(255,255,255,0.82)" : "rgba(255,255,255,0.62)",
-      backdropFilter: isL2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)",
-      WebkitBackdropFilter: isL2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)",
-      border: isL2 ? "1px solid rgba(255,255,255,0.95)" : "1px solid rgba(255,255,255,0.85)",
+      background: isL2 ? "#F9F9F9" : "#F9F9F9",
+                  border: isL2 ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(0,0,0,0.06)",
       boxShadow: isL2
         ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7)"
         : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
@@ -351,10 +349,10 @@ function ChoiceD({ onSelectDetail }) {
 
               <div style={{
                 position: "absolute", inset: 0, borderRadius: 22,
-                background: "rgba(255,255,255,0.35)",
-                backdropFilter: "blur(12px) saturate(1.2)",
-                WebkitBackdropFilter: "blur(12px) saturate(1.2)",
-                border: "1px solid rgba(255,255,255,0.7)",
+                background:"#F9F9F9",
+                
+                
+                border: "1px solid rgba(0,0,0,0.06)",
                 boxShadow: isHovered
                   ? "0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)"
                   : "0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.4)",

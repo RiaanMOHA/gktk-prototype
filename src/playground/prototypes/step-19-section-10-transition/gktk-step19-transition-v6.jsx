@@ -63,10 +63,10 @@ const MeshBg = () => (
 
 const Glass = ({ children, style = {}, panelRef, level = 1 }) => {
   const s = level === 1
-    ? { bg: "rgba(255,255,255,0.70)", blur: "blur(20px) saturate(1.4)", bdr: "1px solid rgba(255,255,255,0.85)", sh: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)", rad: 20 }
-    : { bg: "rgba(255,255,255,0.88)", blur: "blur(24px) saturate(1.6)", bdr: "1px solid rgba(255,255,255,0.95)", sh: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)", rad: 28 };
+    ? { bg:"#F9F9F9", blur: "blur(20px) saturate(1.4)", bdr: "1px solid rgba(0,0,0,0.06)", sh: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)", rad: 20 }
+    : { bg:"#F9F9F9", blur: "blur(24px) saturate(1.6)", bdr: "1px solid rgba(0,0,0,0.06)", sh: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)", rad: 28 };
   return (
-    <div ref={panelRef} style={{ position: "relative", overflow: "hidden", borderRadius: s.rad, background: s.bg, backdropFilter: s.blur, WebkitBackdropFilter: s.blur, border: s.bdr, boxShadow: s.sh, ...style }}>
+    <div ref={panelRef} style={{ position: "relative", overflow: "hidden", borderRadius: s.rad, background: s.bg, border: s.bdr, boxShadow: s.sh, ...style }}>
       <div style={{ position: "absolute", inset: 0, borderRadius: s.rad, filter: "url(#pg)", opacity: 0.035, pointerEvents: "none", zIndex: 1, background: "rgba(128,128,128,0.1)" }} />
       <div style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.95) 30%, white 50%, rgba(255,255,255,0.95) 70%, transparent)", zIndex: 4 }} />
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 40, background: "linear-gradient(180deg, rgba(255,255,255,0.4), transparent)", zIndex: 2, pointerEvents: "none", borderRadius: `${s.rad}px ${s.rad}px 0 0` }} />

@@ -151,8 +151,7 @@ export default function ThreeDPlayground() {
           <p
             style={{
               fontSize: 11,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
+              letterSpacing: "0.02em",
               color: "#8E8F8F",
               margin: 0,
             }}
@@ -223,9 +222,7 @@ function StatusPill({ status }: { status: Status }) {
         fontSize: 12,
         fontWeight: 500,
         letterSpacing: "0.01em",
-        backdropFilter: "blur(20px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-        border: "1px solid rgba(255,255,255,0.85)",
+                        border:"1px solid rgba(0,0,0,0.06)",
         boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
         pointerEvents: "auto",
       }}
@@ -251,10 +248,8 @@ function GlassHint({ children }: { children: React.ReactNode }) {
         alignItems: "center",
         padding: "8px 14px",
         borderRadius: 9999,
-        background: "rgba(255,255,255,0.70)",
-        backdropFilter: "blur(20px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-        border: "1px solid rgba(255,255,255,0.85)",
+        background:"#F9F9F9",
+                        border:"1px solid rgba(0,0,0,0.06)",
         boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
         fontSize: 12,
         color: "#40444C",
@@ -289,10 +284,8 @@ function EmptyState() {
           alignItems: "stretch",
           padding: 28,
           borderRadius: 20,
-          background: "rgba(255,255,255,0.88)",
-          backdropFilter: "blur(24px) saturate(1.6)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-          border: "1px solid rgba(255,255,255,0.95)",
+          background:"#F9F9F9",
+                              border:"1px solid rgba(0,0,0,0.06)",
           boxShadow:
             "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
         }}
@@ -328,8 +321,7 @@ function EmptyState() {
             <p
               style={{
                 fontSize: 11,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
+                letterSpacing: "0.02em",
                 color: "#8E8F8F",
                 margin: 0,
               }}

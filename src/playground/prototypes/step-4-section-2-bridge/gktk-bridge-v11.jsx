@@ -32,10 +32,8 @@ function Glass({ children, level = 2, z = 30, rx = 0, ry = 0, style = {} }) {
       position: "relative",
       transform: `translateZ(${z}px) rotateX(${rx}deg) rotateY(${ry}deg)`,
       transformStyle: "preserve-3d",
-      background: L2 ? "rgba(255,255,255,0.82)" : "rgba(255,255,255,0.62)",
-      backdropFilter: L2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)",
-      WebkitBackdropFilter: L2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)",
-      border: `1px solid ${L2 ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.85)"}`,
+      background: L2 ? "#F9F9F9" : "#F9F9F9",
+                  border: `1px solid ${L2 ? "#F9F9F9" : "#F9F9F9"}`,
       boxShadow: `0 ${8 + z * 0.2}px ${32 + z}px rgba(0,0,0,${0.08 + z * 0.001}), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)`,
       borderRadius: "16px", overflow: "hidden",
       transition: "transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
@@ -98,7 +96,7 @@ function AmberScreen({ visible }) {
       <p style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "2rem", color: "#fff", lineHeight: 1.15, marginBottom: "12px" }}>
         Enter Kumamoto
       </p>
-      <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.875rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.6 }}>
+      <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.875rem", color: "#F9F9F9", lineHeight: 1.6 }}>
         Trigger fired successfully. This is where the next section begins.
       </p>
     </div>
@@ -123,9 +121,9 @@ function TriggerTap({ visible, onFire }) {
         style={{
           width: "48px", height: "48px", borderRadius: "14px",
           position: "relative", cursor: "pointer", overflow: "hidden",
-          background: "rgba(255,255,255,0.72)",
-          backdropFilter: "blur(20px) saturate(1.4)", WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-          border: "1px solid rgba(255,255,255,0.85)",
+          background:"#F9F9F9",
+          
+          border: "1px solid rgba(0,0,0,0.06)",
           boxShadow: "0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)",
           display: "flex", alignItems: "center", justifyContent: "center",
         }}
@@ -225,8 +223,8 @@ function TriggerAuto({ visible, onFire }) {
       <div style={{ position: "relative", width: "44px", height: "44px" }}>
         <div style={{
           position: "absolute", inset: 0, borderRadius: "50%",
-          background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px) saturate(1.3)", WebkitBackdropFilter: "blur(16px) saturate(1.3)",
-          border: "1px solid rgba(255,255,255,0.8)",
+          background:"#F9F9F9", 
+          border: "1px solid rgba(0,0,0,0.06)",
           boxShadow: `0 2px 10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5)${progress > 0.5 ? `, 0 0 ${progress * 16}px rgba(251,185,49,${progress * 0.25})` : ""}`,
         }}>
           <div style={{ position: "absolute", inset: 0, borderRadius: "inherit", backgroundImage: NOISE, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.5 }} />
@@ -270,7 +268,7 @@ function TriggerPull({ visible, onFire }) {
         position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 32,
         height: `${displayY * 1.2}px`,
         background: "linear-gradient(180deg, rgba(237,238,241,0.95), rgba(249,249,249,1))",
-        borderTop: displayY > 2 ? "1px solid rgba(255,255,255,0.8)" : "none",
+        borderTop: displayY > 2 ? "1px solid rgba(0,0,0,0.06)" : "none",
         transition: dragging ? "none" : "height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
         overflow: "hidden", display: "flex", alignItems: "center", padding: "0 24px",
       }}>

@@ -48,17 +48,17 @@ const MeshGradient = () => (
 const GlassPanel = ({ children, level = 1, style = {}, innerRef }) => {
   const levels = {
     1: {
-      background: "rgba(255,255,255,0.70)",
-      backdropFilter: "blur(20px) saturate(1.4)",
-      WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-      border: "1px solid rgba(255,255,255,0.85)",
+      background:"#F9F9F9",
+      
+      
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
     },
     2: {
-      background: "rgba(255,255,255,0.88)",
-      backdropFilter: "blur(24px) saturate(1.6)",
-      WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-      border: "1px solid rgba(255,255,255,0.95)",
+      background:"#F9F9F9",
+      
+      
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
     },
   };
@@ -78,7 +78,7 @@ const PhoneFrame = ({ children }) => (
     <div style={{ position:"absolute",left:-2,top:150,width:3,height:56,background:"#2A2A2E",borderRadius:"2px 0 0 2px" }} />
     <div style={{ position:"absolute",left:-2,top:214,width:3,height:56,background:"#2A2A2E",borderRadius:"2px 0 0 2px" }} />
     <div style={{ position:"absolute",right:-2,top:160,width:3,height:72,background:"#2A2A2E",borderRadius:"0 2px 2px 0" }} />
-    <div style={{ position:"absolute",inset:-1,borderRadius:45,border:"1px solid rgba(255,255,255,0.12)",pointerEvents:"none" }} />
+    <div style={{ position:"absolute",inset:-1,borderRadius:45,border:"1px solid rgba(0,0,0,0.06)",pointerEvents:"none" }} />
     <div style={{ borderRadius: 40, overflow: "hidden", position: "relative", background: "#F9F9F9", height: 720 }}>
       <MeshGradient />
       <div style={{ position:"absolute",top:10,left:"50%",transform:"translateX(-50%)",width:126,height:36,background:"#000",borderRadius:20,zIndex:100 }} />

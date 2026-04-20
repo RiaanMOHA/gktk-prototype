@@ -115,8 +115,7 @@ export default function PrototypePlayground() {
           <p
             style={{
               fontSize: 11,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
+              letterSpacing: "0.02em",
               color: "#8E8F8F",
               margin: 0,
               fontWeight: 500,
@@ -252,123 +251,61 @@ export default function PrototypePlayground() {
           overflow: "hidden",
         }}
       >
-        {/* Step header + file chips */}
+        {/* Compact header — step name only */}
         <div
           style={{
-            padding: "20px 32px 16px",
+            padding: "12px 24px",
             borderBottom: "1px solid rgba(0,0,0,0.06)",
             background: "#EDEEF1",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexShrink: 0,
           }}
         >
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
-            <span
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "#8E8F8F",
-                fontWeight: 500,
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              Step {String(step.index).padStart(2, "0")}
-            </span>
-            <h2
-              style={{
-                fontFamily: '"REM", system-ui, sans-serif',
-                fontSize: 22,
-                lineHeight: 1.25,
-                letterSpacing: "-0.01em",
-                fontWeight: 600,
-                color: "#25272C",
-                margin: 0,
-              }}
-            >
-              {step.label}
-            </h2>
-            <code
-              style={{
-                fontSize: 11,
-                color: "#8E8F8F",
-                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-              }}
-            >
-              {step.id}
-            </code>
-          </div>
-
-          {/* Prototype file chips */}
-          <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {step.prototypes.length === 0 ? (
-              <span style={{ fontSize: 12, color: "#8E8F8F" }}>
-                No prototypes in this drawer yet. Paste one in chat and say which step it belongs to.
-              </span>
-            ) : (
-              step.prototypes.map((p) => {
-                const active = p.filename === activeFile?.filename;
-                return (
-                  <button
-                    key={p.filename}
-                    onClick={() => setFileName(p.filename)}
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: 9999,
-                      border: `1px solid ${active ? "rgba(251,185,49,0.4)" : "rgba(237,238,241,0.9)"}`,
-                      background: active ? "rgba(251,185,49,0.12)" : "rgba(255,255,255,0.8)",
-                      color: active ? "#8C5E00" : "#40444C",
-                      fontSize: 12,
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      fontFamily:
-                        "ui-monospace, SFMono-Regular, Menlo, monospace",
-                      transition: "background 120ms ease, border-color 120ms ease",
-                    }}
-                  >
-                    {p.filename}
-                  </button>
-                );
-              })
-            )}
-          </div>
-
-          {/* Variant chips — only shown when the active file declares variants */}
-          {activeFile?.variants && activeFile.variants.length > 0 && (
-            <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {activeFile.variants.map((v) => {
-                const active = v.id === variantId;
-                return (
-                  <button
-                    key={v.id}
-                    onClick={() => setVariantId(v.id)}
-                    style={{
-                      padding: "6px 14px",
-                      borderRadius: 9999,
-                      border: "none",
-                      background: active ? "#FBB931" : "rgba(0,0,0,0.06)",
-                      color: active ? "#1A1A1E" : "#5B616E",
-                      fontSize: 12,
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      fontFamily: "inherit",
-                      transition: "background 120ms ease, color 120ms ease",
-                    }}
-                  >
-                    {v.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <span
+            style={{
+              fontSize: 11,
+              letterSpacing: "0.02em",
+              color: "#8E8F8F",
+              fontWeight: 500,
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            Step {String(step.index).padStart(2, "0")}
+          </span>
+          <h2
+            style={{
+              fontFamily: '"REM", system-ui, sans-serif',
+              fontSize: 17,
+              lineHeight: 1.25,
+              letterSpacing: "-0.01em",
+              fontWeight: 600,
+              color: "#25272C",
+              margin: 0,
+            }}
+          >
+            {step.label}
+          </h2>
+          <code
+            style={{
+              fontSize: 11,
+              color: "#8E8F8F",
+              fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+            }}
+          >
+            {step.id}
+          </code>
         </div>
 
-        {/* Viewer area */}
+        {/* Viewer area — maximum vertical space for the phone */}
         <div
           ref={viewerRef}
           style={{
             flex: 1,
             minHeight: 0,
             position: "relative",
-            padding: 24,
+            padding: 16,
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "center",
@@ -377,34 +314,32 @@ export default function PrototypePlayground() {
           }}
         >
           {previewUrl ? (
-            <>
-              <div
+            <div
+              style={{
+                width: FRAME_W * fitScale,
+                height: FRAME_H * fitScale,
+                position: "relative",
+                flexShrink: 0,
+              }}
+            >
+              <iframe
+                key={`${previewUrl}#${resetNonce}`}
+                src={previewUrl}
+                title={activeFile?.filename ?? "prototype"}
                 style={{
-                  width: FRAME_W * fitScale,
-                  height: FRAME_H * fitScale,
-                  position: "relative",
-                  flexShrink: 0,
+                  width: FRAME_W,
+                  height: FRAME_H,
+                  border: "none",
+                  borderRadius: 0,
+                  background: "#EDEEF1",
+                  transform: `scale(${fitScale})`,
+                  transformOrigin: "top left",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
                 }}
-              >
-                <iframe
-                  key={`${previewUrl}#${resetNonce}`}
-                  src={previewUrl}
-                  title={activeFile?.filename ?? "prototype"}
-                  style={{
-                    width: FRAME_W,
-                    height: FRAME_H,
-                    border: "none",
-                    borderRadius: 0,
-                    background: "#EDEEF1",
-                    transform: `scale(${fitScale})`,
-                    transformOrigin: "top left",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                  }}
-                />
-              </div>
-            </>
+              />
+            </div>
           ) : (
             <div
               style={{
@@ -413,70 +348,134 @@ export default function PrototypePlayground() {
                 color: "#5B616E",
                 fontSize: 14,
                 lineHeight: 1.6,
+                alignSelf: "center",
               }}
             >
-              Nothing to preview yet. Select a step from the left rail that has
-              a prototype in its drawer.
+              {step.prototypes.length === 0
+                ? "No prototypes in this drawer yet. Paste one in chat and say which step it belongs to."
+                : "Nothing to preview yet. Select a step from the left rail that has a prototype in its drawer."}
             </div>
           )}
         </div>
 
-        {/* Reset button anchored to main pane so it stays visible while viewer scrolls */}
+        {/* ━━ Bottom toolbar — dedicated strip, never covers the phone ━━ */}
         {previewUrl && (
-          <button
-            onClick={() => setResetNonce((n) => n + 1)}
-            title="Reset prototype"
-            aria-label="Reset prototype"
+          <div
             style={{
-              position: "absolute",
-              top: "calc(90px + 16px)",
-              right: 16,
-              zIndex: 3,
-              display: "inline-flex",
+              flexShrink: 0,
+              display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 6,
-              padding: "8px 14px",
-              borderRadius: 9999,
-              border: "1px solid rgba(255,255,255,0.85)",
-              background: "rgba(255,255,255,0.7)",
-              backdropFilter: "blur(20px) saturate(1.4)",
-              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-              boxShadow:
-                "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
-              color: "#25272C",
-              fontFamily: "inherit",
-              fontSize: 12,
-              fontWeight: 500,
-              cursor: "pointer",
-              transition: "background 120ms ease, transform 120ms ease",
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = "scale(0.96)";
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
+              padding: "10px 16px",
+              borderTop: "1px solid rgba(0,0,0,0.06)",
+              background: "#EDEEF1",
+              flexWrap: "wrap",
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-              <path
-                d="M13.5 8a5.5 5.5 0 1 1-1.611-3.889"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-              />
-              <path
-                d="M13.5 2.5v2.8h-2.8"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Reset
-          </button>
+            {/* File chips (only if more than 1 file) */}
+            {step.prototypes.length > 1 &&
+              step.prototypes.map((p) => {
+                const isActive = p.filename === activeFile?.filename;
+                return (
+                  <button
+                    key={p.filename}
+                    onClick={() => setFileName(p.filename)}
+                    style={{
+                      padding: "5px 10px",
+                      borderRadius: 9999,
+                      border: `1px solid ${isActive ? "rgba(251,185,49,0.4)" : "transparent"}`,
+                      background: isActive ? "rgba(251,185,49,0.15)" : "transparent",
+                      color: isActive ? "#8C5E00" : "#40444C",
+                      fontSize: 11,
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      fontFamily:
+                        "ui-monospace, SFMono-Regular, Menlo, monospace",
+                      transition: "background 120ms ease, border-color 120ms ease",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {p.filename.replace(/\.(jsx|html)$/, "")}
+                  </button>
+                );
+              })}
+
+            {/* Separator between file chips and variant chips */}
+            {step.prototypes.length > 1 && activeFile?.variants && activeFile.variants.length > 0 && (
+              <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.1)", flexShrink: 0 }} />
+            )}
+
+            {/* Variant chips */}
+            {activeFile?.variants && activeFile.variants.length > 0 &&
+              activeFile.variants.map((v) => {
+                const isActive = v.id === variantId;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setVariantId(v.id)}
+                    style={{
+                      padding: "5px 12px",
+                      borderRadius: 9999,
+                      border: "none",
+                      background: isActive ? "#FBB931" : "rgba(0,0,0,0.05)",
+                      color: isActive ? "#1A1A1E" : "#5B616E",
+                      fontSize: 11,
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "background 120ms ease, color 120ms ease",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {v.label}
+                  </button>
+                );
+              })}
+
+            {/* Separator before reset */}
+            <div style={{ width: 1, height: 20, background: "rgba(0,0,0,0.1)", flexShrink: 0 }} />
+
+            {/* Reset button */}
+            <button
+              onClick={() => setResetNonce((n) => n + 1)}
+              title="Reset prototype"
+              aria-label="Reset prototype"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "5px 10px",
+                borderRadius: 9999,
+                border: "none",
+                background: "transparent",
+                color: "#5B616E",
+                fontFamily: "inherit",
+                fontSize: 11,
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "color 120ms ease",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <path
+                  d="M13.5 8a5.5 5.5 0 1 1-1.611-3.889"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M13.5 2.5v2.8h-2.8"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Reset
+            </button>
+          </div>
         )}
       </main>
     </div>

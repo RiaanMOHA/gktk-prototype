@@ -66,10 +66,10 @@ function BridgeSnapshot({ visible }) {
     <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 24px" }}>
       <div style={{
         position: "relative", padding: 24, borderRadius: 16, overflow: "hidden",
-        background: "rgba(255,255,255,0.82)",
-        backdropFilter: "blur(24px) saturate(1.6)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-        border: "1px solid rgba(255,255,255,0.95)",
+        background:"#F9F9F9",
+        
+        
+        border: "1px solid rgba(0,0,0,0.06)",
         boxShadow: "0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(8px)",

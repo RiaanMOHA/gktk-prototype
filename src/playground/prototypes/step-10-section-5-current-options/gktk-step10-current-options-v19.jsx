@@ -4,9 +4,9 @@ const C = {
   bg: "#F9F9F9", n950: "#25272C", n900: "#383A42", n800: "#40444C",
   n600: "#5B616E", n400: "#8B8F98", n200: "#D8DBDF", n100: "#EDEEF1",
   amber: "#FBB931", a50: "#FFFBEc", a100: "#FEF2C9",
-  pBg: "rgba(255,255,255,0.70)", pBd: "rgba(255,255,255,0.85)",
+  pBg:"#F9F9F9", pBd:"rgba(0,0,0,0.06)",
   pSh: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
-  eBg: "rgba(255,255,255,0.88)", eBd: "rgba(255,255,255,0.95)",
+  eBg:"#F9F9F9", eBd:"rgba(0,0,0,0.06)",
   eSh: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
 };
 const F = { h: "'REM', sans-serif", b: "'Noto Sans JP', sans-serif" };
@@ -22,7 +22,7 @@ const VARIANTS = [
 function NoiseDef() { return (<svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true"><defs><filter id="n10"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer><feBlend in="SourceGraphic" mode="overlay" /></filter></defs></svg>); }
 function Glass({ children, style, elev, innerRef }) {
   const b = elev ? { background: C.eBg, border: `1px solid ${C.eBd}`, boxShadow: C.eSh } : { background: C.pBg, border: `1px solid ${C.pBd}`, boxShadow: C.pSh };
-  return (<div ref={innerRef} style={{ borderRadius: 16, backdropFilter: "blur(20px) saturate(1.4)", WebkitBackdropFilter: "blur(20px) saturate(1.4)", position: "relative", overflow: "hidden", ...b, ...style }}>
+  return (<div ref={innerRef} style={{ borderRadius: 16, position: "relative", overflow: "hidden", ...b, ...style }}>
     <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.9) 30%,rgba(255,255,255,0.9) 70%,rgba(255,255,255,0) 100%)", zIndex: 2 }} />
     <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 40, background: "linear-gradient(180deg,rgba(255,255,255,0.35) 0%,rgba(255,255,255,0) 100%)", zIndex: 1, pointerEvents: "none" }} />
     <div style={{ position: "absolute", inset: 0, filter: "url(#n10)", zIndex: 1, pointerEvents: "none", borderRadius: 16 }} />
@@ -30,10 +30,10 @@ function Glass({ children, style, elev, innerRef }) {
   </div>);
 }
 function Phone({ children }) {
-  return (<div style={{ width: 375, height: 812, borderRadius: 54, background: "#1A1A1E", padding: 10, position: "relative", boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.12)" }}>
-    <div style={{ position: "absolute", inset: 0, borderRadius: 54, border: "1.5px solid rgba(255,255,255,0.08)", pointerEvents: "none", zIndex: 10 }} />
+  return (<div style={{ width: 393, height: 852, borderRadius: 55, background: "#1A1A1E", overflow: "hidden", position: "relative", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>
+    <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "1px solid rgba(0,0,0,0.06)", pointerEvents: "none", zIndex: 10 }} />
     <div style={{ position: "absolute", left: -2.5, top: 140, width: 3, height: 32, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", left: -2.5, top: 185, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", left: -2.5, top: 245, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", right: -2.5, top: 185, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} />
-    <div style={{ width: "100%", height: "100%", borderRadius: 44, overflow: "hidden", position: "relative", background: `radial-gradient(ellipse 130% 70% at 20% 20%,rgba(237, 238, 241, 0.3) 0%,transparent 50%),radial-gradient(ellipse 100% 60% at 80% 80%,rgba(254, 242, 201, 0.2) 0%,transparent 50%),${C.bg}` }}>
+    <div style={{ position: "absolute", inset: 6, borderRadius: 49, overflow: "hidden", background: `radial-gradient(ellipse 130% 70% at 20% 20%,rgba(237, 238, 241, 0.3) 0%,transparent 50%),radial-gradient(ellipse 100% 60% at 80% 80%,rgba(254, 242, 201, 0.2) 0%,transparent 50%),${C.bg}` }}>
       <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 126, height: 36, background: "#000", borderRadius: 20, zIndex: 50 }} />
       {children}
     </div>

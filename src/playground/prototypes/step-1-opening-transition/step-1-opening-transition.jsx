@@ -68,42 +68,34 @@ const MeshBg = () => (
 const PhoneFrame = ({ children }) => (
   <div style={{
     position: "relative",
-    width: "100%",
-    maxWidth: 393,
-    aspectRatio: "393 / 852",
-    margin: "0 auto",
+    width: 393,
+    height: 852,
+    borderRadius: 55,
+    overflow: "hidden",
+    background: "#1A1A1E",
+    boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset",
   }}>
-    {/* Shell */}
+    {/* Metallic edge */}
     <div style={{
       position: "absolute",
-      inset: -10,
-      borderRadius: 54,
-      background: "#1A1A1C",
-      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
-    }}>
-      {/* Metallic edge */}
-      <div style={{
-        position: "absolute",
-        inset: -1,
-        borderRadius: 55,
-        background: "linear-gradient(170deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.08) 100%)",
-        pointerEvents: "none",
-      }} />
-      {/* Power button (right) */}
-      <div style={{ position: "absolute", right: -3, top: 160, width: 3, height: 38, borderRadius: "0 2px 2px 0", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "1px 0 2px rgba(0,0,0,0.3)" }} />
-      {/* Volume up (left) */}
-      <div style={{ position: "absolute", left: -3, top: 130, width: 3, height: 28, borderRadius: "2px 0 0 2px", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "-1px 0 2px rgba(0,0,0,0.3)" }} />
-      {/* Volume down (left) */}
-      <div style={{ position: "absolute", left: -3, top: 170, width: 3, height: 28, borderRadius: "2px 0 0 2px", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "-1px 0 2px rgba(0,0,0,0.3)" }} />
-      {/* Silent switch (left) */}
-      <div style={{ position: "absolute", left: -3, top: 95, width: 3, height: 18, borderRadius: "2px 0 0 2px", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "-1px 0 2px rgba(0,0,0,0.3)" }} />
-    </div>
+      inset: -1,
+      borderRadius: 56,
+      background: "linear-gradient(170deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.08) 100%)",
+      pointerEvents: "none",
+    }} />
+    {/* Power button (right) */}
+    <div style={{ position: "absolute", right: -3, top: 160, width: 3, height: 38, borderRadius: "0 2px 2px 0", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "1px 0 2px rgba(0,0,0,0.3)" }} />
+    {/* Volume up (left) */}
+    <div style={{ position: "absolute", left: -3, top: 130, width: 3, height: 28, borderRadius: "2px 0 0 2px", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "-1px 0 2px rgba(0,0,0,0.3)" }} />
+    {/* Volume down (left) */}
+    <div style={{ position: "absolute", left: -3, top: 170, width: 3, height: 28, borderRadius: "2px 0 0 2px", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "-1px 0 2px rgba(0,0,0,0.3)" }} />
+    {/* Silent switch (left) */}
+    <div style={{ position: "absolute", left: -3, top: 95, width: 3, height: 18, borderRadius: "2px 0 0 2px", background: "linear-gradient(180deg, #3A3A3C, #2A2A2C)", boxShadow: "-1px 0 2px rgba(0,0,0,0.3)" }} />
     {/* Screen */}
     <div style={{
-      position: "relative",
-      width: "100%",
-      height: "100%",
-      borderRadius: 44,
+      position: "absolute",
+      inset: 6,
+      borderRadius: 49,
       overflow: "hidden",
       background: C.bg,
     }}>
@@ -240,10 +232,10 @@ const Step1Content = ({ onBlank }) => {
           position: "absolute",
           inset: 4,
           borderRadius: "50%",
-          background: "rgba(255,255,255,0.75)",
-          backdropFilter: "blur(16px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(16px) saturate(1.4)",
-          border: "1px solid rgba(255,255,255,0.85)",
+          background:"#F9F9F9",
+          
+          
+          border: "1px solid rgba(0,0,0,0.06)",
           boxShadow: `0 4px 20px rgba(0,0,0,0.08), 0 0 ${progress * 0.5}px rgba(251,185,49,${progress * 0.005})`,
         }} />
 
