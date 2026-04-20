@@ -112,10 +112,10 @@ const GlassPanel = ({ children, style = {}, panelRef }) => (
     ref={panelRef}
     style={{
       position: "relative",
-      background: "rgba(255,255,255,0.88)",
-      backdropFilter: "blur(24px) saturate(1.6)",
-      WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-      border: "1px solid rgba(255,255,255,0.95)",
+      background:"#F9F9F9",
+      
+      
+      border: "1px solid rgba(0,0,0,0.06)",
       borderRadius: 28,
       boxShadow:
         "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5)",
@@ -197,10 +197,10 @@ const GhostFinancials = ({ containerRef, headerRef, rowRefs }) => {
       <div
         style={{
           position: "relative",
-          background: "rgba(255,255,255,0.70)",
-          backdropFilter: "blur(20px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-          border: "1px solid rgba(255,255,255,0.85)",
+          background:"#F9F9F9",
+          
+          
+          border: "1px solid rgba(0,0,0,0.06)",
           borderRadius: 20,
           boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
           overflow: "hidden",

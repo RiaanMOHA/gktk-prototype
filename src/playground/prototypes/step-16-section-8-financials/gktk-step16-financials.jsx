@@ -35,10 +35,8 @@ const Glass = ({level=1,children,style={}})=>{
   const l2=level===2;
   return(
     <div style={{position:"relative",
-      background:l2?"rgba(255,255,255,0.88)":"rgba(255,255,255,0.70)",
-      backdropFilter:l2?"blur(24px) saturate(1.6)":"blur(20px) saturate(1.4)",
-      WebkitBackdropFilter:l2?"blur(24px) saturate(1.6)":"blur(20px) saturate(1.4)",
-      border:l2?"1px solid rgba(255,255,255,0.95)":"1px solid rgba(255,255,255,0.85)",
+      background:l2? "#F9F9F9" : "#F9F9F9",
+                  border:l2?"1px solid rgba(0,0,0,0.06)":"1px solid rgba(0,0,0,0.06)",
       boxShadow:l2?"0 8px 32px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.9)"
         :"0 2px 12px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04),inset 0 1px 0 rgba(255,255,255,0.8)",
       borderRadius:20,overflow:"hidden",...style}}>
@@ -57,10 +55,9 @@ const ScenarioTabs = ({scenario,set})=>(
       <button className="step-16-tab" key={s} onClick={()=>set(s)} style={{
         padding:"7px 18px",borderRadius:12,border:"none",cursor:"pointer",
         fontSize:12,fontWeight:500,fontFamily:"'Noto Sans JP',sans-serif",textTransform:"capitalize",
-        background:scenario===s?"rgba(255,255,255,0.88)":"transparent",
+        background:scenario===s?"#F9F9F9":"transparent",
         color:scenario===s?"#25272C":"#8E8F8F",
-        backdropFilter:scenario===s?"blur(12px)":"none",
-        boxShadow:scenario===s?"0 2px 8px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8)":"none",
+                boxShadow:scenario===s?"0 2px 8px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8)":"none",
         transition:"all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       }}>{s}</button>
     ))}
@@ -254,8 +251,8 @@ const IntroTransition = ({onComplete})=>{
       <div style={{position:"relative",zIndex:5,paddingTop:80,display:"flex",flexDirection:"column",alignItems:"center",gap:8}}>
         {["Property secretary","Medical navigation","Education support","Admin support","Mental wellness","Cultural program"].map((s,i)=>(
           <div key={i} ref={el=>elemRefs.current[i]=el} style={{
-            background:"rgba(255,255,255,0.70)",backdropFilter:"blur(20px) saturate(1.4)",
-            border:"1px solid rgba(255,255,255,0.85)",
+            background:"#F9F9F9",
+            border:"1px solid rgba(0,0,0,0.06)",
             boxShadow:"0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8)",
             borderRadius:12,padding:"9px 18px",fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#40444C",
           }}>{s}</div>

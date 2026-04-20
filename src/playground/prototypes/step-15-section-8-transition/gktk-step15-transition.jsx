@@ -120,7 +120,7 @@ export default function Step15TransitionV4(){
             <div style={{position:"relative",zIndex:5,paddingTop:80,display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
               {["Property secretary","Medical navigation","Education support","Admin support","Mental wellness","Cultural program"].map((s,i)=>(
                 <div key={i} ref={el=>elemRefs.current[i]=el} style={{
-                  background:"rgba(255,255,255,0.70)",backdropFilter:"blur(20px) saturate(1.4)",border:"1px solid rgba(255,255,255,0.85)",
+                  background:"#F9F9F9",border:"1px solid rgba(0,0,0,0.06)",
                   boxShadow:"0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8)",
                   borderRadius:12,padding:"10px 20px",fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#40444C",
                 }}>{s}</div>

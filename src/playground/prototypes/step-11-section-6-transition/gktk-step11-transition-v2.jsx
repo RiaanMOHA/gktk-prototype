@@ -32,17 +32,17 @@ const NoiseGrain = ({ id = "noise" }) => (
 const Glass = ({ level = 1, children, style = {} }) => {
   const levels = {
     1: {
-      background: "rgba(255,255,255,0.70)",
-      backdropFilter: "blur(20px) saturate(1.4)",
-      WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-      border: "1px solid rgba(255,255,255,0.85)",
+      background:"#F9F9F9",
+      
+      
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
     },
     2: {
-      background: "rgba(255,255,255,0.88)",
-      backdropFilter: "blur(24px) saturate(1.6)",
-      WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-      border: "1px solid rgba(255,255,255,0.95)",
+      background:"#F9F9F9",
+      
+      
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95)",
     },
   };
@@ -54,13 +54,13 @@ const Glass = ({ level = 1, children, style = {} }) => {
 };
 
 const PhoneFrame = ({ children }) => (
-  <div style={{ position: "relative", width: 280, height: 606, borderRadius: 40, background: "#1a1a1a", boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.12)", padding: 6 }}>
-    <div style={{ position: "absolute", left: -2.5, top: 90, width: 3, height: 28, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
-    <div style={{ position: "absolute", left: -2.5, top: 140, width: 3, height: 48, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
-    <div style={{ position: "absolute", left: -2.5, top: 196, width: 3, height: 48, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
-    <div style={{ position: "absolute", right: -2.5, top: 150, width: 3, height: 68, background: "#2a2a2a", borderRadius: "0 2px 2px 0" }} />
-    <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: 34, overflow: "hidden", background: C.bg }}>
-      <div style={{ position: "absolute", top: 8, left: "50%", transform: "translateX(-50%)", width: 90, height: 24, background: "#000", borderRadius: 20, zIndex: 100 }} />
+  <div style={{ position: "relative", width: 393, height: 852, borderRadius: 55, background: "#1A1A1E", overflow: "hidden", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>
+    <div style={{ position: "absolute", left: -2.5, top: 130, width: 3, height: 28, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
+    <div style={{ position: "absolute", left: -2.5, top: 195, width: 3, height: 48, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
+    <div style={{ position: "absolute", left: -2.5, top: 270, width: 3, height: 48, background: "#2a2a2a", borderRadius: "2px 0 0 2px" }} />
+    <div style={{ position: "absolute", right: -2.5, top: 210, width: 3, height: 68, background: "#2a2a2a", borderRadius: "0 2px 2px 0" }} />
+    <div style={{ position: "absolute", inset: 6, borderRadius: 49, overflow: "hidden", background: C.bg }}>
+      <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 126, height: 36, background: "#000", borderRadius: 20, zIndex: 100 }} />
       {children}
     </div>
   </div>
@@ -123,7 +123,7 @@ const MapDestination = ({ containerRef }) => (
 
 const TapPrompt = ({ containerRef }) => (
   <div ref={containerRef} aria-live="polite" style={{ position: "absolute", bottom: 36, left: 0, right: 0, textAlign: "center", opacity: 0, visibility: "hidden" }}>
-    <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.4)", letterSpacing: "0.02em" }}>Tap to continue</div>
+    <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: "#F9F9F9", letterSpacing: "0.02em" }}>Tap to continue</div>
   </div>
 );
 

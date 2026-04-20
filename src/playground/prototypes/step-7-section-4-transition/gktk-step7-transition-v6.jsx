@@ -53,10 +53,10 @@ const MeshBg = () => (
 
 const Glass = ({ children, style={}, innerRef }) => (
   <div ref={innerRef} style={{
-    background:"rgba(255,255,255,0.88)",
-    backdropFilter:"blur(24px) saturate(1.6)",
-    WebkitBackdropFilter:"blur(24px) saturate(1.6)",
-    border:"1px solid rgba(255,255,255,0.95)",
+    background:"#F9F9F9",
+    
+    
+    border:"1px solid rgba(0,0,0,0.06)",
     borderRadius:28,position:"relative",overflow:"hidden",
     boxShadow:"0 8px 32px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06)",
     ...style,
@@ -179,17 +179,17 @@ const MapFace = ({ style={} }) => (
     ))}
     <div style={{
       position:"absolute",bottom:"18%",left:"5%",width:"52%",
-      background:"rgba(0,0,0,0.4)",backdropFilter:"blur(12px)",
-      border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"10px 12px",
+      background:"rgba(0,0,0,0.4)",
+      border:"1px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"10px 12px",
     }}>
-      <div style={{fontSize:9,color:"rgba(255,255,255,0.4)",fontFamily:"Noto Sans JP,sans-serif",letterSpacing:"0.04em",marginBottom:4}}>
+      <div style={{fontSize:9,color: "#F9F9F9",fontFamily:"Noto Sans JP,sans-serif",letterSpacing:"0.04em",marginBottom:4}}>
         KUMAMOTO SEMICONDUCTOR CORRIDOR
       </div>
       <div style={{display:"flex",gap:16}}>
         {[["JASM","12,800"],["TSMC","Phase 2"],["Workers","47,000"]].map(([l,v],i)=>(
           <div key={i}>
-            <div style={{fontSize:8,color:"rgba(255,255,255,0.35)",fontFamily:"Noto Sans JP,sans-serif"}}>{l}</div>
-            <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",fontFamily:"REM,sans-serif",fontWeight:600}}>{v}</div>
+            <div style={{fontSize:8,color: "#F9F9F9",fontFamily:"Noto Sans JP,sans-serif"}}>{l}</div>
+            <div style={{fontSize:11,color: "#F9F9F9",fontFamily:"REM,sans-serif",fontWeight:600}}>{v}</div>
           </div>
         ))}
       </div>
@@ -588,23 +588,23 @@ const Warp = ({ resolveRef, tapRef, headingRef, bodyRef, started }) => {
 // ─── iPhone frame ───
 const Phone = ({ children }) => (
   <div style={{
-    position:"relative",width:390,height:844,borderRadius:52,background:"#1a1a1a",padding:4,
-    boxShadow:"inset 0 0 0 1px rgba(255,255,255,0.05)",
+    position:"relative",width:393,height:852,borderRadius:55,background:"#1A1A1E",overflow:"hidden",
+    boxShadow:"0 0 0 1px rgba(255,255,255,0.08) inset",
   }}>
-    <div style={{position:"absolute",inset:-1,borderRadius:53,
+    <div style={{position:"absolute",inset:-1,borderRadius:56,
       background:"linear-gradient(135deg,#555 0%,#333 30%,#444 50%,#2a2a2a 70%,#555 100%)",zIndex:-1}} />
-    <div style={{width:"100%",height:"100%",borderRadius:48,overflow:"hidden",position:"relative",background:C.bg}}>
+    <div style={{position:"absolute",inset:6,borderRadius:49,overflow:"hidden",background:C.bg}}>
       <div style={{position:"absolute",top:10,left:"50%",transform:"translateX(-50%)",width:126,height:36,borderRadius:20,background:"#000",zIndex:30}} />
       <div style={{
         position:"absolute",top:14,left:24,right:24,display:"flex",justifyContent:"space-between",
         zIndex:25,fontSize:13,fontWeight:600,fontFamily:"-apple-system,sans-serif",
-        color:"rgba(255,255,255,0.8)",mixBlendMode:"difference",
+        color: "#F9F9F9",mixBlendMode:"difference",
       }}>
         <span>9:41</span><span style={{fontSize:11}}>5G</span>
       </div>
       <div style={{
         position:"absolute",bottom:8,left:"50%",transform:"translateX(-50%)",
-        width:134,height:5,borderRadius:3,background:"rgba(255,255,255,0.3)",zIndex:25,mixBlendMode:"difference",
+        width:134,height:5,borderRadius:3,background:"#F9F9F9",zIndex:25,mixBlendMode:"difference",
       }} />
       {children}
     </div>

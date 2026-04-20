@@ -23,8 +23,7 @@
    reparenting in index.html. Use % not vw/vh. */
 [data-embed="1"] #gallery-modal {
   background: rgba(20, 20, 22, 0.55);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -39,8 +38,7 @@
   margin: 28px auto;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(24px) saturate(1.6);
-  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.10),
@@ -56,8 +54,7 @@
   padding: 0;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.08),
@@ -96,8 +93,7 @@
 /* ─── Property image quick-look (iOS Photos pattern) ─── */
 [data-embed="1"] #property-quick-look {
   background: rgba(10, 10, 12, 0.7);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,8 +119,7 @@
   padding: 0;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.25),
@@ -149,8 +144,7 @@
 /* ─── Evidence preview (document + chart overlay) ─── */
 [data-embed="1"] #evidence-preview {
   background: rgba(20, 20, 22, 0.55);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -165,8 +159,7 @@
   margin: 28px auto;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(24px) saturate(1.6);
-  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.10),
@@ -183,8 +176,7 @@
   padding: 0;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.08),
@@ -329,13 +321,51 @@
   height: auto;
 }
 
-/* ─── Sheet drag performance hint ───
-   The inline embed JS resizes the sheet via style.height on
-   each pointer move. will-change + contain help the browser
-   keep repaints localized and avoid cascading reflow. */
+/* ─── Custom persistent info card (pinned, scrollable) ───
+   The embed card is a non-modal, non-dismissible custom panel
+   pinned to the bottom of the phone screen. HIG does not name
+   this exact pattern; the prototype deliberately diverges from
+   HIG's iOS place-card (which is a sheet). Force the position
+   and size with !important so the bundle's cascade cannot push
+   it into the floating mid-screen state that looks broken on
+   mobile. Content scrolls inside the fixed-height card when it
+   exceeds the visible area — matching iOS sheet content scroll.
+   Height tuned to show title, paragraph, and at least one row
+   of content before scroll kicks in. */
 [data-embed="1"] #right-panel {
-  will-change: height, transform;
+  position: absolute !important;
+  top: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 38% !important;
+  max-height: 38% !important;
+  min-height: 0 !important;
+  transform: translate(0) !important;
+  border-radius: 24px 24px 0 0 !important;
+  overflow: hidden !important;
   contain: layout paint;
+}
+/* Content scrolls inside the fixed card — kill the bundle's
+   sheet-peek mask that fades the bottom 40px (used to hint at
+   more content when the sheet was resizable; unneeded now that
+   the card scrolls natively). */
+[data-embed="1"] #right-panel #panel-content,
+[data-embed="1"] #right-panel.sheet-peek #panel-content {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  max-height: none !important;
+  padding-bottom: 24px !important;
+  overscroll-behavior: contain !important;
+}
+/* Hide the grabber — there is no resize affordance. */
+[data-embed="1"] #right-panel .sheet-handle-hit,
+[data-embed="1"] #right-panel .sheet-handle-hit:before {
+  display: none !important;
 }
 
 /* ─── Reduced motion ───

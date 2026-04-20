@@ -27,10 +27,10 @@ function Logo({ id, size }) {
 
 /* ── Glass surfaces ── */
 const glass1 = {
-  background: "rgba(255,255,255,0.70)",
-  backdropFilter: "blur(20px) saturate(1.4)",
-  WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-  border: "1px solid rgba(255,255,255,0.85)",
+  background:"#F9F9F9",
+  
+  
+  border: "1px solid rgba(0,0,0,0.06)",
   boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
 };
 
@@ -273,10 +273,10 @@ export default function GKTKEntryTransitions({ variant } = {}) {
         .entry-logo { position: absolute; top: 60px; left: 24px; }
         .entry-h1 { font-family: 'REM', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.1; letter-spacing: -0.025em; color: ${N[950]}; margin: 0 0 8px 0; }
         .entry-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 400; color: ${N[900]}; line-height: 1.5; margin: 0; }
-        .fact-chip { display: inline-block; padding: 6px 14px; border-radius: 12px; background: rgba(255,255,255,0.70); backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(255,255,255,0.85); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; color: ${N[600]}; letter-spacing: 0.01em; line-height: 1.4; }
+        .fact-chip { display: inline-block; padding: 6px 14px; border-radius: 12px; background: #F9F9F9; -webkit-border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; color: ${N[600]}; letter-spacing: 0.01em; line-height: 1.4; }
         .fact-chip.bold { font-weight: 600; color: ${N[950]}; }
-        .glass-bar { padding: 8px 14px; border-radius: 14px; background: rgba(255,255,255,0.70); backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); border: 1px solid rgba(255,255,255,0.85); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 400; color: ${N[800]}; line-height: 1.4; }
-        .glass-bar.elev2 { padding: 10px 16px; background: rgba(255,255,255,0.88); backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6); border: 1px solid rgba(255,255,255,0.95); box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06); font-weight: 600; color: ${N[950]}; }
+        .glass-bar { padding: 8px 14px; border-radius: 14px; background: #F9F9F9; -webkit-border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 400; color: ${N[800]}; line-height: 1.4; }
+        .glass-bar.elev2 { padding: 10px 16px; background: #F9F9F9; -webkit-border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06); font-weight: 600; color: ${N[950]}; }
         .blob { position: absolute; border-radius: 50%; filter: blur(40px); }
 
         @keyframes blobFloat1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(15px, -20px) scale(1.05); } }

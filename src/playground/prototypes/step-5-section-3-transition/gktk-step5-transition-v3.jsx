@@ -55,10 +55,8 @@ function GlassPanel({ level = 1, borderRadius = 20, children, style = {}, innerR
   return (
     <div ref={innerRef} style={{
       position: "relative", borderRadius,
-      background: isL2 ? "rgba(255,255,255,0.82)" : "rgba(255,255,255,0.62)",
-      backdropFilter: isL2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)",
-      WebkitBackdropFilter: isL2 ? "blur(24px) saturate(1.6)" : "blur(20px) saturate(1.4)",
-      border: isL2 ? "1px solid rgba(255,255,255,0.95)" : "1px solid rgba(255,255,255,0.85)",
+      background:  "#F9F9F9",
+                  border: isL2 ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(0,0,0,0.06)",
       boxShadow: isL2
         ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7)"
         : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
@@ -196,12 +194,12 @@ function MapDestination({ onReplay, animate = true }) {
 
       <button onClick={onReplay} style={{
         position: "absolute", top: 52, right: 16, zIndex: 200,
-        background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10,
+        background:"#F9F9F9", 
+        
+        border: "1px solid rgba(0,0,0,0.06)", borderRadius: 10,
         padding: "6px 10px", cursor: "pointer",
         fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, fontWeight: 500,
-        color: "rgba(255,255,255,0.6)", boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+        color: "#F9F9F9", boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
       }}>Replay</button>
     </div>
   );
@@ -575,14 +573,13 @@ function RecedeTransition({ onComplete }) {
 }
 
 function IPhoneFrame({ children }) {
-  const BEZEL = 8;
   return (
     <div style={{
-      position: "relative", width: 375 + BEZEL * 2, height: 812 + BEZEL * 2, borderRadius: 52,
-      background: "linear-gradient(145deg, #2A2A2C 0%, #1A1A1C 50%, #2A2A2C 100%)",
-      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3)",
+      position: "relative", width: 393, height: 852, borderRadius: 55,
+      overflow: "hidden", background: "#1A1A1E",
+      boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset",
     }}>
-      <div style={{ position: "absolute", inset: 0, borderRadius: 52, border: "1px solid rgba(255,255,255,0.12)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "1px solid rgba(0,0,0,0.06)", pointerEvents: "none" }} />
       {[120, 172, 224].map((top, i) => (
         <div key={`l${i}`} style={{
           position: "absolute", left: -2, top, width: 3, height: i === 0 ? 24 : 44,
@@ -596,8 +593,7 @@ function IPhoneFrame({ children }) {
         boxShadow: "1px 0 2px rgba(0,0,0,0.3)",
       }} />
       <div style={{
-        position: "absolute", top: BEZEL, left: BEZEL, right: BEZEL, bottom: BEZEL,
-        borderRadius: 44, overflow: "hidden", background: C.bg,
+        position: "absolute", inset: 6, borderRadius: 49, overflow: "hidden", background: C.bg,
       }}>
         <MeshBg />
         <div style={{
@@ -609,7 +605,7 @@ function IPhoneFrame({ children }) {
             position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
             width: 10, height: 10, borderRadius: "50%",
             background: "radial-gradient(circle at 40% 40%, #1a1a2e 0%, #0a0a0e 100%)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid rgba(0,0,0,0.06)",
           }} />
         </div>
         {children}
