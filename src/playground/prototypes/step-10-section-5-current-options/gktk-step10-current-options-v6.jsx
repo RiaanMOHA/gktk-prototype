@@ -7,39 +7,9 @@ const C = {
   amber: "#FBB931", amber100: "#FEF2C9", orange: "#FF9424",
 };
 
-/* ── visionOS material primitives ── */
-const NOISE_ID = "gktk-noise-s10";
-const NoiseDefs = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <defs>
-      <filter id={NOISE_ID}>
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-      </filter>
-    </defs>
-  </svg>
-);
-
-const NoiseOverlay = ({ opacity = 0.03 }) => (
-  <div style={{
-    position: "absolute", inset: 0, borderRadius: "inherit",
-    filter: `url(#${NOISE_ID})`, opacity, mixBlendMode: "overlay", pointerEvents: "none",
-  }} />
-);
-
 const MeshBg = () => (
   <div style={{ position: "absolute", inset: 0, overflow: "hidden", borderRadius: "inherit" }}>
-    <div style={{
-      position: "absolute", inset: 0,
-      background: [
-        "radial-gradient(ellipse 80% 50% at 20% 80%, rgba(251,185,49,0.08) 0%, transparent 60%)",
-        "radial-gradient(ellipse 60% 60% at 80% 20%, rgba(255,148,36,0.05) 0%, transparent 50%)",
-        "radial-gradient(ellipse 90% 70% at 50% 50%, rgba(237,238,241,0.4) 0%, transparent 70%)",
-        "radial-gradient(ellipse 100% 100% at 50% 100%, rgba(254,242,201,0.12) 0%, transparent 60%)",
-        `linear-gradient(180deg, ${C.n100} 0%, ${C.bg} 40%)`,
-      ].join(", "),
-    }} />
-    <NoiseOverlay opacity={0.025} />
+    <div style={{ position: "absolute", inset: 0, background: C.bg }} />
   </div>
 );
 
@@ -48,25 +18,13 @@ function GlassPanel({ level = 1, borderRadius = 20, children, style = {}, ...pro
   return (
     <div style={{
       position: "relative", borderRadius,
-      background: isL2 ? "#F9F9F9" : "#F9F9F9",
-                  border: isL2 ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(0,0,0,0.06)",
+      background: "#F9F9F9",
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: isL2
-        ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7)"
-        : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
+        ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)"
+        : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
       overflow: "hidden", ...style,
     }} {...props}>
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0,
-        height: isL2 ? 2 : 1.5, borderRadius: `${borderRadius}px ${borderRadius}px 0 0`,
-        background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%)",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "absolute", top: 0, left: "10%", right: "10%", height: 40,
-        background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 100%)",
-        pointerEvents: "none",
-      }} />
-      <NoiseOverlay opacity={0.04} />
       <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
     </div>
   );
@@ -167,14 +125,14 @@ function DetailView({ index, onBack }) {
       }}>{d.body}</p>
 
       {d.takeaway && (
-        <GlassPanel level={2} borderRadius={14} style={{
+        <GlassPanel level={2} borderRadius={12} style={{
           padding: "16px 20px",
           opacity: phase ? 1 : 0,
           transform: phase ? "translateY(0) translateZ(10px)" : "translateY(20px) translateZ(-30px)",
           transition: "all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.35s",
         }}>
           <p style={{
-            fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 600, fontSize: 15,
+            fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 600, fontSize: 16,
             color: C.n950, margin: 0, lineHeight: 1.5,
           }}>{d.takeaway}</p>
         </GlassPanel>
@@ -185,7 +143,7 @@ function DetailView({ index, onBack }) {
           {d.verdicts.map((v, i) => {
             const isLast = i === d.verdicts.length - 1;
             return (
-              <GlassPanel key={i} level={isLast ? 2 : 1} borderRadius={14} style={{
+              <GlassPanel key={i} level={isLast ? 2 : 1} borderRadius={12} style={{
                 padding: "16px 20px",
                 opacity: i < vCount ? 1 : 0,
                 transform: i < vCount
@@ -195,7 +153,7 @@ function DetailView({ index, onBack }) {
               }}>
                 <p style={{
                   fontFamily: "'Noto Sans JP', sans-serif",
-                  fontWeight: isLast ? 600 : 400, fontSize: isLast ? 15 : 14,
+                  fontWeight: isLast ? 600 : 400, fontSize: isLast ? 16 : 14,
                   color: isLast ? C.n950 : C.n800, margin: 0, lineHeight: 1.6,
                 }}>{v}</p>
               </GlassPanel>
@@ -232,7 +190,7 @@ function ChoiceB({ onSelectDetail }) {
       </p>
 
       {DATA.map((d, i) => (
-        <GlassPanel key={i} level={1} borderRadius={18} style={{
+        <GlassPanel key={i} level={1} borderRadius={20} style={{
           padding: "20px", cursor: "pointer", marginBottom: i === 0 ? 12 : 0,
           opacity: entered ? 1 : 0,
           transform: entered
@@ -252,13 +210,13 @@ function ChoiceB({ onSelectDetail }) {
                 color: C.n600, letterSpacing: "0.01em", display: "block", marginBottom: 6,
               }}>{d.label}</span>
               <span style={{
-                fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 17,
+                fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 18,
                 color: C.n950, letterSpacing: "-0.01em", lineHeight: 1.3, display: "block",
               }}>{d.heading}</span>
             </div>
             <span style={{
-              fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 36,
-              color: C.n200, lineHeight: 1, letterSpacing: "-0.03em",
+              fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 32,
+              color: C.n200, lineHeight: 1, letterSpacing: "-0.02em",
               marginLeft: 12, flexShrink: 0,
             }}>{d.stat}</span>
           </div>
@@ -280,15 +238,10 @@ function ChoiceD({ onSelectDetail }) {
     return () => clearTimeout(t);
   }, []);
 
+  /* side gradients and hover glows removed per flat-design mandate */
   const sides = [
-    {
-      gradient: "linear-gradient(175deg, rgba(254,242,201,0.35) 0%, rgba(251,185,49,0.08) 40%, transparent 80%)",
-      hoverGlow: "radial-gradient(ellipse at 50% 70%, rgba(251,185,49,0.12) 0%, transparent 60%)",
-    },
-    {
-      gradient: "linear-gradient(175deg, rgba(216,219,223,0.3) 0%, rgba(138,143,154,0.06) 40%, transparent 80%)",
-      hoverGlow: "radial-gradient(ellipse at 50% 70%, rgba(138,143,154,0.08) 0%, transparent 60%)",
-    },
+    { gradient: "transparent", hoverGlow: "transparent" },
+    { gradient: "transparent", hoverGlow: "transparent" },
   ];
 
   return (
@@ -324,7 +277,7 @@ function ChoiceD({ onSelectDetail }) {
               onMouseLeave={() => setHoveredSide(null)}
               style={{
                 flex: 1, position: "relative", cursor: "pointer",
-                borderRadius: 22, overflow: "hidden",
+                borderRadius: 20, overflow: "hidden",
                 opacity: entered ? 1 : 0,
                 transform: entered
                   ? "translateY(0) scale(1)"
@@ -348,25 +301,14 @@ function ChoiceD({ onSelectDetail }) {
               }} />
 
               <div style={{
-                position: "absolute", inset: 0, borderRadius: 22,
+                position: "absolute", inset: 0, borderRadius: 20,
                 background:"#F9F9F9",
-                
-                
                 border: "1px solid rgba(0,0,0,0.06)",
                 boxShadow: isHovered
-                  ? "0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)"
-                  : "0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.4)",
+                  ? "0 8px 32px rgba(0,0,0,0.08)"
+                  : "0 2px 12px rgba(0,0,0,0.04)",
                 transition: "box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
               }} />
-
-              <div style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 1.5,
-                borderRadius: "22px 22px 0 0",
-                background: "linear-gradient(180deg, rgba(255,255,255,0.85) 0%, transparent 100%)",
-                pointerEvents: "none",
-              }} />
-
-              <NoiseOverlay opacity={0.03} />
 
               <div style={{
                 position: "relative", zIndex: 2, height: "100%",
@@ -378,8 +320,7 @@ function ChoiceD({ onSelectDetail }) {
                   <span style={{
                     fontFamily: "'REM', sans-serif", fontWeight: 600,
                     fontSize: 56, lineHeight: 1, color: C.n950,
-                    letterSpacing: "-0.03em", display: "block",
-                    textShadow: "0 2px 12px rgba(0,0,0,0.05)",
+                    letterSpacing: "-0.02em", display: "block",
                     opacity: entered ? 1 : 0,
                     transform: entered ? "translateY(0)" : "translateY(12px)",
                     transition: `all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${450 + i * 100}ms`,
@@ -388,13 +329,13 @@ function ChoiceD({ onSelectDetail }) {
 
                 <div>
                   <span style={{
-                    fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 11,
+                    fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 12,
                     color: C.n600, letterSpacing: "0.01em", display: "block", marginBottom: 4,
                     opacity: entered ? 1 : 0,
                     transition: `opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${550 + i * 100}ms`,
                   }}>{d.label}</span>
                   <span style={{
-                    fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 15,
+                    fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 16,
                     color: C.n950, letterSpacing: "-0.01em", lineHeight: 1.25,
                     display: "block", marginBottom: 12,
                     opacity: entered ? 1 : 0,
@@ -467,7 +408,6 @@ export default function Step10CurrentOptionsPlayground({ variant } = {}) {
         }
       `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet" />
-      <NoiseDefs />
       <div style={{ position: "relative", width: 393, height: 852, borderRadius: 55, overflow: "hidden", background: "#1A1A1E", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>
         <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "2.5px solid transparent",
           background: "linear-gradient(135deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.05) 50%,rgba(255,255,255,0.15) 100%) border-box",

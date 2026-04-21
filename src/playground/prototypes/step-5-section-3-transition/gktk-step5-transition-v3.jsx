@@ -15,38 +15,9 @@ const an = (el, kf, opts) => {
 };
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
-const NOISE_ID = "gktk-noise";
-const NoiseDefs = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <defs>
-      <filter id={NOISE_ID}>
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-      </filter>
-    </defs>
-  </svg>
-);
-
-const NoiseOverlay = ({ opacity = 0.03 }) => (
-  <div style={{
-    position: "absolute", inset: 0, borderRadius: "inherit",
-    filter: `url(#${NOISE_ID})`, opacity, mixBlendMode: "overlay", pointerEvents: "none",
-  }} />
-);
-
 const MeshBg = () => (
   <div style={{ position: "absolute", inset: 0, overflow: "hidden", borderRadius: "inherit" }}>
-    <div style={{
-      position: "absolute", inset: 0,
-      background: [
-        "radial-gradient(ellipse 80% 50% at 20% 80%, rgba(251,185,49,0.08) 0%, transparent 60%)",
-        "radial-gradient(ellipse 60% 60% at 80% 20%, rgba(255,148,36,0.05) 0%, transparent 50%)",
-        "radial-gradient(ellipse 90% 70% at 50% 50%, rgba(237,238,241,0.4) 0%, transparent 70%)",
-        "radial-gradient(ellipse 100% 100% at 50% 100%, rgba(254,242,201,0.12) 0%, transparent 60%)",
-        `linear-gradient(180deg, ${C.n100} 0%, ${C.bg} 40%)`,
-      ].join(", "),
-    }} />
-    <NoiseOverlay opacity={0.025} />
+    <div style={{ position: "absolute", inset: 0, background: C.bg }} />
   </div>
 );
 
@@ -55,25 +26,13 @@ function GlassPanel({ level = 1, borderRadius = 20, children, style = {}, innerR
   return (
     <div ref={innerRef} style={{
       position: "relative", borderRadius,
-      background:  "#F9F9F9",
-                  border: isL2 ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(0,0,0,0.06)",
+      background: "#F9F9F9",
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: isL2
-        ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7)"
-        : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)",
+        ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)"
+        : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
       overflow: "hidden", ...style,
     }} {...props}>
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0,
-        height: isL2 ? 2 : 1.5, borderRadius: `${borderRadius}px ${borderRadius}px 0 0`,
-        background: "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%)",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "absolute", top: 0, left: "10%", right: "10%", height: 40,
-        background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 100%)",
-        pointerEvents: "none",
-      }} />
-      <NoiseOverlay opacity={0.04} />
       <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
     </div>
   );
@@ -82,7 +41,6 @@ function GlassPanel({ level = 1, borderRadius = 20, children, style = {}, innerR
 const GlowDot = ({ size = 6, style = {} }) => (
   <div style={{
     width: size, height: size, borderRadius: "50%", background: C.amber,
-    boxShadow: `0 0 ${size * 2}px rgba(251,185,49,0.5), 0 0 ${size * 4}px rgba(251,185,49,0.2)`,
     ...style,
   }} />
 );
@@ -103,12 +61,6 @@ function ReadyPrompt() {
 function GhostBridge() {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "72px 24px 48px" }}>
-      <div style={{
-        position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)",
-        width: 280, height: 280, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(251,185,49,0.06) 0%, transparent 70%)",
-        pointerEvents: "none",
-      }} />
       <GlassPanel level={2} style={{ padding: "28px 24px", marginBottom: 16 }}>
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, fontWeight: 500, color: C.n400, margin: "0 0 8px", letterSpacing: "0.04em" }}>
           Semiconductor investment corridor</p>
@@ -124,7 +76,7 @@ function GhostBridge() {
           new jobs projected by 2027</p>
       </GlassPanel>
       {["TSMC / JASM fab complex", "Sony semiconductor expansion", "Government infrastructure program"].map((t, i) => (
-        <GlassPanel key={i} level={1} borderRadius={14} style={{ padding: "14px 20px", marginBottom: 8, opacity: 0.7 - i * 0.1 }}>
+        <GlassPanel key={i} level={1} borderRadius={12} style={{ padding: "14px 20px", marginBottom: 8, opacity: 0.7 - i * 0.1 }}>
           <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, fontWeight: 500, color: C.n800, margin: 0 }}>{t}</p>
         </GlassPanel>
       ))}
@@ -138,10 +90,10 @@ function MapDestination({ onReplay, animate = true }) {
   useEffect(() => {
     if (animate && mapRef.current) {
       mapRef.current.animate([
-        { opacity: 0, filter: "blur(6px)" },
-        { opacity: 0.5, filter: "blur(3px)" },
-        { opacity: 0.9, filter: "blur(1px)" },
-        { opacity: 1, filter: "blur(0px)" },
+        { opacity: 0, transform: "scale(1.02)" },
+        { opacity: 0.5, transform: "scale(1.01)" },
+        { opacity: 0.9, transform: "scale(1.005)" },
+        { opacity: 1, transform: "scale(1)" },
       ], { duration: 600, easing: SETTLE, fill: "forwards" });
     }
   }, [animate]);
@@ -180,26 +132,15 @@ function MapDestination({ onReplay, animate = true }) {
           </defs>
           <rect width="375" height="812" fill="url(#mapGrid)" />
         </svg>
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.3) 100%)",
-          pointerEvents: "none",
-        }} />
-        <div style={{
-          position: "absolute", top: "35%", left: "40%", width: 120, height: 160, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(251,185,49,0.06) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
       </div>
 
       <button onClick={onReplay} style={{
         position: "absolute", top: 52, right: 16, zIndex: 200,
-        background:"#F9F9F9", 
-        
-        border: "1px solid rgba(0,0,0,0.06)", borderRadius: 10,
-        padding: "6px 10px", cursor: "pointer",
-        fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, fontWeight: 500,
-        color: "#F9F9F9", boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+        background: "#F9F9F9",
+        border: "1px solid rgba(0,0,0,0.06)", borderRadius: 12,
+        padding: "8px 12px", cursor: "pointer",
+        fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, fontWeight: 500,
+        color: C.n950, boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
       }}>Replay</button>
     </div>
   );
@@ -292,13 +233,7 @@ function GravityWellTransition({ onComplete }) {
         ctx.fill();
       }
 
-      const glowAlpha = collapse * collapse * 0.4;
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 20 + collapse * 100);
-      grad.addColorStop(0, `rgba(255,255,255,${glowAlpha})`);
-      grad.addColorStop(0.4, `rgba(251,185,49,${glowAlpha * 0.3})`);
-      grad.addColorStop(1, "transparent");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
+      /* central glow removed per flat-design mandate (no radial gradients) */
 
       if (t > 0.82) {
         const flashAlpha = ((t - 0.82) / 0.18) ** 2;
@@ -341,10 +276,10 @@ function ShutterTransition({ onComplete }) {
     setPhase("closing");
 
     await an(ghostRef.current, [
-      { opacity: 1, filter: "blur(0px)" },
-      { opacity: 0.6, filter: "blur(2px)" },
-      { opacity: 0.3, filter: "blur(5px)" },
-      { opacity: 0, filter: "blur(8px)" },
+      { opacity: 1, transform: "scale(1)" },
+      { opacity: 0.6, transform: "scale(0.99)" },
+      { opacity: 0.3, transform: "scale(0.98)" },
+      { opacity: 0, transform: "scale(0.96)" },
     ], { duration: 600, easing: GENTLE, fill: "forwards" });
 
     await wait(200);
@@ -357,11 +292,11 @@ function ShutterTransition({ onComplete }) {
     ], { duration: 750, easing: SETTLE, fill: "forwards" });
 
     await an(seamRef.current, [
-      { opacity: 0, boxShadow: "0 0 0px rgba(251,185,49,0)" },
-      { opacity: 0.6, boxShadow: "0 0 30px rgba(251,185,49,0.3)" },
-      { opacity: 0.8, boxShadow: "0 0 50px rgba(251,185,49,0.4)" },
-      { opacity: 0.6, boxShadow: "0 0 30px rgba(251,185,49,0.2)" },
-      { opacity: 0, boxShadow: "0 0 0px rgba(251,185,49,0)" },
+      { opacity: 0 },
+      { opacity: 0.6 },
+      { opacity: 0.8 },
+      { opacity: 0.6 },
+      { opacity: 0 },
     ], { duration: 500, easing: "ease-in-out", fill: "forwards" });
 
     await wait(150);
@@ -388,15 +323,15 @@ function ShutterTransition({ onComplete }) {
 
       <div ref={topBandRef} style={{
         position: "absolute", top: 0, left: 0, right: 0, height: "50%",
-        background: `linear-gradient(180deg, ${C.n200} 0%, ${C.n100} 70%, rgba(237,238,241,0.95) 100%)`,
+        background: C.n100,
         transform: "translateY(-100%)", zIndex: 20, boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-      }}><NoiseOverlay opacity={0.03} /></div>
+      }} />
 
       <div ref={botBandRef} style={{
         position: "absolute", bottom: 0, left: 0, right: 0, height: "50%",
-        background: `linear-gradient(0deg, ${C.n200} 0%, ${C.n100} 70%, rgba(237,238,241,0.95) 100%)`,
+        background: C.n100,
         transform: "translateY(100%)", zIndex: 20, boxShadow: "0 -4px 20px rgba(0,0,0,0.08)",
-      }}><NoiseOverlay opacity={0.03} /></div>
+      }} />
 
       <div ref={seamRef} style={{
         position: "absolute", top: "50%", left: 0, right: 0,
@@ -460,16 +395,7 @@ function ApproachTransition({ onComplete }) {
 
       const coolMix = Math.min(t * 1.2, 1);
 
-      if (t > 0.2 && t < 0.92) {
-        const vigT = (t - 0.2) / 0.72;
-        const vigAlpha = Math.sin(vigT * Math.PI) * 0.35;
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.6);
-        grad.addColorStop(0, "transparent");
-        grad.addColorStop(0.5, `rgba(237,238,241,${vigAlpha * 0.2})`);
-        grad.addColorStop(1, `rgba(216,219,223,${vigAlpha * 0.4})`);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, W, H);
-      }
+      /* vignette removed per flat-design mandate (no radial gradients) */
 
       for (const line of lines) {
         const dist = line.baseDist + accel * line.speedMult * line.maxDist;
@@ -498,14 +424,7 @@ function ApproachTransition({ onComplete }) {
         ctx.stroke();
       }
 
-      const glowIntensity = accel * accel;
-      const grad2 = ctx.createRadialGradient(cx, cy, 0, cx, cy, 100 + accel * 80);
-      grad2.addColorStop(0, coolMix < 0.6
-        ? `rgba(251,185,49,${glowIntensity * 0.2})`
-        : `rgba(200,195,185,${glowIntensity * 0.15})`);
-      grad2.addColorStop(1, "transparent");
-      ctx.fillStyle = grad2;
-      ctx.fillRect(0, 0, W, H);
+      /* center glow removed per flat-design mandate (no radial gradients) */
 
       if (t > 0.90) {
         const flashAlpha = ((t - 0.90) / 0.10) ** 3;
@@ -545,10 +464,10 @@ function RecedeTransition({ onComplete }) {
     setPhase("receding");
 
     await an(ghostRef.current, [
-      { transform: "scale(1) translateZ(0px)", opacity: 1, filter: "blur(0px)" },
-      { transform: "scale(0.92) translateZ(-60px)", opacity: 0.7, filter: "blur(2px)" },
-      { transform: "scale(0.78) translateZ(-150px)", opacity: 0.35, filter: "blur(5px)" },
-      { transform: "scale(0.6) translateZ(-280px)", opacity: 0, filter: "blur(8px)" },
+      { transform: "scale(1) translateZ(0px)", opacity: 1 },
+      { transform: "scale(0.92) translateZ(-60px)", opacity: 0.7 },
+      { transform: "scale(0.78) translateZ(-150px)", opacity: 0.35 },
+      { transform: "scale(0.6) translateZ(-280px)", opacity: 0 },
     ], { duration: 1100, easing: GENTLE, fill: "forwards" });
 
     await wait(500);
@@ -645,7 +564,6 @@ export default function Step5TransitionV3({ variant } = {}) {
           }
         }
       `}</style>
-      <NoiseDefs />
       <IPhoneFrame>
         <current.Component key={`${resolved}-${flowKey}`} onComplete={() => setFlowKey(k => k + 1)} />
       </IPhoneFrame>

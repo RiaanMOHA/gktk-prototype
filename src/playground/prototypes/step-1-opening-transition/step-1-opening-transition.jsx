@@ -19,16 +19,6 @@ const C = {
   bg: "#F9F9F9",
 };
 
-// ─── SVG noise filter ───
-const NoiseFilter = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <filter id="noise">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-      <feColorMatrix type="saturate" values="0" />
-    </filter>
-  </svg>
-);
-
 // ─── MoreHarvest logo ───
 const Logo = ({ id = "main", size = 1 }) => (
   <svg width={56 * size} height={24 * size} viewBox="0 0 56 24" fill="none">
@@ -53,15 +43,9 @@ const Logo = ({ id = "main", size = 1 }) => (
   </svg>
 );
 
-// ─── Mesh gradient background ───
+// ─── Flat background (was MeshBg; radial gradients removed per flat-design mandate) ───
 const MeshBg = () => (
-  <div style={{ position: "absolute", inset: 0, background: C.bg, overflow: "hidden" }}>
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(254,242,201,0.5), transparent 70%)" }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 80% at 80% 70%, rgba(251,185,49,0.12), transparent 60%)" }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 50% at 60% 20%, rgba(255,148,36,0.08), transparent 60%)" }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 90% 70% at 40% 80%, rgba(237,238,241,0.4), transparent 60%)" }} />
-    <div style={{ position: "absolute", inset: 0, filter: "url(#noise)", opacity: 0.025, mixBlendMode: "overlay" }} />
-  </div>
+  <div style={{ position: "absolute", inset: 0, background: C.bg, overflow: "hidden" }} />
 );
 
 // ─── iPhone 17 Pro frame ───
@@ -236,7 +220,7 @@ const Step1Content = ({ onBlank }) => {
           
           
           border: "1px solid rgba(0,0,0,0.06)",
-          boxShadow: `0 4px 20px rgba(0,0,0,0.08), 0 0 ${progress * 0.5}px rgba(251,185,49,${progress * 0.005})`,
+          boxShadow: `0 4px 20px rgba(0,0,0,0.08)`,
         }} />
 
         {/* Progress ring */}
@@ -258,9 +242,6 @@ const Step1Content = ({ onBlank }) => {
             strokeDasharray={circ}
             strokeDashoffset={circ - (progress / 100) * circ}
             strokeLinecap="round"
-            style={{
-              filter: `drop-shadow(0 0 ${4 + progress * 0.15}px rgba(251,185,49,${0.15 + progress * 0.006}))`,
-            }}
           />
         </svg>
 
@@ -317,7 +298,6 @@ export default function Step1OpeningTransition() {
           }
         }
       `}</style>
-      <NoiseFilter />
       <PhoneFrame>
         <div style={{
           position: "absolute",

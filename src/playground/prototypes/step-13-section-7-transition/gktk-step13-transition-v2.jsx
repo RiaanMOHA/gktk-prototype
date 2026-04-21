@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 
 const C = {
   bg: "#F9F9F9",
-  white: "#FEFEFE",
+  white: "#F9F9F9",
   amber: "#FBB931",
   n950: "#25272C",
   n900: "#383A42",
@@ -17,37 +17,21 @@ const EASING = {
   settle: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
 };
 
-const NoiseGrain = ({ id = "noise" }) => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <defs>
-      <filter id={id}>
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-        <feBlend in="SourceGraphic" mode="overlay" />
-      </filter>
-    </defs>
-  </svg>
-);
-
 const Glass = ({ level = 1, children, style = {} }) => {
   const levels = {
     1: {
       background:"#F9F9F9",
-      
-      
       border: "1px solid rgba(0,0,0,0.06)",
-      boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+      boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
     },
     2: {
       background:"#F9F9F9",
-      
-      
       border: "1px solid rgba(0,0,0,0.06)",
-      boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95)",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
     },
   };
   return (
-    <div style={{ borderRadius: 16, ...levels[level], ...style }}>
+    <div style={{ borderRadius: 20, ...levels[level], ...style }}>
       {children}
     </div>
   );
@@ -67,7 +51,7 @@ const PhoneFrame = ({ children }) => (
 );
 
 const MeshGradient = () => (
-  <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 140% 80% at 30% 20%, rgba(237,238,241,0.5) 0%, transparent 60%), radial-gradient(ellipse 100% 100% at 80% 70%, rgba(254,242,201,0.15) 0%, transparent 50%), ${C.bg}` }} />
+  <div style={{ position: "absolute", inset: 0, background: C.bg }} />
 );
 
 const MapSVG = () => (
@@ -96,7 +80,7 @@ const MapSVG = () => (
 const GhostMap = ({ containerRef }) => (
   <div ref={containerRef} style={{ position: "absolute", inset: 0, background: "#1a1e2a" }}>
     <MapSVG />
-    <div style={{ position: "absolute", top: 195, left: 88, width: 104, height: 190, background: "radial-gradient(ellipse at center, rgba(251,185,49,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
+    {/* amber radial glow removed per flat-design mandate */}
   </div>
 );
 
@@ -118,23 +102,23 @@ const ResolvePanel = ({ containerRef, headingRef, bodyRef }) => (
 
 const TapPrompt = ({ containerRef }) => (
   <div ref={containerRef} aria-live="polite" style={{ position: "absolute", bottom: 36, left: 0, right: 0, textAlign: "center", opacity: 0, visibility: "hidden" }}>
-    <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: C.n600, letterSpacing: "0.02em" }}>Tap to continue</div>
+    <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: C.n600, letterSpacing: "0.02em" }}>Tap to continue</div>
   </div>
 );
 
 const revealResolve = async (resolve, heading, body, prompt) => {
   resolve.style.visibility = "visible";
   await resolve.animate([
-    { opacity: 0, filter: "blur(8px)", transform: "translateY(30px) scale(0.97)" },
-    { opacity: 0.4, filter: "blur(4px)", transform: "translateY(14px) scale(0.985)", offset: 0.4 },
-    { opacity: 1, filter: "blur(0px)", transform: "translateY(0) scale(1)" },
+    { opacity: 0, transform: "translateY(30px) scale(0.97)" },
+    { opacity: 0.4, transform: "translateY(14px) scale(0.985)", offset: 0.4 },
+    { opacity: 1, transform: "translateY(0) scale(1)" },
   ], { duration: 750, easing: EASING.settle, fill: "forwards" }).finished;
 
   await new Promise(r => setTimeout(r, 200));
   await heading.animate([
-    { opacity: 0, transform: "translateY(10px) scale(0.95)", filter: "blur(3px)" },
-    { opacity: 0.6, transform: "translateY(4px) scale(0.98)", filter: "blur(1px)", offset: 0.5 },
-    { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
+    { opacity: 0, transform: "translateY(10px) scale(0.95)" },
+    { opacity: 0.6, transform: "translateY(4px) scale(0.98)", offset: 0.5 },
+    { opacity: 1, transform: "translateY(0) scale(1)" },
   ], { duration: 600, easing: EASING.settle, fill: "forwards" }).finished;
 
   await new Promise(r => setTimeout(r, 150));
@@ -166,23 +150,23 @@ const Lift = ({ playing, onDone }) => {
 
     const run = async () => {
       await mapWrap.animate([
-        { transform: "perspective(900px) rotateX(0deg)", opacity: 1, filter: "blur(0px) brightness(1)", offset: 0 },
-        { transform: "perspective(900px) rotateX(-1deg)", opacity: 1, filter: "blur(0px) brightness(1)", offset: 0.05 },
-        { transform: "perspective(900px) rotateX(-2.5deg)", opacity: 1, filter: "blur(0px) brightness(1)", offset: 0.10 },
-        { transform: "perspective(900px) rotateX(-4.5deg)", opacity: 1, filter: "blur(0px) brightness(1.01)", offset: 0.16 },
-        { transform: "perspective(900px) rotateX(-7deg)", opacity: 1, filter: "blur(0.2px) brightness(1.02)", offset: 0.22 },
-        { transform: "perspective(900px) rotateX(-10deg)", opacity: 0.98, filter: "blur(0.3px) brightness(1.03)", offset: 0.28 },
-        { transform: "perspective(900px) rotateX(-14deg)", opacity: 0.96, filter: "blur(0.5px) brightness(1.04)", offset: 0.34 },
-        { transform: "perspective(900px) rotateX(-19deg)", opacity: 0.93, filter: "blur(0.7px) brightness(1.05)", offset: 0.40 },
-        { transform: "perspective(900px) rotateX(-25deg)", opacity: 0.88, filter: "blur(1px) brightness(1.06)", offset: 0.46 },
-        { transform: "perspective(900px) rotateX(-32deg)", opacity: 0.80, filter: "blur(1.4px) brightness(1.08)", offset: 0.52 },
-        { transform: "perspective(900px) rotateX(-40deg)", opacity: 0.70, filter: "blur(1.8px) brightness(1.09)", offset: 0.58 },
-        { transform: "perspective(900px) rotateX(-49deg)", opacity: 0.56, filter: "blur(2.3px) brightness(1.10)", offset: 0.64 },
-        { transform: "perspective(900px) rotateX(-58deg)", opacity: 0.40, filter: "blur(3px) brightness(1.12)", offset: 0.70 },
-        { transform: "perspective(900px) rotateX(-66deg)", opacity: 0.26, filter: "blur(3.8px) brightness(1.14)", offset: 0.77 },
-        { transform: "perspective(900px) rotateX(-74deg)", opacity: 0.14, filter: "blur(4.5px) brightness(1.16)", offset: 0.84 },
-        { transform: "perspective(900px) rotateX(-81deg)", opacity: 0.06, filter: "blur(5.5px) brightness(1.18)", offset: 0.92 },
-        { transform: "perspective(900px) rotateX(-88deg)", opacity: 0, filter: "blur(6px) brightness(1.2)", offset: 1 },
+        { transform: "perspective(900px) rotateX(0deg)", opacity: 1, offset: 0 },
+        { transform: "perspective(900px) rotateX(-1deg)", opacity: 1, offset: 0.05 },
+        { transform: "perspective(900px) rotateX(-2.5deg)", opacity: 1, offset: 0.10 },
+        { transform: "perspective(900px) rotateX(-4.5deg)", opacity: 1, offset: 0.16 },
+        { transform: "perspective(900px) rotateX(-7deg)", opacity: 1, offset: 0.22 },
+        { transform: "perspective(900px) rotateX(-10deg)", opacity: 0.98, offset: 0.28 },
+        { transform: "perspective(900px) rotateX(-14deg)", opacity: 0.96, offset: 0.34 },
+        { transform: "perspective(900px) rotateX(-19deg)", opacity: 0.93, offset: 0.40 },
+        { transform: "perspective(900px) rotateX(-25deg)", opacity: 0.88, offset: 0.46 },
+        { transform: "perspective(900px) rotateX(-32deg)", opacity: 0.80, offset: 0.52 },
+        { transform: "perspective(900px) rotateX(-40deg)", opacity: 0.70, offset: 0.58 },
+        { transform: "perspective(900px) rotateX(-49deg)", opacity: 0.56, offset: 0.64 },
+        { transform: "perspective(900px) rotateX(-58deg)", opacity: 0.40, offset: 0.70 },
+        { transform: "perspective(900px) rotateX(-66deg)", opacity: 0.26, offset: 0.77 },
+        { transform: "perspective(900px) rotateX(-74deg)", opacity: 0.14, offset: 0.84 },
+        { transform: "perspective(900px) rotateX(-81deg)", opacity: 0.06, offset: 0.92 },
+        { transform: "perspective(900px) rotateX(-88deg)", opacity: 0, offset: 1 },
       ], { duration: 2000, easing: "linear", fill: "forwards" }).finished;
 
       await new Promise(r => setTimeout(r, 500));
@@ -222,44 +206,44 @@ const Push = ({ playing, onDone }) => {
 
     const run = async () => {
       await mapWrap.animate([
-        { transform: "perspective(700px) translateZ(0px) rotateX(0deg) scale(1)", opacity: 1, filter: "blur(0px) brightness(1)", offset: 0 },
-        { transform: "perspective(700px) translateZ(-4px) rotateX(0.2deg) scale(0.998)", opacity: 1, filter: "blur(0px) brightness(1)", offset: 0.05 },
-        { transform: "perspective(700px) translateZ(-10px) rotateX(0.5deg) scale(0.995)", opacity: 1, filter: "blur(0px) brightness(0.99)", offset: 0.10 },
-        { transform: "perspective(700px) translateZ(-20px) rotateX(0.9deg) scale(0.99)", opacity: 1, filter: "blur(0.15px) brightness(0.98)", offset: 0.16 },
-        { transform: "perspective(700px) translateZ(-34px) rotateX(1.5deg) scale(0.982)", opacity: 0.98, filter: "blur(0.3px) brightness(0.96)", offset: 0.22 },
-        { transform: "perspective(700px) translateZ(-52px) rotateX(2.2deg) scale(0.972)", opacity: 0.96, filter: "blur(0.5px) brightness(0.94)", offset: 0.28 },
-        { transform: "perspective(700px) translateZ(-75px) rotateX(3.1deg) scale(0.958)", opacity: 0.92, filter: "blur(0.8px) brightness(0.91)", offset: 0.34 },
-        { transform: "perspective(700px) translateZ(-105px) rotateX(4.2deg) scale(0.94)", opacity: 0.86, filter: "blur(1.1px) brightness(0.87)", offset: 0.40 },
-        { transform: "perspective(700px) translateZ(-140px) rotateX(5.4deg) scale(0.918)", opacity: 0.78, filter: "blur(1.5px) brightness(0.83)", offset: 0.46 },
-        { transform: "perspective(700px) translateZ(-180px) rotateX(6.8deg) scale(0.892)", opacity: 0.68, filter: "blur(2px) brightness(0.78)", offset: 0.52 },
-        { transform: "perspective(700px) translateZ(-225px) rotateX(8.2deg) scale(0.862)", opacity: 0.56, filter: "blur(2.5px) brightness(0.73)", offset: 0.58 },
-        { transform: "perspective(700px) translateZ(-275px) rotateX(9.6deg) scale(0.828)", opacity: 0.44, filter: "blur(3.2px) brightness(0.67)", offset: 0.64 },
-        { transform: "perspective(700px) translateZ(-325px) rotateX(10.8deg) scale(0.79)", opacity: 0.32, filter: "blur(4px) brightness(0.60)", offset: 0.70 },
-        { transform: "perspective(700px) translateZ(-375px) rotateX(12deg) scale(0.748)", opacity: 0.22, filter: "blur(4.8px) brightness(0.53)", offset: 0.76 },
-        { transform: "perspective(700px) translateZ(-420px) rotateX(13deg) scale(0.70)", opacity: 0.14, filter: "blur(5.5px) brightness(0.46)", offset: 0.82 },
-        { transform: "perspective(700px) translateZ(-460px) rotateX(13.8deg) scale(0.66)", opacity: 0.07, filter: "blur(6.5px) brightness(0.40)", offset: 0.88 },
-        { transform: "perspective(700px) translateZ(-495px) rotateX(14.5deg) scale(0.62)", opacity: 0.02, filter: "blur(7.5px) brightness(0.35)", offset: 0.94 },
-        { transform: "perspective(700px) translateZ(-520px) rotateX(15deg) scale(0.58)", opacity: 0, filter: "blur(8px) brightness(0.30)", offset: 1 },
+        { transform: "perspective(700px) translateZ(0px) rotateX(0deg) scale(1)", opacity: 1, offset: 0 },
+        { transform: "perspective(700px) translateZ(-4px) rotateX(0.2deg) scale(0.998)", opacity: 1, offset: 0.05 },
+        { transform: "perspective(700px) translateZ(-10px) rotateX(0.5deg) scale(0.995)", opacity: 1, offset: 0.10 },
+        { transform: "perspective(700px) translateZ(-20px) rotateX(0.9deg) scale(0.99)", opacity: 1, offset: 0.16 },
+        { transform: "perspective(700px) translateZ(-34px) rotateX(1.5deg) scale(0.982)", opacity: 0.98, offset: 0.22 },
+        { transform: "perspective(700px) translateZ(-52px) rotateX(2.2deg) scale(0.972)", opacity: 0.96, offset: 0.28 },
+        { transform: "perspective(700px) translateZ(-75px) rotateX(3.1deg) scale(0.958)", opacity: 0.92, offset: 0.34 },
+        { transform: "perspective(700px) translateZ(-105px) rotateX(4.2deg) scale(0.94)", opacity: 0.86, offset: 0.40 },
+        { transform: "perspective(700px) translateZ(-140px) rotateX(5.4deg) scale(0.918)", opacity: 0.78, offset: 0.46 },
+        { transform: "perspective(700px) translateZ(-180px) rotateX(6.8deg) scale(0.892)", opacity: 0.68, offset: 0.52 },
+        { transform: "perspective(700px) translateZ(-225px) rotateX(8.2deg) scale(0.862)", opacity: 0.56, offset: 0.58 },
+        { transform: "perspective(700px) translateZ(-275px) rotateX(9.6deg) scale(0.828)", opacity: 0.44, offset: 0.64 },
+        { transform: "perspective(700px) translateZ(-325px) rotateX(10.8deg) scale(0.79)", opacity: 0.32, offset: 0.70 },
+        { transform: "perspective(700px) translateZ(-375px) rotateX(12deg) scale(0.748)", opacity: 0.22, offset: 0.76 },
+        { transform: "perspective(700px) translateZ(-420px) rotateX(13deg) scale(0.70)", opacity: 0.14, offset: 0.82 },
+        { transform: "perspective(700px) translateZ(-460px) rotateX(13.8deg) scale(0.66)", opacity: 0.07, offset: 0.88 },
+        { transform: "perspective(700px) translateZ(-495px) rotateX(14.5deg) scale(0.62)", opacity: 0.02, offset: 0.94 },
+        { transform: "perspective(700px) translateZ(-520px) rotateX(15deg) scale(0.58)", opacity: 0, offset: 1 },
       ], { duration: 2200, easing: "linear", fill: "forwards" }).finished;
 
       await new Promise(r => setTimeout(r, 500));
 
       resolve.style.visibility = "visible";
       await resolve.animate([
-        { opacity: 0, filter: "blur(10px)", transform: "perspective(700px) translateZ(-160px) rotateX(-2deg)" },
-        { opacity: 0.1, filter: "blur(8px)", transform: "perspective(700px) translateZ(-120px) rotateX(-1.6deg)", offset: 0.15 },
-        { opacity: 0.25, filter: "blur(6px)", transform: "perspective(700px) translateZ(-80px) rotateX(-1.1deg)", offset: 0.30 },
-        { opacity: 0.45, filter: "blur(4px)", transform: "perspective(700px) translateZ(-48px) rotateX(-0.7deg)", offset: 0.48 },
-        { opacity: 0.65, filter: "blur(2.5px)", transform: "perspective(700px) translateZ(-24px) rotateX(-0.35deg)", offset: 0.65 },
-        { opacity: 0.85, filter: "blur(1px)", transform: "perspective(700px) translateZ(-8px) rotateX(-0.1deg)", offset: 0.82 },
-        { opacity: 1, filter: "blur(0px)", transform: "perspective(700px) translateZ(0px) rotateX(0deg)" },
+        { opacity: 0, transform: "perspective(700px) translateZ(-160px) rotateX(-2deg)" },
+        { opacity: 0.1, transform: "perspective(700px) translateZ(-120px) rotateX(-1.6deg)", offset: 0.15 },
+        { opacity: 0.25, transform: "perspective(700px) translateZ(-80px) rotateX(-1.1deg)", offset: 0.30 },
+        { opacity: 0.45, transform: "perspective(700px) translateZ(-48px) rotateX(-0.7deg)", offset: 0.48 },
+        { opacity: 0.65, transform: "perspective(700px) translateZ(-24px) rotateX(-0.35deg)", offset: 0.65 },
+        { opacity: 0.85, transform: "perspective(700px) translateZ(-8px) rotateX(-0.1deg)", offset: 0.82 },
+        { opacity: 1, transform: "perspective(700px) translateZ(0px) rotateX(0deg)" },
       ], { duration: 950, easing: EASING.settle, fill: "forwards" }).finished;
 
       await new Promise(r => setTimeout(r, 200));
       await heading.animate([
-        { opacity: 0, transform: "translateY(10px) scale(0.95)", filter: "blur(3px)" },
-        { opacity: 0.6, transform: "translateY(4px) scale(0.98)", filter: "blur(1px)", offset: 0.5 },
-        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
+        { opacity: 0, transform: "translateY(10px) scale(0.95)" },
+        { opacity: 0.6, transform: "translateY(4px) scale(0.98)", offset: 0.5 },
+        { opacity: 1, transform: "translateY(0) scale(1)" },
       ], { duration: 600, easing: EASING.settle, fill: "forwards" }).finished;
 
       await new Promise(r => setTimeout(r, 150));
@@ -333,7 +317,6 @@ export default function Step13TransitionV2({ variant } = {}) {
           }
         }
       `}</style>
-      <NoiseGrain />
       <PhoneFrame>
         <div key={`${resolved}-${key}`} style={{ position: "absolute", inset: 0, borderRadius: 34, overflow: "hidden" }}>
           {current && <current.Component playing={true} onDone={() => setDone(true)} />}

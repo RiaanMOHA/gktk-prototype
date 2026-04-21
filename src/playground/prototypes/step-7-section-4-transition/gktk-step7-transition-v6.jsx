@@ -42,30 +42,18 @@ const Noise = () => (
 const MeshBg = () => (
   <div style={{
     position:"absolute",inset:0,zIndex:0,
-    background:`
-      radial-gradient(ellipse 80% 50% at 20% 80%,rgba(251,185,49,0.06) 0%,transparent 60%),
-      radial-gradient(ellipse 60% 70% at 80% 20%,rgba(237, 238, 241, 0.08) 0%,transparent 50%),
-      radial-gradient(ellipse 120% 80% at 50% 60%,${C.amber100}33 0%,transparent 40%),
-      linear-gradient(180deg,#FAFAFA 0%,${C.bg} 100%)
-    `,
+    background: C.bg,
   }} />
 );
 
 const Glass = ({ children, style={}, innerRef }) => (
   <div ref={innerRef} style={{
     background:"#F9F9F9",
-    
-    
     border:"1px solid rgba(0,0,0,0.06)",
     borderRadius:28,position:"relative",overflow:"hidden",
     boxShadow:"0 8px 32px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06)",
     ...style,
   }}>
-    <div style={{position:"absolute",top:0,left:0,right:0,height:1,
-      background:"linear-gradient(90deg,transparent 5%,rgba(255,255,255,0.95) 30%,rgba(255,255,255,0.98) 50%,rgba(255,255,255,0.95) 70%,transparent 95%)",zIndex:2}} />
-    <div style={{position:"absolute",top:0,left:0,right:0,height:50,
-      background:"linear-gradient(180deg,rgba(255,255,255,0.6) 0%,transparent 100%)",zIndex:1}} />
-    <div style={{position:"absolute",inset:0,filter:"url(#ng)",opacity:0.5,zIndex:3,pointerEvents:"none"}} />
     <div style={{position:"relative",zIndex:4}}>{children}</div>
   </div>
 );
@@ -77,11 +65,11 @@ const Resolve = ({ innerRef, headingRef, bodyRef }) => (
   }}>
     <MeshBg />
     <Glass style={{padding:"28px 24px",position:"relative",zIndex:2}}>
-      <div ref={headingRef} style={{fontFamily:"REM,sans-serif",fontWeight:600,fontSize:40,lineHeight:1.05,
-        letterSpacing:"-0.025em",color:C.heading,marginBottom:12,opacity:0}}>
+      <div ref={headingRef} style={{fontFamily:"REM,sans-serif",fontWeight:600,fontSize:32,lineHeight:1.1,
+        letterSpacing:"-0.02em",color:C.heading,marginBottom:12,opacity:0}}>
         3 to 5 million yen
       </div>
-      <div ref={bodyRef} style={{fontFamily:"Noto Sans JP,sans-serif",fontWeight:400,fontSize:15,lineHeight:1.6,
+      <div ref={bodyRef} style={{fontFamily:"Noto Sans JP,sans-serif",fontWeight:400,fontSize:16,lineHeight:1.6,
         color:C.body,maxWidth:"72ch",opacity:0}}>
         Estimated replacement cost per engineer who repatriates early due to family maladjustment.
       </div>
@@ -103,17 +91,17 @@ const Tap = ({ innerRef }) => (
 const reveal = async (res, tap, heading, body) => {
   // Panel enters
   await an(res,[
-    {opacity:0,transform:"translateY(30px) scale(0.97)",filter:"blur(6px)"},
-    {opacity:0.4,transform:"translateY(15px) scale(0.985)",filter:"blur(3px)"},
-    {opacity:1,transform:"translateY(0) scale(1)",filter:"blur(0px)"},
+    {opacity:0,transform:"translateY(30px) scale(0.97)"},
+    {opacity:0.4,transform:"translateY(15px) scale(0.985)"},
+    {opacity:1,transform:"translateY(0) scale(1)"},
   ],{duration:700,easing:EASING.settle});
   await wait(200);
   // Heading animates: scale up from smaller, blur to sharp
   if (heading) {
     await an(heading,[
-      {opacity:0,transform:"translateY(12px) scale(0.94)",filter:"blur(4px)"},
-      {opacity:0.6,transform:"translateY(5px) scale(0.98)",filter:"blur(1.5px)"},
-      {opacity:1,transform:"translateY(0) scale(1)",filter:"blur(0px)"},
+      {opacity:0,transform:"translateY(12px) scale(0.94)"},
+      {opacity:0.6,transform:"translateY(5px) scale(0.98)"},
+      {opacity:1,transform:"translateY(0) scale(1)"},
     ],{duration:600,easing:EASING.settle});
   }
   await wait(150);
@@ -173,23 +161,23 @@ const MapFace = ({ style={} }) => (
       <div key={i} style={{
         position:"absolute",left:p.x,top:p.y,width:p.s,height:p.s,borderRadius:"50%",
         background:p.a?C.amber:"#FF9424",
-        boxShadow:`0 0 ${p.s}px ${p.a?"rgba(251,185,49,0.5)":"rgba(255,148,36,0.4)"}`,
         transform:"translate(-50%,-50%)",
       }} />
     ))}
     <div style={{
       position:"absolute",bottom:"18%",left:"5%",width:"52%",
-      background:"rgba(0,0,0,0.4)",
-      border:"1px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"10px 12px",
+      background:"#F9F9F9",
+      border:"1px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"12px",
+      boxShadow:"0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
     }}>
-      <div style={{fontSize:9,color: "#F9F9F9",fontFamily:"Noto Sans JP,sans-serif",letterSpacing:"0.04em",marginBottom:4}}>
-        KUMAMOTO SEMICONDUCTOR CORRIDOR
+      <div style={{fontSize:12,color: C.caption,fontFamily:"Noto Sans JP,sans-serif",letterSpacing:"0.01em",marginBottom:4}}>
+        Kumamoto semiconductor corridor
       </div>
       <div style={{display:"flex",gap:16}}>
         {[["JASM","12,800"],["TSMC","Phase 2"],["Workers","47,000"]].map(([l,v],i)=>(
           <div key={i}>
-            <div style={{fontSize:8,color: "#F9F9F9",fontFamily:"Noto Sans JP,sans-serif"}}>{l}</div>
-            <div style={{fontSize:11,color: "#F9F9F9",fontFamily:"REM,sans-serif",fontWeight:600}}>{v}</div>
+            <div style={{fontSize:12,color: C.caption,fontFamily:"Noto Sans JP,sans-serif"}}>{l}</div>
+            <div style={{fontSize:12,color: C.heading,fontFamily:"REM,sans-serif",fontWeight:600}}>{v}</div>
           </div>
         ))}
       </div>
@@ -355,7 +343,6 @@ const Descent = ({ resolveRef, tapRef, headingRef, bodyRef, started }) => {
               borderRadius: "50%",
               background: C.amber,
               opacity: 0.08 + Math.random() * 0.12,
-              boxShadow: `0 0 ${10 + Math.random() * 20}px rgba(251,185,49,0.15)`,
             }} />
           ))}
 
@@ -374,24 +361,16 @@ const Descent = ({ resolveRef, tapRef, headingRef, bodyRef, started }) => {
         }}>
           <div style={{
             position: "absolute", inset: 0,
-            background: `
-              radial-gradient(ellipse 80% 50% at 20% 80%,rgba(251,185,49,0.06) 0%,transparent 60%),
-              radial-gradient(ellipse 60% 70% at 80% 20%,rgba(237, 238, 241, 0.08) 0%,transparent 50%),
-              linear-gradient(180deg, rgba(251,185,49,0.06) 0%, ${C.bg} 25%)
-            `,
+            background: C.bg,
           }} />
-          {/* Warmth at the top — the "sunrise" as we emerge */}
-          <div style={{
-            position: "absolute", top: 0, left: 0, right: 0, height: "40%",
-            background: "linear-gradient(180deg, rgba(251,185,49,0.08) 0%, transparent 100%)",
-          }} />
+          {/* Warmth gradient removed per flat-design mandate (no radial gradients, no amber washes) */}
         </div>
       </div>
 
-      {/* Light wash overlay at transition point */}
+      {/* Light wash overlay at transition point (flattened to solid neutral) */}
       <div ref={flashRef} style={{
         position: "absolute", inset: 0, zIndex: 10, opacity: 0,
-        background: "linear-gradient(180deg, transparent 20%, rgba(255,255,255,0.95) 45%, rgba(255,255,255,0.95) 55%, transparent 80%)",
+        background: C.bg,
       }} />
     </div>
   );

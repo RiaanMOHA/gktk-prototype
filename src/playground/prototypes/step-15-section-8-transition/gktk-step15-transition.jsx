@@ -7,19 +7,8 @@ const EASE = {
   spring:"cubic-bezier(0.34,1.56,0.64,1)",
 };
 
-const NoiseGrain = ({opacity=0.035,id="ng"})=>(
-  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none",mixBlendMode:"overlay",opacity,zIndex:90}} aria-hidden="true">
-    <filter id={id}><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/></filter>
-    <rect width="100%" height="100%" filter={`url(#${id})`}/>
-  </svg>
-);
-
-const MeshGradient = ({warm=false})=>(
-  <div style={{position:"absolute",inset:0,zIndex:0,
-    background:warm
-      ?`radial-gradient(ellipse 80% 60% at 30% 70%,rgba(255,251,236,0.6) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 70% 40%,rgba(251,185,49,0.08) 0%,transparent 50%),radial-gradient(ellipse 90% 70% at 50% 50%,rgba(254,242,201,0.3) 0%,transparent 70%),#F9F9F9`
-      :`radial-gradient(ellipse 80% 60% at 30% 30%,rgba(237,238,241,0.5) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 70% 60%,rgba(220,222,228,0.3) 0%,transparent 50%),linear-gradient(135deg,#EDEEF1 0%,#F9F9F9 50%)`,
-  }}/>
+const MeshGradient = ()=>(
+  <div style={{position:"absolute",inset:0,zIndex:0, background: "#F9F9F9" }}/>
 );
 
 export default function Step15TransitionV4(){
@@ -113,35 +102,34 @@ export default function Step15TransitionV4(){
             aria-label={phase==="ready"?"Tap to continue":"Reset"}
             onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (phase==="ready") play(); else reset(); } }}
           >
-            <MeshGradient warm={phase==="ready"}/>
-            <NoiseGrain opacity={0.035} id="nB"/>
+            <MeshGradient/>
 
             {/* software ghost elements */}
             <div style={{position:"relative",zIndex:5,paddingTop:80,display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
               {["Property secretary","Medical navigation","Education support","Admin support","Mental wellness","Cultural program"].map((s,i)=>(
                 <div key={i} ref={el=>elemRefs.current[i]=el} style={{
                   background:"#F9F9F9",border:"1px solid rgba(0,0,0,0.06)",
-                  boxShadow:"0 2px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.8)",
-                  borderRadius:12,padding:"10px 20px",fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#40444C",
+                  boxShadow:"0 2px 12px rgba(0,0,0,0.06)",
+                  borderRadius:12,padding:"10px 20px",fontFamily:"'Noto Sans JP',sans-serif",fontSize:12,color:"#40444C",
                 }}>{s}</div>
               ))}
             </div>
 
             {/* datum point */}
             <div ref={datumRef} style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%) scale(0)",
-              width:8,height:8,borderRadius:"50%",background:"#FBB931",boxShadow:"0 0 20px rgba(251,185,49,0.5)",zIndex:10,opacity:0}}/>
+              width:8,height:8,borderRadius:"50%",background:"#FBB931",zIndex:10,opacity:0}}/>
 
             {/* resolve */}
             <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 32px",zIndex:20,pointerEvents:phase==="playing"?"auto":"none"}}>
-              <div ref={headingRef} style={{fontFamily:"REM,sans-serif",fontWeight:600,fontSize:24,color:"#25272C",letterSpacing:"-0.02em",lineHeight:1.15,opacity:0,textAlign:"left",maxWidth:280}}>
+              <div ref={headingRef} style={{fontFamily:"REM,sans-serif",fontWeight:600,fontSize:22,color:"#25272C",letterSpacing:"-0.02em",lineHeight:1.15,opacity:0,textAlign:"left",maxWidth:280}}>
                 The investment case.
               </div>
             </div>
 
             {/* tap indicator */}
             <div aria-live="polite" style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:30,opacity:showTap?1:0,transition:"opacity 0.4s",display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-              <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:11,color:"#8E8F8F",letterSpacing:"0.015em"}}>Tap to continue</div>
-              <div style={{width:4,height:4,borderRadius:"50%",background:"#FBB931",boxShadow:"0 0 8px rgba(251,185,49,0.4)",animation:"tapPulse 2s ease-in-out infinite"}}/>
+              <div style={{fontFamily:"'Noto Sans JP',sans-serif",fontSize:12,color:"#8E8F8F",letterSpacing:"0.015em"}}>Tap to continue</div>
+              <div style={{width:4,height:4,borderRadius:"50%",background:"#FBB931",animation:"tapPulse 2s ease-in-out infinite"}}/>
             </div>
 
             {phase==="ready"&&<div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",zIndex:25}}>

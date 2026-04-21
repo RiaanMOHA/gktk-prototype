@@ -19,13 +19,9 @@ const VARIANTS = [
   { id: "D", label: "D: the sweep" },
 ];
 
-function NoiseDef() { return (<svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true"><defs><filter id="n10"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer><feBlend in="SourceGraphic" mode="overlay" /></filter></defs></svg>); }
 function Glass({ children, style, elev, innerRef }) {
   const b = elev ? { background: C.eBg, border: `1px solid ${C.eBd}`, boxShadow: C.eSh } : { background: C.pBg, border: `1px solid ${C.pBd}`, boxShadow: C.pSh };
-  return (<div ref={innerRef} style={{ borderRadius: 16, position: "relative", overflow: "hidden", ...b, ...style }}>
-    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.9) 30%,rgba(255,255,255,0.9) 70%,rgba(255,255,255,0) 100%)", zIndex: 2 }} />
-    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 40, background: "linear-gradient(180deg,rgba(255,255,255,0.35) 0%,rgba(255,255,255,0) 100%)", zIndex: 1, pointerEvents: "none" }} />
-    <div style={{ position: "absolute", inset: 0, filter: "url(#n10)", zIndex: 1, pointerEvents: "none", borderRadius: 16 }} />
+  return (<div ref={innerRef} style={{ borderRadius: 20, position: "relative", overflow: "hidden", ...b, ...style }}>
     <div style={{ position: "relative", zIndex: 3 }}>{children}</div>
   </div>);
 }
@@ -33,28 +29,28 @@ function Phone({ children }) {
   return (<div style={{ width: 393, height: 852, borderRadius: 55, background: "#1A1A1E", overflow: "hidden", position: "relative", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>
     <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "1px solid rgba(0,0,0,0.06)", pointerEvents: "none", zIndex: 10 }} />
     <div style={{ position: "absolute", left: -2.5, top: 140, width: 3, height: 32, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", left: -2.5, top: 185, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", left: -2.5, top: 245, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} /><div style={{ position: "absolute", right: -2.5, top: 185, width: 3, height: 52, background: "#2A2A2E", borderRadius: "2px 0 0 2px" }} />
-    <div style={{ position: "absolute", inset: 6, borderRadius: 49, overflow: "hidden", background: `radial-gradient(ellipse 130% 70% at 20% 20%,rgba(237, 238, 241, 0.3) 0%,transparent 50%),radial-gradient(ellipse 100% 60% at 80% 80%,rgba(254, 242, 201, 0.2) 0%,transparent 50%),${C.bg}` }}>
+    <div style={{ position: "absolute", inset: 6, borderRadius: 49, overflow: "hidden", background: C.bg }}>
       <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 126, height: 36, background: "#000", borderRadius: 20, zIndex: 50 }} />
       {children}
     </div>
   </div>);
 }
 function Img({ label, h, innerRef, style }) {
-  return (<div ref={innerRef} style={{ width: "100%", height: h, borderRadius: 14, background: `linear-gradient(135deg, ${C.n100} 0%, ${C.n200} 100%)`, border: `1.5px dashed ${C.n200}`, display: "flex", alignItems: "center", justifyContent: "center", ...style }}>
+  return (<div ref={innerRef} style={{ width: "100%", height: h, borderRadius: 12, background: C.n100, border: `1px dashed ${C.n200}`, display: "flex", alignItems: "center", justifyContent: "center", ...style }}>
     <span style={{ fontFamily: F.b, fontSize: 13, color: C.n400, fontWeight: 500 }}>{label}</span>
   </div>);
 }
 function an(el, kf, o) { if (!el) return Promise.resolve(); return el.animate(kf, { fill: "forwards", ...o }).finished; }
 function w(ms) { return new Promise(r => setTimeout(r, ms)); }
-function Dots({ b, t }) { return (<div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, zIndex: 41 }}>{Array.from({ length: t }).map((_, i) => (<div key={i} style={{ width: i === b ? 8 : 5, height: i === b ? 8 : 5, borderRadius: 99, background: i === b ? C.n800 : C.n200, transition: "all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />))}</div>); }
+function Dots({ b, t }) { return (<div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, zIndex: 41 }}>{Array.from({ length: t }).map((_, i) => (<div key={i} style={{ width: i === b ? 8 : 5, height: i === b ? 8 : 5, borderRadius: 9999, background: i === b ? C.n800 : C.n200, transition: "all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />))}</div>); }
 function XMark() { return (<span style={{ fontFamily: F.b, fontSize: 14, fontWeight: 600, color: C.n400, lineHeight: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, borderRadius: 6, background: C.n100, flexShrink: 0 }}>{"\u2715"}</span>); }
-function AmberDot({ size = 10 }) { return (<div style={{ width: size, height: size, borderRadius: 99, background: C.amber, flexShrink: 0, boxShadow: "0 0 6px rgba(251,185,49,0.35)" }} />); }
+function AmberDot({ size = 10 }) { return (<div style={{ width: size, height: size, borderRadius: 9999, background: C.amber, flexShrink: 0 }} />); }
 
 // ─── CTA button ──────────────────────────────────────────────────────────────
 function CtaButton({ innerRef }) {
   return (
     <div ref={innerRef} style={{ opacity: 0 }}>
-      <button className="step-10-cta" style={{ width: "100%", padding: "14px 0", borderRadius: 14, border: "none", background: C.amber, fontFamily: F.h, fontSize: 15, fontWeight: 600, color: C.n950, cursor: "pointer", letterSpacing: "-0.01em" }}>
+      <button className="step-10-cta" style={{ width: "100%", padding: "14px 0", borderRadius: 12, border: "none", background: C.amber, fontFamily: F.h, fontSize: 16, fontWeight: 600, color: C.n950, cursor: "pointer", letterSpacing: "-0.01em" }}>
         View Moha Map
       </button>
     </div>
@@ -64,49 +60,49 @@ function CtaButton({ innerRef }) {
 // ─── shared beat animations ──────────────────────────────────────────────────
 
 async function animB0($) {
-  $.q && ($.q.style.opacity = "0");
-  await an($.q, [{ opacity: 0, filter: "blur(16px)", transform: "scale(1.03)" }, { opacity: 1, filter: "blur(0px)", transform: "scale(1)" }], { duration: 800, easing: E.s });
+  if ($.q) $.q.style.opacity = "0";
+  await an($.q, [{ opacity: 0, transform: "scale(1.03)" }, { opacity: 1, transform: "scale(1)" }], { duration: 800, easing: E.s });
 }
 async function animB1($) {
-  ["1l","1i","1s","1h","1b","1p"].forEach(k => $[k] && ($[k].style.opacity = "0"));
+  ["1l","1i","1s","1h","1b","1p"].forEach(k => { if ($[k]) $[k].style.opacity = "0"; });
   await an($["1l"], [{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: E.s });
-  await an($["1i"], [{ opacity: 0, filter: "blur(6px)", transform: "scale(0.97)" }, { opacity: 1, filter: "blur(0px)", transform: "scale(1)" }], { duration: 500, easing: E.s });
+  await an($["1i"], [{ opacity: 0, transform: "scale(0.97)" }, { opacity: 1, transform: "scale(1)" }], { duration: 500, easing: E.s });
   await w(100);
-  await an($["1s"], [{ opacity: 0, transform: "translateY(8px) scale(0.9)", filter: "blur(8px)" }, { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" }], { duration: 500, easing: E.s });
+  await an($["1s"], [{ opacity: 0, transform: "translateY(8px) scale(0.9)" }, { opacity: 1, transform: "translateY(0) scale(1)" }], { duration: 500, easing: E.s });
   await w(150);
   await an($["1h"], [{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: E.s });
   await an($["1b"], [{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: E.s });
   await w(250);
-  await an($["1p"], [{ opacity: 0, transform: "translateY(6px)", filter: "blur(6px)" }, { opacity: 1, transform: "translateY(0)", filter: "blur(0px)" }], { duration: 500, easing: E.s });
+  await an($["1p"], [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 500, easing: E.s });
 }
 async function animB2($) {
-  ["2l","2h","2i","2s","2t"].forEach(k => $[k] && ($[k].style.opacity = "0"));
+  ["2l","2h","2i","2s","2t"].forEach(k => { if ($[k]) $[k].style.opacity = "0"; });
   await an($["2l"], [{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: E.s });
-  await an($["2h"], [{ opacity: 0, filter: "blur(6px)", transform: "translateY(4px)" }, { opacity: 1, filter: "blur(0px)", transform: "translateY(0)" }], { duration: 450, easing: E.s });
-  await an($["2i"], [{ opacity: 0, filter: "blur(6px)", transform: "scale(0.97)" }, { opacity: 1, filter: "blur(0px)", transform: "scale(1)" }], { duration: 550, easing: E.s });
+  await an($["2h"], [{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 450, easing: E.s });
+  await an($["2i"], [{ opacity: 0, transform: "scale(0.97)" }, { opacity: 1, transform: "scale(1)" }], { duration: 550, easing: E.s });
   await w(100);
-  await an($["2s"], [{ opacity: 0, transform: "translateY(10px)", filter: "blur(6px)" }, { opacity: 1, transform: "translateY(0)", filter: "blur(0px)" }], { duration: 450, easing: E.s });
+  await an($["2s"], [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 450, easing: E.s });
   await w(100);
-  await an($["2t"], [{ opacity: 0, transform: "translateY(6px)", filter: "blur(6px)" }, { opacity: 1, transform: "translateY(0)", filter: "blur(0px)" }], { duration: 500, easing: E.s });
+  await an($["2t"], [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 500, easing: E.s });
 }
 
 // ─── shared beat renders ─────────────────────────────────────────────────────
 
 function renderB0(s) {
   return (<div style={{ position: "absolute", inset: 0, padding: "68px 24px 70px", display: "flex", alignItems: "center" }}>
-    <h1 ref={s("q")} style={{ opacity: 0, fontFamily: F.h, fontSize: 30, fontWeight: 600, color: C.n950, lineHeight: 1.2, letterSpacing: "-0.02em", margin: 0 }}>What are the current options?</h1>
+    <h1 ref={s("q")} style={{ opacity: 0, fontFamily: F.h, fontSize: 32, fontWeight: 600, color: C.n950, lineHeight: 1.2, letterSpacing: "-0.02em", margin: 0 }}>What are the current options?</h1>
   </div>);
 }
 
 function renderB1(s) {
   return (<div style={{ position: "absolute", inset: 0, padding: "56px 20px 44px", display: "flex", flexDirection: "column" }}>
-    <span ref={s("1l")} style={{ opacity: 0, fontFamily: F.b, fontSize: 11, fontWeight: 500, color: C.n600, letterSpacing: "0.03em", display: "block", marginBottom: 8 }}>Market proof</span>
+    <span ref={s("1l")} style={{ opacity: 0, fontFamily: F.b, fontSize: 12, fontWeight: 500, color: C.n600, letterSpacing: "0.03em", display: "block", marginBottom: 8 }}>Market proof</span>
     <div style={{ position: "relative", marginBottom: 28 }}>
       <Img label="Kusunoki apartment complex" h={200} innerRef={s("1i")} style={{ opacity: 0 }} />
       <div ref={s("1s")} style={{ opacity: 0, position: "absolute", bottom: -20, right: 12 }}>
-        <Glass elev style={{ padding: "8px 16px", borderRadius: 14, display: "flex", alignItems: "baseline", gap: 6 }}>
+        <Glass elev style={{ padding: "8px 16px", borderRadius: 12, display: "flex", alignItems: "baseline", gap: 6 }}>
           <span role="group" aria-label="42 units" style={{ display: "contents" }}>
-            <span style={{ fontFamily: F.h, fontSize: 40, fontWeight: 600, color: C.n950, lineHeight: 1, letterSpacing: "-0.03em" }}>42</span>
+            <span style={{ fontFamily: F.h, fontSize: 48, fontWeight: 600, color: C.n950, lineHeight: 1, letterSpacing: "-0.02em" }}>42</span>
             <span style={{ fontFamily: F.b, fontSize: 13, fontWeight: 500, color: C.n600 }}>units</span>
           </span>
         </Glass>
@@ -116,7 +112,7 @@ function renderB1(s) {
     <p ref={s("1b")} style={{ opacity: 0, fontFamily: F.b, fontSize: 12, color: C.n600, margin: "0 0 16px", lineHeight: 1.4 }}>Kusunoki complex. Bulk-leased by JASM.</p>
     <div ref={s("1p")} style={{ opacity: 0 }}>
       <Glass elev style={{ padding: "14px 16px" }}>
-        <p style={{ fontFamily: F.h, fontSize: 15, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.3 }}>The B2B bulk-lease model works. Demand is proven.</p>
+        <p style={{ fontFamily: F.h, fontSize: 16, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.3 }}>The B2B bulk-lease model works. Demand is proven.</p>
       </Glass>
     </div>
   </div>);
@@ -124,28 +120,28 @@ function renderB1(s) {
 
 function renderB2(s) {
   return (<div style={{ position: "absolute", inset: 0, padding: "56px 20px 44px", display: "flex", flexDirection: "column" }}>
-    <span ref={s("2l")} style={{ opacity: 0, fontFamily: F.b, fontSize: 11, fontWeight: 500, color: C.n600, letterSpacing: "0.03em", display: "block", marginBottom: 8 }}>Closest competitor</span>
-    <h2 ref={s("2h")} style={{ opacity: 0, fontFamily: F.h, fontSize: 20, fontWeight: 600, color: C.n950, margin: "0 0 12px", lineHeight: 1.2 }}>Current options: housing without solutions</h2>
+    <span ref={s("2l")} style={{ opacity: 0, fontFamily: F.b, fontSize: 12, fontWeight: 500, color: C.n600, letterSpacing: "0.03em", display: "block", marginBottom: 8 }}>Closest competitor</span>
+    <h2 ref={s("2h")} style={{ opacity: 0, fontFamily: F.h, fontSize: 22, fontWeight: 600, color: C.n950, margin: "0 0 12px", lineHeight: 1.2 }}>Current options: housing without solutions</h2>
     <div style={{ position: "relative", marginBottom: 28 }}>
       <Img label="Formosa Hills" h={300} innerRef={s("2i")} style={{ opacity: 0 }} />
       <div ref={s("2s")} style={{ opacity: 0, position: "absolute", bottom: -18, left: 12, right: 12, display: "flex", gap: 8 }}>
         <Glass elev style={{ padding: "8px 12px", flex: 1, borderRadius: 12 }}>
           <span role="group" aria-label="65 units" style={{ display: "contents" }}>
-            <span style={{ fontFamily: F.h, fontSize: 28, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>65</span>
-            <span style={{ fontFamily: F.b, fontSize: 10, color: C.n600, fontWeight: 500 }}>units</span>
+            <span style={{ fontFamily: F.h, fontSize: 32, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>65</span>
+            <span style={{ fontFamily: F.b, fontSize: 12, color: C.n600, fontWeight: 500 }}>units</span>
           </span>
         </Glass>
         <Glass elev style={{ padding: "8px 12px", flex: 1, borderRadius: 12 }}>
           <span role="group" aria-label="80 percent Taiwanese guests" style={{ display: "contents" }}>
-            <span style={{ fontFamily: F.h, fontSize: 28, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>80%</span>
-            <span style={{ fontFamily: F.b, fontSize: 10, color: C.n600, fontWeight: 500 }}>Taiwanese guests</span>
+            <span style={{ fontFamily: F.h, fontSize: 32, fontWeight: 600, color: C.n950, display: "block", lineHeight: 1, letterSpacing: "-0.02em" }}>80%</span>
+            <span style={{ fontFamily: F.b, fontSize: 12, color: C.n600, fontWeight: 500 }}>Taiwanese guests</span>
           </span>
         </Glass>
       </div>
     </div>
     <div ref={s("2t")} style={{ opacity: 0 }}>
       <Glass elev style={{ padding: "14px 16px" }}>
-        <p style={{ fontFamily: F.h, fontSize: 15, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.3 }}>Bilingual management, mail handling, meeting facilities.</p>
+        <p style={{ fontFamily: F.h, fontSize: 16, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.3 }}>Bilingual management, mail handling, meeting facilities.</p>
       </Glass>
     </div>
   </div>);
@@ -154,7 +150,7 @@ function renderB2(s) {
 // ─── the transform beat (shared across variants) ─────────────────────────────
 // Both X marks and amber dots exist. Tapping animates each X out and amber in, staggered.
 
-function TransformBeat({ solved, onSolve, s, variant, ctaRef }) {
+function TransformBeat({ solved, onSolve, s, ctaRef }) {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "56px 20px 44px", display: "flex", flexDirection: "column" }}>
       {/* image swaps: competitor when unsolved, MoreHarvest when solved */}
@@ -166,7 +162,7 @@ function TransformBeat({ solved, onSolve, s, variant, ctaRef }) {
       {/* heading: unsolved is visible by default, solved fades in on top */}
       <div aria-live="polite" style={{ position: "relative", marginBottom: 16, minHeight: 28 }}>
         <p ref={s("thOld")} style={{ fontFamily: F.b, fontSize: 12, fontWeight: 500, color: C.n600, margin: 0, letterSpacing: "0.02em", position: "absolute", top: 0, left: 0 }}>What they do not solve</p>
-        <p ref={s("thNew")} style={{ opacity: 0, fontFamily: F.h, fontSize: 20, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.2, position: "absolute", top: 0, left: 0 }}>MoreHarvest solves all five.</p>
+        <p ref={s("thNew")} style={{ opacity: 0, fontFamily: F.h, fontSize: 22, fontWeight: 600, color: C.n950, margin: 0, lineHeight: 1.2, position: "absolute", top: 0, left: 0 }}>MoreHarvest solves all five.</p>
       </div>
 
       <div style={{ flex: 1 }}>
@@ -177,7 +173,7 @@ function TransformBeat({ solved, onSolve, s, variant, ctaRef }) {
             {/* Amber dot — hidden initially */}
             <div ref={s(`a${i}`)} style={{ opacity: 0, position: "absolute", left: 5 }}><AmberDot size={10} /></div>
             {/* text — offset by indicator width */}
-            <span ref={s(`r${i}`)} style={{ fontFamily: F.h, fontSize: 15, fontWeight: 600, color: C.n950, marginLeft: 32 }}>{g}</span>
+            <span ref={s(`r${i}`)} style={{ fontFamily: F.h, fontSize: 16, fontWeight: 600, color: C.n950, marginLeft: 32 }}>{g}</span>
           </div>
         ))}
       </div>
@@ -196,7 +192,7 @@ function TransformBeat({ solved, onSolve, s, variant, ctaRef }) {
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSolve(e); } }}
           style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}
         >
-          <span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span>
+          <span style={{ fontFamily: F.b, fontSize: 12, color: C.n400 }}>Tap to continue</span>
         </div>
       )}
     </div>
@@ -249,8 +245,8 @@ function VA({ playing }) {
       if (beat === 1) await animB1($);
       if (beat === 2) await animB2($);
       if (beat === 3 && !solved) {
-        GAPS.forEach((_, i) => $[`r${i}`] && ($[`r${i}`].style.opacity = "0"));
-        $.thOld && ($.thOld.style.opacity = "0");
+        GAPS.forEach((_, i) => { if ($[`r${i}`]) $[`r${i}`].style.opacity = "0"; });
+        if ($.thOld) $.thOld.style.opacity = "0";
         await an($.thOld, [{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: E.s });
         await w(150);
         for (let i = 0; i < GAPS.length; i++) {
@@ -276,7 +272,7 @@ function VA({ playing }) {
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }}
           style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}
         >
-          <span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span>
+          <span style={{ fontFamily: F.b, fontSize: 12, color: C.n400 }}>Tap to continue</span>
         </div>
       )}
       {beat === 0 && renderB0(s)}
@@ -300,19 +296,19 @@ function VB({ playing }) {
     if (beat === 1) await animB1($);
     if (beat === 2) await animB2($);
     if (beat === 3 && !solved) {
-      GAPS.forEach((_, i) => $[`r${i}`] && ($[`r${i}`].style.opacity = "0"));
-      $.thOld && ($.thOld.style.opacity = "0");
+      GAPS.forEach((_, i) => { if ($[`r${i}`]) $[`r${i}`].style.opacity = "0"; });
+      if ($.thOld) $.thOld.style.opacity = "0";
       await an($.thOld, [{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: E.s });
       await w(200);
       for (let i = 0; i < GAPS.length; i++) {
-        await an($[`r${i}`], [{ opacity: 0, filter: "blur(4px)" }, { opacity: 1, filter: "blur(0px)" }], { duration: 350, easing: E.s });
+        await an($[`r${i}`], [{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: E.s });
         await w(200);
       }
     }
   })(); }, [playing, beat, solved]);
   if (!playing) return null;
   return (<><Dots b={Math.min(beat, 3)} t={4} />
-    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
+    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 12, color: C.n400 }}>Tap to continue</span></div>}
     {beat === 0 && renderB0(s)}{beat === 1 && renderB1(s)}{beat === 2 && renderB2(s)}
     {beat === 3 && <TransformBeat solved={solved} onSolve={handleSolve} s={s} variant="B" ctaRef={(el) => { r.current["4cta"] = el; }} />}
   </>);
@@ -329,8 +325,8 @@ function VC({ playing }) {
     if (beat === 1) await animB1($);
     if (beat === 2) await animB2($);
     if (beat === 3 && !solved) {
-      GAPS.forEach((_, i) => $[`r${i}`] && ($[`r${i}`].style.opacity = "0"));
-      $.thOld && ($.thOld.style.opacity = "0");
+      GAPS.forEach((_, i) => { if ($[`r${i}`]) $[`r${i}`].style.opacity = "0"; });
+      if ($.thOld) $.thOld.style.opacity = "0";
       await an($.thOld, [{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 400, easing: E.s });
       await w(200);
       for (let i = 0; i < GAPS.length; i++) {
@@ -341,7 +337,7 @@ function VC({ playing }) {
   })(); }, [playing, beat, solved]);
   if (!playing) return null;
   return (<><Dots b={Math.min(beat, 3)} t={4} />
-    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
+    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 12, color: C.n400 }}>Tap to continue</span></div>}
     {beat === 0 && renderB0(s)}{beat === 1 && renderB1(s)}{beat === 2 && renderB2(s)}
     {beat === 3 && <TransformBeat solved={solved} onSolve={handleSolve} s={s} variant="C" ctaRef={(el) => { r.current["4cta"] = el; }} />}
   </>);
@@ -358,8 +354,8 @@ function VD({ playing }) {
     if (beat === 1) await animB1($);
     if (beat === 2) await animB2($);
     if (beat === 3 && !solved) {
-      GAPS.forEach((_, i) => $[`r${i}`] && ($[`r${i}`].style.opacity = "0"));
-      $.thOld && ($.thOld.style.opacity = "0");
+      GAPS.forEach((_, i) => { if ($[`r${i}`]) $[`r${i}`].style.opacity = "0"; });
+      if ($.thOld) $.thOld.style.opacity = "0";
       await an($.thOld, [{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: E.s });
       await w(250);
       for (let i = 0; i < GAPS.length; i++) {
@@ -370,7 +366,7 @@ function VD({ playing }) {
   })(); }, [playing, beat, solved]);
   if (!playing) return null;
   return (<><Dots b={Math.min(beat, 3)} t={4} />
-    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 11, color: C.n400 }}>Tap to continue</span></div>}
+    {beat < 3 && <div className="step-10-tap" onClick={advanceBeat} role="button" tabIndex={0} aria-label="Tap to continue" onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); advanceBeat(); } }} style={{ position: "absolute", bottom: 28, left: 0, right: 0, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 40 }}><span style={{ fontFamily: F.b, fontSize: 12, color: C.n400 }}>Tap to continue</span></div>}
     {beat === 0 && renderB0(s)}{beat === 1 && renderB1(s)}{beat === 2 && renderB2(s)}
     {beat === 3 && <TransformBeat solved={solved} onSolve={handleSolve} s={s} variant="D" ctaRef={(el) => { r.current["4cta"] = el; }} />}
   </>);
@@ -405,7 +401,7 @@ export default function Step10V19({ variant }) {
         .step-10-tap:active { transform: scale(0.97); }
       `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet" />
-      <Phone><NoiseDef /><Comp key={v} playing={true} /></Phone>
+      <Phone><Comp key={v} playing={true} /></Phone>
     </div>
   );
 }

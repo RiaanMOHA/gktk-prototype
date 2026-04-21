@@ -31,45 +31,16 @@ const an = (el, kf, opts) => {
 };
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const Noise = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <defs>
-      <filter id="pg" x="0%" y="0%" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" result="n" />
-        <feColorMatrix in="n" type="saturate" values="0" result="m" />
-        <feBlend in="SourceGraphic" in2="m" mode="soft-light" />
-      </filter>
-      <filter id="pg-sub" x="0%" y="0%" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-        <feComponentTransfer>
-          <feFuncA type="linear" slope="0.12" />
-        </feComponentTransfer>
-        <feBlend in="SourceGraphic" mode="overlay" />
-      </filter>
-    </defs>
-  </svg>
-);
-
 const MeshBg = () => (
-  <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-    <div style={{ position: "absolute", inset: 0, background: C.bg }} />
-    <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${C.n100} 0%, ${C.bg} 50%)` }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 90% 50% at 15% 85%, rgba(237, 238, 241, 0.35) 0%, transparent 60%)" }} />
-    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 40% at 85% 15%, rgba(237, 238, 241, 0.3) 0%, transparent 55%)" }} />
-    <div style={{ position: "absolute", inset: 0, filter: "url(#pg)", opacity: 0.025, pointerEvents: "none", background: "rgba(128,128,128,0.08)" }} />
-  </div>
+  <div style={{ position: "absolute", inset: 0, zIndex: 0, background: C.bg }} />
 );
 
 const Glass = ({ children, style = {}, panelRef, level = 1 }) => {
   const s = level === 1
-    ? { bg:"#F9F9F9", blur: "blur(20px) saturate(1.4)", bdr: "1px solid rgba(0,0,0,0.06)", sh: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)", rad: 20 }
-    : { bg:"#F9F9F9", blur: "blur(24px) saturate(1.6)", bdr: "1px solid rgba(0,0,0,0.06)", sh: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)", rad: 28 };
+    ? { bg:"#F9F9F9", bdr: "1px solid rgba(0,0,0,0.06)", sh: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)", rad: 20 }
+    : { bg:"#F9F9F9", bdr: "1px solid rgba(0,0,0,0.06)", sh: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)", rad: 28 };
   return (
     <div ref={panelRef} style={{ position: "relative", overflow: "hidden", borderRadius: s.rad, background: s.bg, border: s.bdr, boxShadow: s.sh, ...style }}>
-      <div style={{ position: "absolute", inset: 0, borderRadius: s.rad, filter: "url(#pg)", opacity: 0.035, pointerEvents: "none", zIndex: 1, background: "rgba(128,128,128,0.1)" }} />
-      <div style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.95) 30%, white 50%, rgba(255,255,255,0.95) 70%, transparent)", zIndex: 4 }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 40, background: "linear-gradient(180deg, rgba(255,255,255,0.4), transparent)", zIndex: 2, pointerEvents: "none", borderRadius: `${s.rad}px ${s.rad}px 0 0` }} />
       <div style={{ position: "relative", zIndex: 3 }}>{children}</div>
     </div>
   );
@@ -86,12 +57,12 @@ const FAQ_GHOST = [
 
 const GhostFaq = ({ containerRef, cardRefs }) => (
   <div ref={containerRef} style={{ position: "absolute", inset: 0, padding: "64px 20px 56px", display: "flex", flexDirection: "column", zIndex: 3 }}>
-    <div style={{ fontFamily: F.b, fontWeight: 500, fontSize: 11, color: C.n600, marginBottom: 12 }}>Risk factors</div>
+    <div style={{ fontFamily: F.b, fontWeight: 500, fontSize: 12, color: C.n600, marginBottom: 12 }}>Risk factors</div>
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       {FAQ_GHOST.map((q, i) => (
         <Glass key={i} level={1} panelRef={(el) => { if (cardRefs) cardRefs.current[i] = el; }} style={{ padding: "12px 14px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ flex: 1, fontFamily: F.b, fontWeight: 500, fontSize: 12.5, lineHeight: 1.35, color: C.n950 }}>{q}</div>
+            <div style={{ flex: 1, fontFamily: F.b, fontWeight: 500, fontSize: 13, lineHeight: 1.35, color: C.n950 }}>{q}</div>
             <div style={{ fontSize: 14, color: C.n600, flexShrink: 0 }}>&#9662;</div>
           </div>
         </Glass>
@@ -102,9 +73,9 @@ const GhostFaq = ({ containerRef, cardRefs }) => (
 
 const ResolveContent = ({ resolveRef }) => (
   <div style={{ position: "absolute", top: "50%", left: 20, right: 20, transform: "translateY(-50%)", zIndex: 6 }}>
-    <Glass level={2} panelRef={resolveRef} style={{ padding: "32px 24px", opacity: 0, filter: "blur(4px)" }}>
+    <Glass level={2} panelRef={resolveRef} style={{ padding: "32px 24px", opacity: 0 }}>
       <div style={{ position: "relative", zIndex: 4 }}>
-        <div style={{ fontFamily: F.h, fontWeight: 600, fontSize: 20, lineHeight: 1.25, color: C.n950 }}>step-20-section-10-exit-strategy</div>
+        <div style={{ fontFamily: F.h, fontWeight: 600, fontSize: 22, lineHeight: 1.25, color: C.n950 }}>Exit strategy</div>
       </div>
     </Glass>
   </div>
@@ -141,10 +112,10 @@ const VariantA = () => {
       const card = cardRefs.current[i];
       if (!card) continue;
       an(card, [
-        { opacity: 1, transform: "translateY(0)", filter: "blur(0px)" },
-        { opacity: 0.6, transform: "translateY(-30px)", filter: "blur(1px)", offset: 0.4 },
-        { opacity: 0.2, transform: "translateY(-80px)", filter: "blur(3px)", offset: 0.75 },
-        { opacity: 0, transform: "translateY(-140px)", filter: "blur(6px)" },
+        { opacity: 1, transform: "translateY(0)" },
+        { opacity: 0.6, transform: "translateY(-30px)", offset: 0.4 },
+        { opacity: 0.2, transform: "translateY(-80px)", offset: 0.75 },
+        { opacity: 0, transform: "translateY(-140px)" },
       ], { duration: 600, easing: E.gentle });
       await wait(100);
     }
@@ -156,9 +127,9 @@ const VariantA = () => {
     await wait(30);
     if (resolveRef.current) {
       await an(resolveRef.current, [
-        { opacity: 0, transform: "translateY(40px) scale(0.97)", filter: "blur(4px)" },
-        { opacity: 0.6, transform: "translateY(12px) scale(0.99)", filter: "blur(1px)", offset: 0.5 },
-        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
+        { opacity: 0, transform: "translateY(40px) scale(0.97)" },
+        { opacity: 0.6, transform: "translateY(12px) scale(0.99)", offset: 0.5 },
+        { opacity: 1, transform: "translateY(0) scale(1)" },
       ], { duration: 650, easing: E.settle });
     }
 
@@ -213,10 +184,10 @@ const VariantB = () => {
       const scaleVal = 0.92 - (i * 0.02);
 
       an(card, [
-        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
-        { opacity: 0.7, transform: `translateY(${targetOffset * 0.4}px) scale(${1 - (1 - scaleVal) * 0.4})`, filter: "blur(0.5px)", offset: 0.4 },
-        { opacity: 0.35, transform: `translateY(${targetOffset * 0.8}px) scale(${scaleVal})`, filter: "blur(2px)", offset: 0.75 },
-        { opacity: 0.1, transform: `translateY(${targetOffset}px) scale(${scaleVal - 0.05})`, filter: "blur(4px)" },
+        { opacity: 1, transform: "translateY(0) scale(1)" },
+        { opacity: 0.7, transform: `translateY(${targetOffset * 0.4}px) scale(${1 - (1 - scaleVal) * 0.4})`, offset: 0.4 },
+        { opacity: 0.35, transform: `translateY(${targetOffset * 0.8}px) scale(${scaleVal})`, offset: 0.75 },
+        { opacity: 0.1, transform: `translateY(${targetOffset}px) scale(${scaleVal - 0.05})` },
       ], { duration: 800, easing: E.gentle });
       await wait(80);
     }
@@ -235,9 +206,9 @@ const VariantB = () => {
     await wait(30);
     if (resolveRef.current) {
       await an(resolveRef.current, [
-        { opacity: 0, transform: "translateY(30px) scale(0.96)", filter: "blur(5px)" },
-        { opacity: 0.5, transform: "translateY(10px) scale(0.98)", filter: "blur(2px)", offset: 0.45 },
-        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
+        { opacity: 0, transform: "translateY(30px) scale(0.96)" },
+        { opacity: 0.5, transform: "translateY(10px) scale(0.98)", offset: 0.45 },
+        { opacity: 1, transform: "translateY(0) scale(1)" },
       ], { duration: 700, easing: E.settle });
     }
 
@@ -311,7 +282,6 @@ export default function Step19TransitionV6({ variant } = {}) {
           }
         }
       `}</style>
-      <Noise />
       <Phone>
         <Cur key={resolved} />
       </Phone>
