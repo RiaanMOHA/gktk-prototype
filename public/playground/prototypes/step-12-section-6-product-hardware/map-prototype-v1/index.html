@@ -35,6 +35,38 @@
       (function () {
         if (new URLSearchParams(location.search).get("embed") !== "1") return;
         document.documentElement.setAttribute("data-embed", "1");
+        // Cover the screen with a solid F9F9F9 overlay during setup so
+        // the user never sees the bundle's default map view or the
+        // step-entry camera flash before the Ozu framing is applied.
+        // Using an overlay instead of opacity/visibility on <html>
+        // because some browsers pause WebGL context rendering in
+        // invisible elements, which would stop the map from finishing
+        // its setup. The map renders normally underneath.
+        var cover = document.createElement("div");
+        cover.id = "__setup-cover";
+        cover.style.cssText = [
+          "position:fixed",
+          "inset:0",
+          "background:#F9F9F9",
+          "z-index:99999",
+          "pointer-events:none",
+        ].join(";");
+        function uncover() {
+          if (cover && cover.parentNode) cover.parentNode.removeChild(cover);
+          cover = null;
+        }
+        window.__uncoverSetup = uncover;
+        // Safety reveal in case the normal trigger never fires. Short
+        // because the fast-entry window caps camera durations, so the
+        // final zone fly should complete well under 1s.
+        setTimeout(uncover, 3000);
+        if (document.body) {
+          document.body.appendChild(cover);
+        } else {
+          document.addEventListener("DOMContentLoaded", function () {
+            if (cover) document.body.appendChild(cover);
+          });
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
           /* Reparent overlays into #app-container so their `position: absolute`
@@ -814,6 +846,7 @@
           patched = true;
           var origFlyTo = map.flyTo.bind(map);
           var origEaseTo = map.easeTo.bind(map);
+          var origFitBounds = map.fitBounds.bind(map);
           function applyMode(opts) {
             opts = Object.assign({}, opts || {});
             if (getMode() === "2d") {
@@ -824,30 +857,191 @@
             }
             return opts;
           }
+          // Framing rules for every map move:
+          //  (a) the focal area must sit >=16px above the base bottom sheet
+          //      (done with Mapbox padding), and
+          //  (b) the camera must be wide enough to show the step's on-map
+          //      content (approximated here with a small zoom-out on
+          //      flyTo/easeTo; fitBounds already fits content so it only
+          //      gets the padding).
+          var SHEET_CLEARANCE_PX = 16;
+          var EDGE_PAD_PX = 16;
+          var ZOOM_OUT_ADJUST = 0.6;
+          function getSheetHeight() {
+            var el = document.getElementById("right-panel");
+            if (el) {
+              var r = el.getBoundingClientRect();
+              if (r && r.height) return r.height;
+            }
+            var mc = document.getElementById("map-container");
+            if (mc) {
+              var rc = mc.getBoundingClientRect();
+              if (rc && rc.height) return rc.height * 0.38;
+            }
+            return 0;
+          }
+          function buildFramingPadding(existing) {
+            existing = existing || {};
+            var bottomNeeded = getSheetHeight() + SHEET_CLEARANCE_PX;
+            return {
+              top:    typeof existing.top    === "number" ? Math.max(existing.top, EDGE_PAD_PX) : EDGE_PAD_PX,
+              right:  typeof existing.right  === "number" ? Math.max(existing.right, EDGE_PAD_PX) : EDGE_PAD_PX,
+              bottom: typeof existing.bottom === "number" ? Math.max(existing.bottom, bottomNeeded) : bottomNeeded,
+              left:   typeof existing.left   === "number" ? Math.max(existing.left, EDGE_PAD_PX) : EDGE_PAD_PX,
+            };
+          }
+          function applyFraming(opts, options) {
+            opts = Object.assign({}, opts || {});
+            opts.padding = buildFramingPadding(opts.padding);
+            if (options && options.zoomOut && typeof opts.zoom === "number") {
+              opts.zoom = Math.max(0, opts.zoom - ZOOM_OUT_ADJUST);
+            }
+            // Shorten every camera move during the initial entry window
+            // so the drawer lands on the Ozu framing fast. Capped (not
+            // zero) so the bundle's step-entry chain, which waits on
+            // real moveend events, still gets genuine animation frames.
+            if (window.__initialEntry) {
+              if (typeof opts.duration !== "number" || opts.duration > 250) {
+                opts.duration = 250;
+              }
+            }
+            return opts;
+          }
           map.flyTo = function (opts) {
-            return origFlyTo(applyMode(opts));
+            return origFlyTo(applyMode(applyFraming(opts, { zoomOut: true })));
           };
           map.easeTo = function (opts) {
-            return origEaseTo(applyMode(opts));
+            return origEaseTo(applyMode(applyFraming(opts, { zoomOut: true })));
           };
-          origEaseTo({
+          map.fitBounds = function (bounds, opts) {
+            return origFitBounds(bounds, applyMode(applyFraming(opts, { zoomOut: false })));
+          };
+          // Auto-fit to step content.
+          // When the bundle adds a GeoJSON source (the arcs, polygons,
+          // dots, routes it draws for the current step), widen the camera
+          // to the union of recently-added source bounds so every piece of
+          // the step's on-map content is visible, framed per the sheet
+          // clearance rules above. Runs only after the map's first idle so
+          // basemap sources loaded during boot are excluded.
+          //
+          // Step-specific opt-outs: for properties the bundle's zone
+          // camera (_propertyZoneMap.ozu-properties.camera) already
+          // produces the desired Ozu framing; auto-fitting to the zone
+          // polygon + property markers zooms in too tight. Let the
+          // zone fly stand.
+          var SKIP_AUTOFIT_STEPS = ["properties"];
+          var contentBatch = null;
+          var batchTimer = null;
+          var mapReady = false;
+          map.once("idle", function () { mapReady = true; });
+          function currentStepId() {
+            var a = window.App;
+            var steps = window.STEPS;
+            if (!a || !a.state || !steps) return null;
+            var s = steps[a.state.currentStep - 1];
+            return (s && s.id) || null;
+          }
+          function computeGeoJSONBounds(g) {
+            var mnLng = Infinity, mnLat = Infinity, mxLng = -Infinity, mxLat = -Infinity;
+            function consume(c) {
+              if (typeof c[0] === "number") {
+                if (c[0] < mnLng) mnLng = c[0];
+                if (c[0] > mxLng) mxLng = c[0];
+                if (c[1] < mnLat) mnLat = c[1];
+                if (c[1] > mxLat) mxLat = c[1];
+              } else if (Array.isArray(c)) {
+                for (var i = 0; i < c.length; i++) consume(c[i]);
+              }
+            }
+            var feats = g && g.type === "FeatureCollection" ? g.features : [g];
+            for (var i = 0; i < feats.length; i++) {
+              var f = feats[i];
+              if (!f) continue;
+              var geom = f.type === "Feature" ? f.geometry : f;
+              if (geom && geom.coordinates) consume(geom.coordinates);
+            }
+            if (mnLng === Infinity) return null;
+            return [[mnLng, mnLat], [mxLng, mxLat]];
+          }
+          function bumpBatch(b) {
+            if (!contentBatch) {
+              contentBatch = [[b[0][0], b[0][1]], [b[1][0], b[1][1]]];
+            } else {
+              contentBatch[0][0] = Math.min(contentBatch[0][0], b[0][0]);
+              contentBatch[0][1] = Math.min(contentBatch[0][1], b[0][1]);
+              contentBatch[1][0] = Math.max(contentBatch[1][0], b[1][0]);
+              contentBatch[1][1] = Math.max(contentBatch[1][1], b[1][1]);
+            }
+            if (batchTimer) clearTimeout(batchTimer);
+            batchTimer = setTimeout(function () {
+              var b2 = contentBatch;
+              contentBatch = null;
+              batchTimer = null;
+              if (!b2) return;
+              function clearEntryWindow() {
+                window.__initialEntry = false;
+                if (window.__initialEntryTimer) {
+                  clearTimeout(window.__initialEntryTimer);
+                  window.__initialEntryTimer = null;
+                }
+              }
+              if (SKIP_AUTOFIT_STEPS.indexOf(currentStepId()) !== -1) {
+                // Step opted out of auto-fit. Clear the duration cap
+                // so user-initiated pan/zoom later animates at the
+                // natural speed, but LEAVE the overlay alone — this
+                // drawer's activateOzu sets its own moveend handler
+                // to uncover after the final explicit fitBounds
+                // lands, so the user never sees an intermediate
+                // camera state.
+                clearEntryWindow();
+                return;
+              }
+              map.stop();
+              map.once("moveend", function () {
+                clearEntryWindow();
+                if (typeof window.__uncoverSetup === "function") {
+                  window.__uncoverSetup();
+                }
+              });
+              map.fitBounds(b2, { duration: 600 });
+            }, 250);
+          }
+          var origAddSource = map.addSource.bind(map);
+          map.addSource = function (id, src) {
+            var r = origAddSource(id, src);
+            if (mapReady && src && src.type === "geojson" && src.data) {
+              var b = computeGeoJSONBounds(src.data);
+              if (b) bumpBatch(b);
+            }
+            return r;
+          };
+          if (typeof map.removeSource === "function") {
+            var origRemoveSource = map.removeSource.bind(map);
+            map.removeSource = function (id) {
+              contentBatch = null;
+              if (batchTimer) { clearTimeout(batchTimer); batchTimer = null; }
+              return origRemoveSource(id);
+            };
+          }
+          // Apply initial mode + framing to the current view
+          origEaseTo(applyFraming({
             center: map.getCenter(),
             zoom: map.getZoom(),
             pitch: getMode() === "2d" ? 0 : PITCH_3D,
             bearing: getMode() === "2d" ? 0 : map.getBearing(),
             duration: 0,
-          });
+          }, { zoomOut: false }));
           btn.addEventListener("click", function () {
             var next = getMode() === "2d" ? "3d" : "2d";
             localStorage.setItem(STORAGE_KEY, next);
             setLabel();
-            origEaseTo({
+            origEaseTo(applyFraming({
               center: map.getCenter(),
               zoom: map.getZoom(),
               pitch: next === "2d" ? 0 : PITCH_3D,
               bearing: next === "2d" ? 0 : map.getBearing(),
               duration: 500,
-            });
+            }, { zoomOut: false }));
           });
         }
         function waitForMap() {
@@ -858,6 +1052,140 @@
           setTimeout(waitForMap, 80);
         }
         waitForMap();
+      })();
+    </script>
+
+    <!-- Step-12 drawer scope:
+           Starts on: properties step with Ozu zone activated and
+                      Ozu 1 selected in the dashboard.
+           Navigable: single step (the drawer's URL passes
+                      ?steps=properties so the bundle's K is one
+                      entry, indexed 1).
+         The bundle's App.init() does NOT call goToStep(1) — that only
+         happens inside restart(). So the drawer sits at currentStep=0
+         forever unless we fire the jump ourselves. After goToStep
+         settles, we activate the Ozu zone via the bundle's own public
+         method `_handlePropertySubItem("ozu-properties")`, which sets
+         state, draws the zone polygon + Ozu property markers, flies
+         the camera to the Ozu coords, and renders the zone panel.
+         `selectProperty("ozu-1")` then focuses Ozu 1 specifically. -->
+    <script>
+      (function () {
+        var TARGET_STEP = 1;
+        var MIN_STEP = 1;
+        var MAX_STEP = 1;
+        function wrap(app) {
+          if (!app || typeof app.goToStep !== "function" || app.__stepRedirect) return;
+          app.__stepRedirect = true;
+          var orig = app.goToStep.bind(app);
+          app.goToStep = function (n) {
+            if (n < MIN_STEP) n = MIN_STEP;
+            if (n > MAX_STEP) n = MAX_STEP;
+            if (app.state && app.state.currentStep === n) {
+              return Promise.resolve();
+            }
+            // Fast-entry window: applyFraming caps camera durations
+            // while this is true so the entry lands quickly. Cleared
+            // by bumpBatch's moveend (or by the skip-autofit path) or
+            // by the safety timer.
+            window.__initialEntry = true;
+            if (window.__initialEntryTimer) clearTimeout(window.__initialEntryTimer);
+            window.__initialEntryTimer = setTimeout(function () {
+              window.__initialEntry = false;
+            }, 3000);
+            return orig(n);
+          };
+        }
+        var _app;
+        try {
+          Object.defineProperty(window, "App", {
+            configurable: true,
+            enumerable: true,
+            get: function () { return _app; },
+            set: function (v) { _app = v; wrap(v); },
+          });
+        } catch (_e) {
+          (function poll() {
+            if (window.App) { wrap(window.App); return; }
+            setTimeout(poll, 20);
+          })();
+        }
+        function activateOzu() {
+          // Ozu zone: draws the zone polygon, adds the Ozu property
+          // marker, flies to the zone camera (3D/52 pitch), and
+          // renders the zone panel.
+          try { window.App._handlePropertySubItem("ozu-properties"); } catch (_) {}
+          // Add context lines + endpoint markers (Jasm, station,
+          // airport, road) for Ozu 1 WITHOUT switching the panel to
+          // the property detail — the bundle's selectProperty couples
+          // the two, so call the map part directly via MapController.
+          try {
+            var prop = window.AppData
+              && window.AppData.properties
+              && window.AppData.properties.find(function (p) { return p && p.id === "ozu-1"; });
+            if (prop && window.MapController && typeof window.MapController.showPropertyContextLines === "function") {
+              window.MapController.showPropertyContextLines(prop);
+            }
+          } catch (_) {}
+          // Both _handlePropertySubItem and showPropertyContextLines
+          // end with their own flyTo/fitBounds. The zone camera
+          // (zoom 12.7 at pitch 52) is designed for 3D and looks too
+          // tight once applyMode forces pitch:0 for 2D. The property
+          // camera is even tighter (street level). Override with an
+          // explicit wide bounds covering Kikuchi → Mashiki and
+          // Koshi → Shirakawa so the full corridor is in frame with
+          // the Ozu marker sitting in the upper half above the sheet.
+          try {
+            var m = window.__mbmap;
+            if (m) {
+              // Uncover the overlay once THIS final fitBounds lands
+              // so the user never sees an intermediate bundle camera
+              // (zone flyTo, context-lines flyTo) before the wide
+              // corridor framing is in place.
+              m.once("moveend", function () {
+                window.__initialEntry = false;
+                if (window.__initialEntryTimer) {
+                  clearTimeout(window.__initialEntryTimer);
+                  window.__initialEntryTimer = null;
+                }
+                if (typeof window.__uncoverSetup === "function") {
+                  window.__uncoverSetup();
+                }
+              });
+              m.fitBounds(
+                [[130.76, 32.78], [130.95, 32.94]],
+                { duration: 250 }
+              );
+            }
+          } catch (_) {}
+        }
+        var triggered = false;
+        function triggerInitial() {
+          if (triggered) return;
+          if (!window.App || typeof window.App.goToStep !== "function") {
+            setTimeout(triggerInitial, 40);
+            return;
+          }
+          var m = window.__mbmap;
+          if (!m || typeof m.isStyleLoaded !== "function" || !m.isStyleLoaded()) {
+            setTimeout(triggerInitial, 40);
+            return;
+          }
+          triggered = true;
+          // Pretend we came from a non-zero step so the bundle takes
+          // the single-flyTo branch instead of the dramatic double-fly
+          // intro, cutting ~2s off entry. Step index 2 is safe since
+          // this drawer only has one step; _exitStep on a never-
+          // entered step is a no-op.
+          if (window.App.state) {
+            window.App.state.currentStep = 2;
+          }
+          window.__initialEntry = true;
+          Promise.resolve(window.App.goToStep(TARGET_STEP))
+            .then(activateOzu)
+            .catch(function () { activateOzu(); });
+        }
+        triggerInitial();
       })();
     </script>
 
