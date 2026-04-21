@@ -17,7 +17,7 @@ export default function Step19Section10Transition({ isActive, onComplete }: Step
   if (!isActive) return null;
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-base-black">
+    <div className="w-full h-full flex items-center justify-center bg-base-black">
       <p className="font-body text-base text-neutral-200 tracking-wide">
         step-19-section-10-transition
       </p>

@@ -17,7 +17,7 @@ export default function Step13Section7Transition({ isActive, onComplete }: StepP
   if (!isActive) return null;
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-base-black">
+    <div className="w-full h-full flex items-center justify-center bg-base-black">
       <p className="font-body text-base text-neutral-200 tracking-wide">
         step-13-section-7-transition
       </p>
