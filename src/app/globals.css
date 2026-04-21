@@ -111,3 +111,19 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+[data-qa] button,
+[data-qa] select,
+[data-qa] input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-qa] button:focus,
+[data-qa] button:focus-visible,
+[data-qa] select:focus,
+[data-qa] select:focus-visible,
+[data-qa] input:focus,
+[data-qa] input:focus-visible {
+  outline: 0 !important;
+  box-shadow: none !important;
+}

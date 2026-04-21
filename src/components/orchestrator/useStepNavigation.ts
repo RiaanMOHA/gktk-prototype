@@ -14,6 +14,10 @@ export function useStepNavigation() {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   }, []);
 
+  const goToStep = useCallback((n: number) => {
+    setCurrentStep(Math.min(Math.max(n, 1), STEPS.length));
+  }, []);
+
   const stepConfig = STEPS[currentStep - 1];
 
   return {
@@ -22,5 +26,6 @@ export function useStepNavigation() {
     totalSteps: STEPS.length,
     goToNext,
     goToPrev,
+    goToStep,
   };
 }

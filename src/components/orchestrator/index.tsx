@@ -1,7 +1,10 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useCallback, useEffect, useState } from 'react';
 import { useStepNavigation } from './useStepNavigation';
+import { DevQaChrome } from './DevQaChrome';
+import { StepNav } from './StepNav';
 
 const stepComponents = [
   dynamic(() => import('../steps/step-1-opening-transition')),
@@ -26,35 +29,57 @@ const stepComponents = [
   dynamic(() => import('../steps/step-20-section-10-exit-strategy')),
 ];
 
+const IS_DEV = process.env.NODE_ENV !== 'production';
+
 export default function Orchestrator() {
-  const { currentStep, stepConfig, totalSteps, goToNext, goToPrev } = useStepNavigation();
+  const { currentStep, totalSteps, goToNext, goToPrev, goToStep } =
+    useStepNavigation();
+  const [reloadKey, setReloadKey] = useState(0);
+  const reloadStep = useCallback(() => setReloadKey((k) => k + 1), []);
+
+  const [mode, setMode] = useState<'loading' | 'parent' | 'preview'>('loading');
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const inPreview = params.get('preview') === '1';
+    setMode(inPreview ? 'preview' : 'parent');
+  }, []);
 
   const ActiveStep = stepComponents[currentStep - 1];
-
-  return (
-    <div className="relative w-screen h-screen overflow-hidden">
-      <ActiveStep isActive={true} onComplete={goToNext} />
-
-      {/* Dev navigation bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-chrome flex items-center justify-between px-4 py-2 bg-base-black/80 backdrop-blur-sm">
-        <button
-          onClick={goToPrev}
-          disabled={currentStep === 1}
-          className="px-3 py-1 text-sm font-body text-neutral-200 disabled:text-neutral-600"
-        >
-          Prev
-        </button>
-        <span className="text-sm font-body text-neutral-200">
-          {currentStep}/{totalSteps} — {stepConfig.name}
-        </span>
-        <button
-          onClick={goToNext}
-          disabled={currentStep === totalSteps}
-          className="px-3 py-1 text-sm font-body text-neutral-200 disabled:text-neutral-600"
-        >
-          Next
-        </button>
-      </div>
-    </div>
+  const stepEl = (
+    <ActiveStep
+      key={`${currentStep}-${reloadKey}`}
+      isActive={true}
+      onComplete={goToNext}
+    />
   );
+
+  if (!IS_DEV) {
+    return (
+      <div className="relative w-screen h-screen overflow-hidden">
+        {stepEl}
+      </div>
+    );
+  }
+
+  if (mode === 'loading') return null;
+
+  const stepWithNav = (
+    <>
+      <div className="relative w-screen h-screen overflow-hidden">{stepEl}</div>
+      <StepNav
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        onPrev={goToPrev}
+        onNext={goToNext}
+        onJumpTo={goToStep}
+        onReload={reloadStep}
+      />
+    </>
+  );
+
+  if (mode === 'preview') {
+    return stepWithNav;
+  }
+
+  return <DevQaChrome>{stepWithNav}</DevQaChrome>;
 }

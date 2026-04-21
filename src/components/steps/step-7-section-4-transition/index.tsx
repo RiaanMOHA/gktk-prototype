@@ -17,7 +17,7 @@ export default function Step7Section4Transition({ isActive, onComplete }: StepPr
   if (!isActive) return null;
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-base-black">
+    <div className="w-full h-full flex items-center justify-center bg-base-black">
       <p className="font-body text-base text-neutral-200 tracking-wide">
         step-7-section-4-transition
       </p>
