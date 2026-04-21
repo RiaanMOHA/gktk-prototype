@@ -7,46 +7,15 @@ const C = {
   amber: "#FBB931", amber100: "#FEF2C9", orange: "#FF9424",
 };
 
-/* ── visionOS material primitives ── */
-const NOISE_ID = "gktk-noise-s9";
-const NoiseDefs = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <defs>
-      <filter id={NOISE_ID}>
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-      </filter>
-    </defs>
-  </svg>
-);
-
-const NoiseOverlay = ({ opacity = 0.03 }) => (
-  <div style={{
-    position: "absolute", inset: 0, borderRadius: "inherit",
-    filter: `url(#${NOISE_ID})`, opacity, mixBlendMode: "overlay", pointerEvents: "none",
-  }} />
-);
-
 const MeshBg = () => (
   <div style={{ position: "absolute", inset: 0, overflow: "hidden", borderRadius: "inherit" }}>
-    <div style={{
-      position: "absolute", inset: 0,
-      background: [
-        "radial-gradient(ellipse 80% 50% at 20% 80%, rgba(251,185,49,0.08) 0%, transparent 60%)",
-        "radial-gradient(ellipse 60% 60% at 80% 20%, rgba(255,148,36,0.05) 0%, transparent 50%)",
-        "radial-gradient(ellipse 90% 70% at 50% 50%, rgba(237,238,241,0.4) 0%, transparent 70%)",
-        "radial-gradient(ellipse 100% 100% at 50% 100%, rgba(254,242,201,0.12) 0%, transparent 60%)",
-        `linear-gradient(180deg, ${C.n100} 0%, ${C.bg} 40%)`,
-      ].join(", "),
-    }} />
-    <NoiseOverlay opacity={0.025} />
+    <div style={{ position: "absolute", inset: 0, background: C.bg }} />
   </div>
 );
 
 const GlowDot = ({ size = 6, style = {} }) => (
   <div style={{
     width: size, height: size, borderRadius: "50%", background: C.amber,
-    boxShadow: `0 0 ${size * 2}px rgba(251,185,49,0.5), 0 0 ${size * 4}px rgba(251,185,49,0.2)`,
     ...style,
   }} />
 );
@@ -83,19 +52,12 @@ function Step9Transition({ onAdvance }) {
         cursor: beat >= 3 ? "pointer" : "default",
       }}
     >
-      {/* ambient glow — slowly breathing */}
-      <div style={{
-        position: "absolute", top: "35%", left: "10%",
-        width: 200, height: 200, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(251,185,49,0.08) 0%, transparent 70%)",
-        animation: "glowPulse 4s ease-in-out infinite",
-        pointerEvents: "none",
-      }} />
+      {/* ambient glow removed per flat-design mandate (no radial gradients or glows) */}
 
       {/* the question — word by word stagger feel via opacity + translateY */}
       <h1 aria-live="polite" style={{
-        fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 28,
-        lineHeight: 1.15, color: C.n950, letterSpacing: "-0.025em",
+        fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 32,
+        lineHeight: 1.15, color: C.n950, letterSpacing: "-0.02em",
         margin: 0, maxWidth: 280,
         opacity: beat >= 1 ? 1 : 0,
         transform: beat >= 1 ? "translateY(0)" : "translateY(24px)",
@@ -153,7 +115,6 @@ export default function Step9TransitionPlayground() {
         }
       `}</style>
       <link href="https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet" />
-      <NoiseDefs />
       <div style={{ position: "relative", width: 393, height: 852, borderRadius: 55, overflow: "hidden", background: "#1A1A1E", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) inset" }}>
         <div style={{ position: "absolute", inset: 0, borderRadius: 55, border: "2.5px solid transparent",
           background: "linear-gradient(135deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.05) 50%,rgba(255,255,255,0.15) 100%) border-box",

@@ -38,9 +38,6 @@ const glass1 = {
 function EntryWarmth() {
   return (
     <>
-      <div className="blob" style={{ top: "15%", left: "-20%", width: 280, height: 280, background: "radial-gradient(circle,rgba(251,185,49,0.12) 0%,transparent 70%)", animation: "blobFloat1 8s ease-in-out infinite" }} />
-      <div className="blob" style={{ top: "35%", right: "-15%", width: 220, height: 220, background: "radial-gradient(circle,rgba(255,134,96,0.10) 0%,transparent 70%)", filter: "blur(35px)", animation: "blobFloat2 10s ease-in-out infinite" }} />
-      <div className="blob" style={{ top: "55%", left: "10%", width: 180, height: 180, background: "radial-gradient(circle,rgba(254,242,201,0.20) 0%,transparent 70%)", filter: "blur(30px)", animation: "blobFloat3 7s ease-in-out infinite" }} />
       <div className="entry-logo"><Logo id="warmth" size={48} /></div>
       <div style={{ position: "absolute", bottom: 100, left: 24, right: 24 }}>
         <h1 className="entry-h1">Why Kumamoto,<br />why now?</h1>
@@ -87,7 +84,6 @@ function EntrySignal() {
       <div style={{ position: "absolute", top: "18%", left: "50%", transform: "translateX(-50%)", opacity: 0.14, animation: "logoPulse 4s ease-in-out infinite" }}>
         <Logo id="signal-bg" size={240} />
       </div>
-      <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: 200, height: 100, borderRadius: "50%", background: "radial-gradient(circle,rgba(251,185,49,0.18) 0%,transparent 70%)", filter: "blur(40px)", animation: "logoPulse 4s ease-in-out infinite" }} />
       <div className="entry-logo"><Logo id="signal" size={48} /></div>
       <div style={{ position: "absolute", bottom: 100, left: 24, right: 24 }}>
         <h1 className="entry-h1">Why Kumamoto,<br />why now?</h1>
@@ -273,25 +269,20 @@ export default function GKTKEntryTransitions({ variant } = {}) {
         .entry-logo { position: absolute; top: 60px; left: 24px; }
         .entry-h1 { font-family: 'REM', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.1; letter-spacing: -0.025em; color: ${N[950]}; margin: 0 0 8px 0; }
         .entry-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 400; color: ${N[900]}; line-height: 1.5; margin: 0; }
-        .fact-chip { display: inline-block; padding: 6px 14px; border-radius: 12px; background: #F9F9F9; -webkit-border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; color: ${N[600]}; letter-spacing: 0.01em; line-height: 1.4; }
+        .fact-chip { display: inline-block; padding: 6px 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; color: ${N[600]}; letter-spacing: 0.01em; line-height: 1.4; }
         .fact-chip.bold { font-weight: 600; color: ${N[950]}; }
-        .glass-bar { padding: 8px 14px; border-radius: 14px; background: #F9F9F9; -webkit-border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 400; color: ${N[800]}; line-height: 1.4; }
-        .glass-bar.elev2 { padding: 10px 16px; background: #F9F9F9; -webkit-border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06); font-weight: 600; color: ${N[950]}; }
-        .blob { position: absolute; border-radius: 50%; filter: blur(40px); }
-
-        @keyframes blobFloat1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(15px, -20px) scale(1.05); } }
-        @keyframes blobFloat2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-20px, 15px) scale(1.08); } }
-        @keyframes blobFloat3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(10px, 10px) scale(0.95); } }
+        .glass-bar { padding: 8px 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 400; color: ${N[800]}; line-height: 1.4; }
+        .glass-bar.elev2 { padding: 10px 16px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06); font-weight: 600; color: ${N[950]}; }
         @keyframes logoPulse { 0%, 100% { opacity: 0.12; transform: translateX(-50%) scale(1); } 50% { opacity: 0.18; transform: translateX(-50%) scale(1.03); } }
         @keyframes barSlideIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
 
         @keyframes sweepOut { 0% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
         @keyframes sweepIn { from { clip-path: inset(0 100% 0 0); opacity: 0.8; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
-        @keyframes scatterOut { 0% { transform: scale(1); opacity: 1; filter: blur(0px); } 60% { transform: scale(0.92); opacity: 0.6; filter: blur(4px); } 100% { transform: scale(0.8); opacity: 0; filter: blur(12px); } }
-        @keyframes scatterIn { from { transform: scale(1.05); opacity: 0; filter: blur(6px); } to { transform: scale(1); opacity: 1; filter: blur(0px); } }
-        @keyframes dissolveOut { 0% { opacity: 1; filter: blur(0px) saturate(1); } 50% { opacity: 0.5; filter: blur(8px) saturate(0.5); } 100% { opacity: 0; filter: blur(16px) saturate(0); } }
-        @keyframes dissolveIn { from { opacity: 0; filter: blur(12px) saturate(0.5); } to { opacity: 1; filter: blur(0px) saturate(1); } }
+        @keyframes scatterOut { 0% { transform: scale(1); opacity: 1; } 60% { transform: scale(0.94); opacity: 0.6; } 100% { transform: scale(0.85); opacity: 0; } }
+        @keyframes scatterIn { from { transform: scale(1.04); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes dissolveOut { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.98); } 100% { opacity: 0; transform: scale(0.96); } }
+        @keyframes dissolveIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
         @keyframes dropOut { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(60px); opacity: 0; } }
         @keyframes dropIn { from { transform: translateY(-40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes sweepBand { 0% { clip-path: inset(0 100% 0 0); } 45% { clip-path: inset(0 0 0 0); } 55% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
@@ -322,8 +313,8 @@ export default function GKTKEntryTransitions({ variant } = {}) {
               <div style={{ position: "absolute", top: "50%", right: 18, transform: "translateY(-50%)", width: 11, height: 11, borderRadius: "50%", background: "radial-gradient(circle at 40% 40%, #1E2028 0%, #0A0A0C 50%, #1A1A1E 100%)", boxShadow: "0 0 0 1.5px #0D0D0F, 0 0 3px rgba(255,255,255,0.06) inset" }} />
             </div>
 
-            {/* Mesh gradient bg */}
-            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 120% 80% at 50% 60%, #FEF2C9 0%, #F9F9F9 60%)", zIndex: 0 }} />
+            {/* Flat screen bg (was mesh gradient) */}
+            <div style={{ position: "absolute", inset: 0, background: "#F9F9F9", zIndex: 0 }} />
 
             {/* Phone content */}
             <div style={{ position: "absolute", inset: 0, zIndex: 1 }}>
@@ -372,7 +363,7 @@ export default function GKTKEntryTransitions({ variant } = {}) {
 
             {/* Sweep overlay */}
             {phase === "transitioning" && t.key === "sweep" && (
-              <div style={{ position: "absolute", inset: 0, zIndex: 5, background: "#FEF2C9", animation: `sweepBand ${t.duration}ms ease-in-out forwards` }} />
+              <div style={{ position: "absolute", inset: 0, zIndex: 5, background: "#EDEEF1", animation: `sweepBand ${t.duration}ms ease-in-out forwards` }} />
             )}
 
             {/* Scatter particles */}

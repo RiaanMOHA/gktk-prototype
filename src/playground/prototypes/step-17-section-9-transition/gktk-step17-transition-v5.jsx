@@ -1,10 +1,5 @@
 import { useState, useRef, useCallback } from "react";
 
-const VARIANTS = [
-  { id: "recede", label: "C: the recede" },
-  { id: "shutter", label: "D: the shutter" },
-];
-
 const COLORS = {
   neutral950: "#25272C",
   neutral900: "#383A42",
@@ -26,83 +21,13 @@ const EASING = {
   sharp: "cubic-bezier(0.4, 0, 0.2, 1)",
 };
 
-const NoiseFilter = () => (
-  <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-    <defs>
-      <filter id="noise-grain">
-        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-        <feBlend in="SourceGraphic" mode="soft-light" />
-      </filter>
-      <filter id="noise-subtle">
-        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-        <feComponentTransfer>
-          <feFuncA type="linear" slope="0.12" />
-        </feComponentTransfer>
-        <feBlend in="SourceGraphic" mode="overlay" />
-      </filter>
-    </defs>
-  </svg>
-);
-
 const MeshGradientBg = () => (
   <div
     style={{
       position: "absolute",
       inset: 0,
-      background: `
-        linear-gradient(135deg, ${COLORS.neutral100} 0%, ${COLORS.base} 50%),
-        radial-gradient(ellipse 80% 60% at 30% 20%, rgba(237,238,241,0.5) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 80% at 70% 80%, rgba(237,238,241,0.3) 0%, transparent 60%)
-      `,
+      background: COLORS.base,
       zIndex: 0,
-    }}
-  />
-);
-
-const NoiseOverlay = () => (
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      opacity: 0.035,
-      filter: "url(#noise-grain)",
-      pointerEvents: "none",
-      zIndex: 1,
-    }}
-  />
-);
-
-const SpecularEdge = ({ radius = 28 }) => (
-  <div
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 8,
-      right: 8,
-      height: 1,
-      background:
-        "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.9) 20%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.9) 80%, transparent 100%)",
-      borderRadius: `${radius}px ${radius}px 0 0`,
-      zIndex: 3,
-      pointerEvents: "none",
-    }}
-  />
-);
-
-const InnerGlow = () => (
-  <div
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      height: 40,
-      background: "linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%)",
-      borderRadius: "28px 28px 0 0",
-      zIndex: 2,
-      pointerEvents: "none",
     }}
   />
 );
@@ -113,30 +38,15 @@ const GlassPanel = ({ children, style = {}, panelRef }) => (
     style={{
       position: "relative",
       background:"#F9F9F9",
-      
-      
       border: "1px solid rgba(0,0,0,0.06)",
       borderRadius: 28,
       boxShadow:
-        "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5)",
+        "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
       padding: "32px 24px",
       zIndex: 5,
       ...style,
     }}
   >
-    <SpecularEdge radius={28} />
-    <InnerGlow />
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        borderRadius: 28,
-        opacity: 0.04,
-        filter: "url(#noise-subtle)",
-        pointerEvents: "none",
-        zIndex: 2,
-      }}
-    />
     <div style={{ position: "relative", zIndex: 4 }}>{children}</div>
   </div>
 );
@@ -198,25 +108,12 @@ const GhostFinancials = ({ containerRef, headerRef, rowRefs }) => {
         style={{
           position: "relative",
           background:"#F9F9F9",
-          
-          
           border: "1px solid rgba(0,0,0,0.06)",
           borderRadius: 20,
           boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
           overflow: "hidden",
         }}
       >
-        <SpecularEdge radius={20} />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: 20,
-            opacity: 0.03,
-            filter: "url(#noise-subtle)",
-            pointerEvents: "none",
-          }}
-        />
         {rows.map((row, i) => (
           <div
             key={row.label}
@@ -237,9 +134,8 @@ const GhostFinancials = ({ containerRef, headerRef, rowRefs }) => {
                 fontFamily: "'Noto Sans JP', sans-serif",
                 fontSize: 13,
                 fontWeight: 500,
-                letterSpacing: "0.04em",
+                letterSpacing: "0.01em",
                 color: COLORS.neutral600,
-                textTransform: "uppercase",
               }}
             >
               {row.label}
@@ -248,7 +144,7 @@ const GhostFinancials = ({ containerRef, headerRef, rowRefs }) => {
               style={{
                 fontFamily: "'REM', sans-serif",
                 fontWeight: 600,
-                fontSize: row.highlight ? 24 : 16,
+                fontSize: row.highlight ? 22 : 16,
                 color: COLORS.neutral950,
                 fontVariantNumeric: "tabular-nums",
               }}
@@ -330,10 +226,10 @@ const VariantRecede = () => {
       await an(
         containerRef.current,
         [
-          { opacity: 1, transform: "scale(1) translateY(0)", filter: "blur(0px)" },
-          { opacity: 0.5, transform: "scale(0.92) translateY(-10px)", filter: "blur(2px)", offset: 0.5 },
-          { opacity: 0.15, transform: "scale(0.85) translateY(-18px)", filter: "blur(5px)", offset: 0.8 },
-          { opacity: 0, transform: "scale(0.82) translateY(-22px)", filter: "blur(8px)" },
+          { opacity: 1, transform: "scale(1) translateY(0)" },
+          { opacity: 0.5, transform: "scale(0.92) translateY(-10px)", offset: 0.5 },
+          { opacity: 0.15, transform: "scale(0.85) translateY(-18px)", offset: 0.8 },
+          { opacity: 0, transform: "scale(0.82) translateY(-22px)" },
         ],
         { duration: 1100, easing: EASING.gentle }
       );
@@ -347,9 +243,9 @@ const VariantRecede = () => {
       await an(
         resolveRef.current,
         [
-          { opacity: 0, transform: "scale(0.95) translateY(10px)", filter: "blur(4px)" },
-          { opacity: 0.6, transform: "scale(0.98) translateY(4px)", filter: "blur(1px)", offset: 0.5 },
-          { opacity: 1, transform: "scale(1) translateY(0)", filter: "blur(0px)" },
+          { opacity: 0, transform: "scale(0.95) translateY(10px)" },
+          { opacity: 0.6, transform: "scale(0.98) translateY(4px)", offset: 0.5 },
+          { opacity: 1, transform: "scale(1) translateY(0)" },
         ],
         { duration: 700, easing: EASING.settle }
       );
@@ -369,11 +265,10 @@ const VariantRecede = () => {
       onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !running.current) { e.preventDefault(); run(); } }}
     >
       <MeshGradientBg />
-      <NoiseOverlay />
       <GhostFinancials containerRef={containerRef} headerRef={headerRef} rowRefs={rowRefs} />
       {resolveVisible && (
         <div style={{ position: "absolute", top: "50%", left: 20, right: 20, transform: "translateY(-50%)", zIndex: 6 }}>
-          <GlassPanel panelRef={resolveRef} style={{ opacity: 0, filter: "blur(4px)" }}>
+          <GlassPanel panelRef={resolveRef} style={{ opacity: 0 }}>
             <ResolveContent />
           </GlassPanel>
         </div>
@@ -462,8 +357,8 @@ const VariantShutter = () => {
       an(
         resolveRef.current,
         [
-          { opacity: 0, transform: "scale(0.97)", filter: "blur(3px)" },
-          { opacity: 1, transform: "scale(1)", filter: "blur(0px)" },
+          { opacity: 0, transform: "scale(0.97)" },
+          { opacity: 1, transform: "scale(1)" },
         ],
         { duration: 600, easing: EASING.settle }
       );
@@ -484,12 +379,11 @@ const VariantShutter = () => {
       onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !running.current) { e.preventDefault(); run(); } }}
     >
       <MeshGradientBg />
-      <NoiseOverlay />
       <GhostFinancials containerRef={containerRef} headerRef={headerRef} rowRefs={rowRefs} />
 
       {resolveVisible && (
         <div style={{ position: "absolute", top: "50%", left: 20, right: 20, transform: "translateY(-50%)", zIndex: 6 }}>
-          <GlassPanel panelRef={resolveRef} style={{ opacity: 0, transform: "scale(0.97)", filter: "blur(3px)" }}>
+          <GlassPanel panelRef={resolveRef} style={{ opacity: 0, transform: "scale(0.97)" }}>
             <ResolveContent />
           </GlassPanel>
         </div>
@@ -511,7 +405,6 @@ const VariantShutter = () => {
               boxShadow: "0 2px 0 rgba(251,185,49,0.6), 0 2px 16px rgba(251,185,49,0.2)",
             }}
           >
-            <div style={{ position: "absolute", inset: 0, opacity: 0.03, filter: "url(#noise-subtle)", pointerEvents: "none" }} />
           </div>
           <div
             ref={bottomRef}
@@ -527,7 +420,6 @@ const VariantShutter = () => {
               boxShadow: "0 -2px 0 rgba(251,185,49,0.6), 0 -2px 16px rgba(251,185,49,0.2)",
             }}
           >
-            <div style={{ position: "absolute", inset: 0, opacity: 0.03, filter: "url(#noise-subtle)", pointerEvents: "none" }} />
           </div>
         </>
       )}
@@ -640,7 +532,6 @@ export default function Step17TransitionV5({ variant } = {}) {
           }
         }
       `}</style>
-      <NoiseFilter />
 
       <IPhoneFrame>
         <Comp key={resolved} />

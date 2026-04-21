@@ -26,24 +26,10 @@ function Logo({ id = "l3", size = 48 }) {
   );
 }
 
-/* ── mesh bg that warms during the transition ── */
-function MeshBG({ warm }) {
+/* ── flat bg (was MeshBG; radial gradients removed per flat-design mandate) ── */
+function MeshBG() {
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: 0, background: warm
-      ? `radial-gradient(ellipse 80% 60% at 30% 70%,rgba(255,251,236,0.6) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 70% 40%,rgba(251,185,49,0.10) 0%,transparent 50%),radial-gradient(ellipse 120% 80% at 50% 60%,#FEF2C9 0%,#F9F9F9 60%)`
-      : `radial-gradient(ellipse 120% 80% at 50% 60%,#FEF2C9 0%,#F9F9F9 60%)`,
-      transition: "background 700ms cubic-bezier(0.25,0.46,0.45,0.94)",
-    }} />
-  );
-}
-
-/* ── noise grain overlay ── */
-function Noise({ opacity = 0.04, id = "n3" }) {
-  return (
-    <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", mixBlendMode: "overlay", opacity, zIndex: 90 }} aria-hidden="true">
-      <filter id={id}><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" /></filter>
-      <rect width="100%" height="100%" filter={`url(#${id})`} />
-    </svg>
+    <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "#F9F9F9" }} />
   );
 }
 
@@ -65,17 +51,14 @@ function BridgeSnapshot({ visible }) {
   return (
     <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 24px" }}>
       <div style={{
-        position: "relative", padding: 24, borderRadius: 16, overflow: "hidden",
+        position: "relative", padding: 24, borderRadius: 20, overflow: "hidden",
         background:"#F9F9F9",
-        
-        
         border: "1px solid rgba(0,0,0,0.06)",
-        boxShadow: "0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
+        boxShadow: "0 16px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(8px)",
         transition: "opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 120ms, transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 120ms",
       }}>
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg,transparent 5%,rgba(255,255,255,0.92) 50%,transparent 95%)", pointerEvents: "none" }} />
         <div style={{ fontFamily: "'REM',sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: N[950] }}>10</div>
         <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: "0.875rem", color: N[600], margin: "8px 0 0", lineHeight: 1.6 }}>trillion yen. Japan is rebuilding its chip industry.</p>
       </div>
@@ -159,8 +142,8 @@ export default function Step3TransitionV1({ variant } = {}) {
 
         @keyframes sweepOut    { 0% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
         @keyframes sweepBand   { 0% { clip-path: inset(0 100% 0 0); } 45% { clip-path: inset(0 0 0 0); } 55% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
-        @keyframes scatterOut  { 0% { transform: scale(1); opacity: 1; filter: blur(0); } 60% { transform: scale(0.92); opacity: 0.6; filter: blur(4px); } 100% { transform: scale(0.8); opacity: 0; filter: blur(12px); } }
-        @keyframes dissolveOut { 0% { opacity: 1; filter: blur(0) saturate(1); } 50% { opacity: 0.5; filter: blur(8px) saturate(0.5); } 100% { opacity: 0; filter: blur(16px) saturate(0); } }
+        @keyframes scatterOut  { 0% { transform: scale(1); opacity: 1; } 60% { transform: scale(0.94); opacity: 0.6; } 100% { transform: scale(0.85); opacity: 0; } }
+        @keyframes dissolveOut { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.98); } 100% { opacity: 0; transform: scale(0.96); } }
         @keyframes dropOut     { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(60px); opacity: 0; } }
 
         @keyframes particle0 { to { transform: translate(-80px,-120px) scale(0); opacity: 0; } }
@@ -188,9 +171,7 @@ export default function Step3TransitionV1({ variant } = {}) {
           {/* dynamic island */}
           <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", width: 126, height: 37, borderRadius: 20, background: "#000", zIndex: 100 }} />
 
-          {/* bg warms as we approach the bridge */}
-          <MeshBG warm={phase !== "entry"} />
-          <Noise />
+          <MeshBG />
 
           {/* entry layer — exits with the selected animation */}
           <div style={{ position: "absolute", inset: 0, zIndex: 5,
@@ -202,7 +183,7 @@ export default function Step3TransitionV1({ variant } = {}) {
 
           {/* sweep band overlay */}
           {phase === "exiting" && spec.band && (
-            <div style={{ position: "absolute", inset: 0, zIndex: 6, background: "#FEF2C9", animation: `sweepBand ${spec.dur}ms ease-in-out forwards` }} />
+            <div style={{ position: "absolute", inset: 0, zIndex: 6, background: "#EDEEF1", animation: `sweepBand ${spec.dur}ms ease-in-out forwards` }} />
           )}
 
           {/* scatter particles */}

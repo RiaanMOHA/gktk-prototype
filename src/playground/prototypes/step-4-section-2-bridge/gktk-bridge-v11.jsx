@@ -7,24 +7,18 @@ const NEUTRAL_600 = "#5B616E";
 const NEUTRAL_200 = "#D8DBDF";
 const BASE_BG = "#F9F9F9";
 
-const mkNoise = (f, o) => `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' aria-hidden="true"><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='${f}' numOctaves='4' stitchTiles='stitch'/></filter><rect width='300' height='300' filter='url(#n)' opacity='${o}'/></svg>`)}")`;
-const NOISE = mkNoise(0.75, 0.04);
-const BG_NOISE = mkNoise(0.6, 0.03);
 const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
 
-// ─── mesh background ────────────────────────────────────────
-function MeshBG({ phase = 0 }) {
-  const w = 0.07 + phase * 0.07;
+// ─── flat background (was mesh; radial gradients and noise removed per flat-design mandate) ───
+function MeshBG() {
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: BASE_BG }} />
-      <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 80% 60% at 25% 18%, rgba(254,242,201,${w}) 0%, transparent 70%), radial-gradient(ellipse 55% 75% at 78% 72%, rgba(251,185,49,${w * 0.5}) 0%, transparent 60%), radial-gradient(ellipse 90% 45% at 45% 55%, rgba(255,148,36,${w * 0.25}) 0%, transparent 65%), radial-gradient(ellipse 65% 65% at 62% 28%, rgba(255,255,255,0.45) 0%, transparent 50%)`, transition: "background 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)" }} />
-      <div style={{ position: "absolute", inset: 0, backgroundImage: BG_NOISE, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.6, pointerEvents: "none" }} />
     </div>
   );
 }
 
-// ─── glass panel ────────────────────────────────────────────
+// ─── flat panel (was Glass; specular, inner-glow, noise removed per flat-design mandate) ───
 function Glass({ children, level = 2, z = 30, rx = 0, ry = 0, style = {} }) {
   const L2 = level === 2;
   return (
@@ -32,26 +26,24 @@ function Glass({ children, level = 2, z = 30, rx = 0, ry = 0, style = {} }) {
       position: "relative",
       transform: `translateZ(${z}px) rotateX(${rx}deg) rotateY(${ry}deg)`,
       transformStyle: "preserve-3d",
-      background: L2 ? "#F9F9F9" : "#F9F9F9",
-                  border: `1px solid ${L2 ? "#F9F9F9" : "#F9F9F9"}`,
-      boxShadow: `0 ${8 + z * 0.2}px ${32 + z}px rgba(0,0,0,${0.08 + z * 0.001}), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)`,
-      borderRadius: "16px", overflow: "hidden",
+      background: "#F9F9F9",
+      border: "1px solid rgba(0,0,0,0.06)",
+      boxShadow: L2
+        ? `0 ${8 + z * 0.2}px ${32 + z}px rgba(0,0,0,${0.10 + z * 0.001}), 0 2px 8px rgba(0,0,0,0.06)`
+        : `0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)`,
+      borderRadius: "20px", overflow: "hidden",
       transition: "transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       ...style,
     }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: L2 ? "2px" : "1.5px", background: "linear-gradient(90deg, rgba(255,255,255,0) 5%, rgba(255,255,255,0.92) 30%, rgba(255,255,255,0.96) 50%, rgba(255,255,255,0.92) 70%, rgba(255,255,255,0) 95%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: "45%", background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", inset: 0, backgroundImage: NOISE, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.7, pointerEvents: "none", borderRadius: "inherit" }} />
       <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
     </div>
   );
 }
 
-function DNum({ children, arrived = false, glow = false, z = 50, style = {} }) {
+function DNum({ children, arrived = false, z = 50, style = {} }) {
   return (
-    <div style={{ transform: `translateZ(${arrived ? z : z - 20}px) scale(${arrived ? 1 : 0.88})`, transformStyle: "preserve-3d", transition: "transform 0.65s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)", opacity: arrived ? 1 : 0, filter: arrived ? "none" : "blur(2px)", position: "relative" }}>
-      <span style={{ display: "inline-block", fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: NEUTRAL_950, textShadow: arrived ? "0 1px 0 rgba(255,255,255,0.5), 0 4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.04)" : "none", ...style }}>{children}</span>
-      {glow && <span style={{ position: "absolute", inset: "-24px", borderRadius: "50%", background: "radial-gradient(circle, rgba(251,185,49,0.22) 0%, transparent 70%)", pointerEvents: "none", animation: "bloomPulse 0.9s ease-out forwards" }} />}
+    <div style={{ transform: `translateZ(${arrived ? z : z - 20}px) scale(${arrived ? 1 : 0.88})`, transformStyle: "preserve-3d", transition: "transform 0.65s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)", opacity: arrived ? 1 : 0, position: "relative" }}>
+      <span style={{ display: "inline-block", fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: NEUTRAL_950, ...style }}>{children}</span>
     </div>
   );
 }
@@ -67,7 +59,7 @@ function Cap({ children, vis = false, delay = 0, z = 10, style = {} }) {
 function ALine({ progress = 1, width = "100%", z = 15, style = {} }) {
   return (
     <div style={{ transform: `translateZ(${z}px)`, ...style }}>
-      <svg width={width} height="3" viewBox="0 0 200 3" preserveAspectRatio="none" style={{ display: "block", filter: "drop-shadow(0 0 5px rgba(251,185,49,0.35))" }}>
+      <svg width={width} height="3" viewBox="0 0 200 3" preserveAspectRatio="none" style={{ display: "block" }}>
         <defs><linearGradient id="al" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor={AMBER} stopOpacity="0" /><stop offset="15%" stopColor={AMBER} stopOpacity="0.85" /><stop offset="85%" stopColor={AMBER} stopOpacity="0.85" /><stop offset="100%" stopColor={AMBER} stopOpacity="0" /></linearGradient></defs>
         <rect x="0" y="0.5" width={200 * progress} height="2" rx="1" fill="url(#al)" />
       </svg>
@@ -108,7 +100,6 @@ function AmberScreen({ visible }) {
 // ───────────────────────────────────────────────────────────
 
 function TriggerTap({ visible, onFire }) {
-  const [ripple, setRipple] = useState(false);
   return (
     <div style={{
       position: "absolute", bottom: "28px", right: "24px", zIndex: 35,
@@ -117,20 +108,17 @@ function TriggerTap({ visible, onFire }) {
       pointerEvents: visible ? "auto" : "none",
     }}>
       <div
-        onClick={() => { setRipple(true); setTimeout(() => onFire?.(), 250); }}
+        onClick={() => onFire?.()}
         style={{
-          width: "48px", height: "48px", borderRadius: "14px",
+          width: "48px", height: "48px", borderRadius: "12px",
           position: "relative", cursor: "pointer", overflow: "hidden",
-          background:"#F9F9F9",
-          
+          background: "#F9F9F9",
           border: "1px solid rgba(0,0,0,0.06)",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)",
           display: "flex", alignItems: "center", justifyContent: "center",
         }}
       >
-        <div style={{ position: "absolute", inset: 0, borderRadius: "inherit", backgroundImage: NOISE, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.5 }} />
-        {ripple && <div style={{ position: "absolute", inset: "-50%", borderRadius: "50%", background: `radial-gradient(circle, rgba(251,185,49,0.4) 0%, transparent 60%)`, animation: "rippleOut 0.5s ease-out forwards" }} />}
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ position: "relative", zIndex: 2 }}>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M6.5 3.5L12 9L6.5 14.5" stroke={NEUTRAL_800} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
@@ -180,7 +168,7 @@ function TriggerSwipe({ visible, onFire }) {
           </svg>
         </div>
         <div style={{ width: "48px", height: "3px", background: "rgba(0,0,0,0.08)", borderRadius: "2px", overflow: "hidden" }}>
-          <div style={{ width: `${p * 100}%`, height: "100%", background: AMBER, borderRadius: "2px", transition: dragging ? "none" : "width 0.3s ease", boxShadow: p > 0.5 ? "0 0 8px rgba(251,185,49,0.4)" : "none" }} />
+          <div style={{ width: `${p * 100}%`, height: "100%", background: AMBER, borderRadius: "2px", transition: dragging ? "none" : "width 0.3s ease" }} />
         </div>
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.6875rem", color: NEUTRAL_600, opacity: 0.5, margin: 0 }}>swipe up</p>
       </div>
@@ -222,17 +210,14 @@ function TriggerAuto({ visible, onFire }) {
     }}>
       <div style={{ position: "relative", width: "44px", height: "44px" }}>
         <div style={{
-          position: "absolute", inset: 0, borderRadius: "50%",
-          background:"#F9F9F9", 
+          position: "absolute", inset: 0, borderRadius: "9999px",
+          background:"#F9F9F9",
           border: "1px solid rgba(0,0,0,0.06)",
-          boxShadow: `0 2px 10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5)${progress > 0.5 ? `, 0 0 ${progress * 16}px rgba(251,185,49,${progress * 0.25})` : ""}`,
-        }}>
-          <div style={{ position: "absolute", inset: 0, borderRadius: "inherit", backgroundImage: NOISE, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.5 }} />
-        </div>
+          boxShadow: `0 2px 10px rgba(0,0,0,0.06)`,
+        }} />
         <svg width="44" height="44" style={{ position: "absolute", top: 0, left: 0, transform: "rotate(-90deg)" }}>
           <circle cx="22" cy="22" r={r} fill="none" stroke={AMBER} strokeWidth="2.5"
-            strokeDasharray={circ} strokeDashoffset={circ * (1 - progress)} strokeLinecap="round"
-            style={{ filter: progress > 0.3 ? `drop-shadow(0 0 4px rgba(251,185,49,${progress * 0.6}))` : "none" }} />
+            strokeDasharray={circ} strokeDashoffset={circ * (1 - progress)} strokeLinecap="round" />
         </svg>
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 1 }}>
           <path d="M5.5 3L10.5 8L5.5 13" stroke={progress >= 1 ? AMBER : NEUTRAL_800} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -301,8 +286,7 @@ function TriggerPull({ visible, onFire }) {
         <div style={{
           width: "40px", height: "4px", borderRadius: "2px",
           background: p > 0.8 ? AMBER : NEUTRAL_200,
-          boxShadow: p > 0.5 ? `0 0 10px rgba(251,185,49,${p * 0.5})` : "none",
-          transition: "background 0.2s, box-shadow 0.2s", marginBottom: "5px",
+          transition: "background 0.2s", marginBottom: "5px",
         }} />
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.625rem", color: NEUTRAL_600, opacity: 0.5, margin: 0 }}>pull up</p>
       </div>
@@ -392,7 +376,7 @@ function TW({ text, active, speed = 28, delay = 0 }) {
     const sd = setTimeout(() => { const fn = () => { if (i <= text.length) { setCh(i); i++; to = setTimeout(fn, speed); } }; fn(); }, delay);
     return () => { clearTimeout(sd); clearTimeout(to); };
   }, [active, text, speed, delay]);
-  return <span>{text.slice(0, ch)}{ch < text.length && active && <span style={{ display: "inline-block", width: "2px", height: "1em", background: AMBER, marginLeft: "1px", animation: "cursorBlink 0.5s step-end infinite", verticalAlign: "text-bottom", boxShadow: "0 0 6px rgba(251,185,49,0.5)" }} />}</span>;
+  return <span>{text.slice(0, ch)}{ch < text.length && active && <span style={{ display: "inline-block", width: "2px", height: "1em", background: AMBER, marginLeft: "1px", animation: "cursorBlink 0.5s step-end infinite", verticalAlign: "text-bottom" }} />}</span>;
 }
 
 function BridgeF({ playing, onDone }) {
@@ -429,7 +413,7 @@ function BridgeF({ playing, onDone }) {
       <ZLayer z={12}>
         <div style={{ opacity: beat >= 5 ? 1 : 0, transition: "opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)", paddingLeft: "4px" }}>
           <div style={{ width: "100%", height: "3px", background: NEUTRAL_200, borderRadius: "2px", overflow: "hidden" }}>
-            <div style={{ width: `${barP * 100}%`, height: "100%", background: `linear-gradient(90deg, transparent, ${AMBER})`, borderRadius: "2px", boxShadow: "0 0 8px rgba(251,185,49,0.4)" }} />
+            <div style={{ width: `${barP * 100}%`, height: "100%", background: `linear-gradient(90deg, transparent, ${AMBER})`, borderRadius: "2px" }} />
           </div>
           <Cap vis={beat >= 5} delay={0.3} z={5} style={{ marginTop: "12px" }}>Kumamoto is set to attract waves of high-income engineers.</Cap>
         </div>
@@ -461,23 +445,23 @@ function BridgeG({ playing, onDone }) {
     <div style={{ padding: "48px 24px 90px", display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", perspective: "1200px", perspectiveOrigin: "50% 45%", transformStyle: "preserve-3d" }}>
       <ZLayer z={20} style={{ marginBottom: "20px", paddingLeft: "4px" }}>
         <div style={{ display: "flex", gap: "8px" }}>
-          {slides.map((_, i) => <div key={i} style={{ width: as === i ? "24px" : "6px", height: "6px", borderRadius: "3px", background: as >= i ? AMBER : NEUTRAL_200, boxShadow: as === i ? "0 0 10px rgba(251,185,49,0.5)" : "none", transition: "all 0.4s cubic-bezier(0.34,1.56,0.64,1)" }} />)}
+          {slides.map((_, i) => <div key={i} style={{ width: as === i ? "24px" : "6px", height: "6px", borderRadius: "3px", background: as >= i ? AMBER : NEUTRAL_200, transition: "all 0.4s cubic-bezier(0.34,1.56,0.64,1)" }} />)}
         </div>
       </ZLayer>
       <div style={{ position: "relative", minHeight: "220px", transformStyle: "preserve-3d" }}>
         {slides.map((sl, i) => {
           const act = as === i, past = as > i;
           return (
-            <div key={i} style={{ position: "absolute", inset: 0, transform: `translateZ(${act ? 45 : past ? -10 : 20}px) rotateX(${act ? 0.8 : past ? -2 : 2}deg) scale(${act ? 1 : 0.92})`, opacity: act ? 1 : 0, filter: act ? "none" : "blur(6px)", transition: "all 0.65s cubic-bezier(0.34,1.56,0.64,1)", pointerEvents: act ? "auto" : "none", transformStyle: "preserve-3d" }}>
+            <div key={i} style={{ position: "absolute", inset: 0, transform: `translateZ(${act ? 45 : past ? -10 : 20}px) rotateX(${act ? 0.8 : past ? -2 : 2}deg) scale(${act ? 1 : 0.88})`, opacity: act ? 1 : 0, transition: "all 0.65s cubic-bezier(0.34,1.56,0.64,1)", pointerEvents: act ? "auto" : "none", transformStyle: "preserve-3d" }}>
               <Glass level={2} z={0} rx={0} style={{ padding: "28px" }}>
                 <ZLayer z={20}>
-                  <div style={{ display: "inline-block", padding: "3px 10px", borderRadius: "8px", background: "rgba(251,185,49,0.1)", border: "1px solid rgba(251,185,49,0.2)", marginBottom: "16px" }}>
+                  <div style={{ display: "inline-block", padding: "4px 10px", borderRadius: "8px", background: "#EDEEF1", border: "1px solid rgba(0,0,0,0.06)", marginBottom: "16px" }}>
                     <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.75rem", fontWeight: 500, color: NEUTRAL_600, letterSpacing: "0.02em" }}>{sl.label}</span>
                   </div>
                 </ZLayer>
                 <div role="group" aria-live="polite" aria-label={sl.number ? `${sl.number}${sl.suffix || ""}. ${sl.text}` : sl.text}>
                   {sl.number && (
-                    <DNum arrived={act} glow={act} z={40}>
+                    <DNum arrived={act} z={40}>
                       {sl.number}{sl.suffix && <span style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "2rem", color: NEUTRAL_800, marginLeft: "4px" }}>{sl.suffix}</span>}
                     </DNum>
                   )}
@@ -529,9 +513,7 @@ export default function App({ variant } = {}) {
       `}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
-        @keyframes bloomPulse { 0%{opacity:0;transform:scale(0.5)} 40%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.4)} }
         @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes rippleOut { 0%{opacity:1;transform:scale(0.3)} 100%{opacity:0;transform:scale(2.5)} }
         @keyframes chevronBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
       `}</style>
 

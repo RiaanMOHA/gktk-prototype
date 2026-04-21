@@ -37,9 +37,9 @@
   max-height: calc(100% - 56px);
   margin: 28px auto;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.88);
+  background: #F9F9F9;
   
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.10),
     0 2px 8px rgba(0, 0, 0, 0.06);
@@ -49,22 +49,19 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.9);
-  
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: #F9F9F9;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   color: #25272C;
   z-index: 10;
 }
 [data-embed="1"] #gallery-close:hover,
 [data-embed="1"] #gallery-close:active {
-  background: rgba(255, 255, 255, 0.98);
+  background: #EDEEF1;
   color: #25272C;
 }
 [data-embed="1"] #gallery-close svg {
@@ -112,18 +109,15 @@
 }
 [data-embed="1"] #quick-look-close {
   position: absolute;
-  top: -44px;
+  top: -52px;
   right: 0;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.92);
-  
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: #F9F9F9;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   color: #25272C;
   z-index: 10;
 }
@@ -158,9 +152,9 @@
   max-height: calc(100% - 56px);
   margin: 28px auto;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.88);
+  background: #F9F9F9;
   
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.10),
     0 2px 8px rgba(0, 0, 0, 0.06);
@@ -171,16 +165,13 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.9);
-  
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: #F9F9F9;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   color: #25272C;
   z-index: 10;
 }
@@ -208,10 +199,10 @@
 
 /* ─── Talent list (inside right-panel sheet) ─── */
 [data-embed="1"] .talent-list {
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   margin-top: 12px;
-  background: rgba(255, 255, 255, 0.72);
+  background: #F9F9F9;
 }
 [data-embed="1"] .talent-row {
   padding: 10px 12px;
@@ -245,7 +236,7 @@
   padding: 24px 16px 16px;
 }
 [data-embed="1"] .transition-name {
-  font-size: 20px;
+  font-size: 22px;
 }
 [data-embed="1"] .transition-type {
   font-size: 12px;
@@ -305,7 +296,7 @@
 }
 [data-embed="1"] #panel-content .panel-bento-stat-label,
 [data-embed="1"] #panel-content .stat-label {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.3;
 }
 

@@ -45,42 +45,21 @@ const YEAR_3 = {
 const ALL_YEARS = [YEAR_1, YEAR_2, YEAR_3];
 
 // ─── shared components ──────────────────────────────────────────────
-const NoiseGrain = ({ opacity = 0.035, id = "ng" }) => (
-  <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 2 }} aria-hidden="true">
-    <filter id={`noise-${id}`}>
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch" />
-      <feColorMatrix type="saturate" values="0" />
-    </filter>
-    <rect width="100%" height="100%" filter={`url(#noise-${id})`} opacity={opacity} />
-  </svg>
-);
-
-const GlassPanel = ({ children, style = {}, level = 1, noiseId = "gp" }) => {
+const GlassPanel = ({ children, style = {}, level = 1 }) => {
   const bg = "#F9F9F9";
   const bdr = "1px solid rgba(0,0,0,0.06)";
   const shd = level === 2
     ? "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)"
     : "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)";
   return (
-    <div style={{ borderRadius: 16, overflow: "hidden", position: "relative", background: bg, border: bdr, boxShadow: shd, ...style }}>
-      <NoiseGrain opacity={0.03} id={noiseId} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.9) 70%, rgba(255,255,255,0) 100%)", zIndex: 3 }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, background: "linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)", zIndex: 3 }} />
+    <div style={{ borderRadius: 20, overflow: "hidden", position: "relative", background: bg, border: bdr, boxShadow: shd, ...style }}>
       <div style={{ position: "relative", zIndex: 4 }}>{children}</div>
     </div>
   );
 };
 
 const MeshGradient = () => (
-  <div style={{
-    position: "absolute", inset: 0, zIndex: 0,
-    background: `
-      radial-gradient(ellipse 80% 50% at 20% 80%, rgba(251,185,49,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(251, 185, 49, 0.04) 0%, transparent 50%),
-      radial-gradient(ellipse 90% 60% at 50% 50%, rgba(251,185,49,0.03) 0%, transparent 70%),
-      linear-gradient(180deg, #F9F9F9 0%, #FFFBEc 100%)
-    `,
-  }} />
+  <div style={{ position: "absolute", inset: 0, zIndex: 0, background: BG }} />
 );
 
 const StatusBar = () => (
@@ -112,10 +91,10 @@ const useNotifEntrance = (ref, visible) => {
     if (!ref.current || !visible) return;
     const el = ref.current;
     el.animate([
-      { opacity: 0, transform: "translateY(24px) scale(0.98)", filter: "blur(4px)" },
-      { opacity: 0.4, transform: "translateY(12px) scale(0.99)", filter: "blur(2px)", offset: 0.35 },
-      { opacity: 0.85, transform: "translateY(4px) scale(0.998)", filter: "blur(0.5px)", offset: 0.7 },
-      { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
+      { opacity: 0, transform: "translateY(24px) scale(0.98)" },
+      { opacity: 0.4, transform: "translateY(12px) scale(0.99)", offset: 0.35 },
+      { opacity: 0.85, transform: "translateY(4px) scale(0.998)", offset: 0.7 },
+      { opacity: 1, transform: "translateY(0) scale(1)" },
     ], { duration: 600, easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)", fill: "forwards" });
   }, [visible]);
 };
@@ -127,9 +106,9 @@ const useMsgEntrance = (ref, visible, fromRight = false) => {
     const el = ref.current;
     const x = fromRight ? -12 : 12;
     el.animate([
-      { opacity: 0, transform: `translateY(16px) translateX(${x}px) scale(0.96)`, filter: "blur(3px)" },
-      { opacity: 0.5, transform: `translateY(6px) translateX(${x * 0.3}px) scale(0.985)`, filter: "blur(1px)", offset: 0.4 },
-      { opacity: 1, transform: "translateY(0) translateX(0) scale(1)", filter: "blur(0px)" },
+      { opacity: 0, transform: `translateY(16px) translateX(${x}px) scale(0.96)` },
+      { opacity: 0.5, transform: `translateY(6px) translateX(${x * 0.3}px) scale(0.985)`, offset: 0.4 },
+      { opacity: 1, transform: "translateY(0) translateX(0) scale(1)" },
     ], { duration: 550, easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)", fill: "forwards" });
   }, [visible]);
 };
@@ -153,7 +132,7 @@ const IntroScreen = ({ onContinue }) => (
         { year: "Year 2", name: "Family", tag: "Add-on", items: "Medical navigation. Education support. Community events." },
         { year: "Year 3+", name: "Wellness", tag: "Premium", items: "Mental health. Health management. Golf, onsen, culture." },
       ].map((tier, i) => (
-        <GlassPanel key={i} style={{ padding: "12px 14px", borderRadius: 14 }} noiseId={`intro-${i}`}>
+        <GlassPanel key={i} style={{ padding: "12px 14px", borderRadius: 12}}>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 4 }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
               <span style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 15, color: N950 }}>{tier.year}</span>
@@ -171,7 +150,7 @@ const IntroScreen = ({ onContinue }) => (
       </div>
     </div>
     <div style={{ position: "absolute", bottom: 40, left: 24, right: 24, zIndex: 10 }}>
-      <button className="step-14-cta" onClick={onContinue} style={{ width: "100%", padding: "14px 0", borderRadius: 14, border: "none", background: AMBER, color: N950, fontFamily: "'REM', sans-serif", fontSize: 15, fontWeight: 600, cursor: "pointer", boxShadow: "0 2px 12px rgba(251,185,49,0.3)" }}>
+      <button className="step-14-cta" onClick={onContinue} style={{ width: "100%", padding: "14px 0", borderRadius: 12, border: "none", background: AMBER, color: N950, fontFamily: "'REM', sans-serif", fontSize: 16, fontWeight: 600, cursor: "pointer" }}>
         See it in action
       </button>
     </div>
@@ -182,16 +161,16 @@ const IntroScreen = ({ onContinue }) => (
 // NOTIFICATION CARD (shared by variant A)
 // Uses Web Animations API for smooth entrance
 // ───────────────────────────────────────────────────────────────────
-const NotifCard = ({ from, msg, time, noiseId }) => {
+const NotifCard = ({ from, msg, time }) => {
   const ref = useRef(null);
   useNotifEntrance(ref, true);
 
   return (
     <div ref={ref} style={{ opacity: 0 }}>
-      <GlassPanel style={{ padding: "10px 12px", borderRadius: 14 }} noiseId={noiseId}>
+      <GlassPanel style={{ padding: "10px 12px", borderRadius: 12}}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
           <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 600, fontSize: 13, color: N950 }}>{from}</span>
-          <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: N600 }}>{time}</span>
+          <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N600 }}>{time}</span>
         </div>
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N800, margin: 0, lineHeight: 1.5 }}>{msg}</p>
       </GlassPanel>
@@ -209,8 +188,8 @@ const YearHeader = ({ label, sub, tag }) => {
   return (
     <div ref={ref} style={{ opacity: 0, display: "flex", alignItems: "center", gap: 8, padding: "10px 4px 2px" }}>
       <span style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 14, color: N950 }}>{label}</span>
-      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: N600 }}>{sub}</span>
-      <span style={{ marginLeft: "auto", fontFamily: "'Noto Sans JP', sans-serif", fontSize: 10, color: N800, background: N100, borderRadius: 6, padding: "2px 7px", fontWeight: 500 }}>{tag}</span>
+      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N600 }}>{sub}</span>
+      <span style={{ marginLeft: "auto", fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N800, background: N100, borderRadius: 8, padding: "4px 8px", fontWeight: 500 }}>{tag}</span>
     </div>
   );
 };
@@ -263,7 +242,7 @@ const VariantA = ({ active }) => {
             {item.type === "year" ? (
               <YearHeader label={item.label} sub={item.sub} tag={item.tag} />
             ) : (
-              <NotifCard from={item.from} msg={item.msg} time={item.time} noiseId={`a-${item.key}`} />
+              <NotifCard from={item.from} msg={item.msg} time={item.time} />
             )}
           </div>
         ))}
@@ -275,26 +254,25 @@ const VariantA = ({ active }) => {
 // ───────────────────────────────────────────────────────────────────
 // CHAT BUBBLE (used by variant B)
 // ───────────────────────────────────────────────────────────────────
-const ChatBubbleSec = ({ text, noiseId }) => {
+const ChatBubbleSec = ({ text }) => {
   const ref = useRef(null);
   useMsgEntrance(ref, true, false);
   return (
     <div ref={ref} aria-live="polite" style={{ opacity: 0, maxWidth: "82%", marginRight: "auto" }}>
-      <GlassPanel style={{ padding: "9px 12px", borderRadius: "14px 14px 14px 4px" }} noiseId={noiseId}>
+      <GlassPanel style={{ padding: "12px", borderRadius: "12px 12px 12px 4px" }}>
         <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: N800, margin: 0, lineHeight: 1.5 }}>{text}</p>
       </GlassPanel>
     </div>
   );
 };
 
-const ChatBubbleTen = ({ text, id }) => {
+const ChatBubbleTen = ({ text }) => {
   const ref = useRef(null);
   useMsgEntrance(ref, true, true);
   return (
     <div ref={ref} aria-live="polite" style={{ opacity: 0, maxWidth: "78%", marginLeft: "auto" }}>
-      <div style={{ padding: "9px 12px", borderRadius: "14px 14px 4px 14px", background: AMBER, position: "relative", overflow: "hidden" }}>
-        <NoiseGrain opacity={0.04} id={`bt-${id}`} />
-        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: N950, margin: 0, lineHeight: 1.5, position: "relative", zIndex: 2 }}>{text}</p>
+      <div style={{ padding: "12px", borderRadius: "12px 12px 4px 12px", background: AMBER }}>
+        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, color: N950, margin: 0, lineHeight: 1.5 }}>{text}</p>
       </div>
     </div>
   );
@@ -311,7 +289,7 @@ const ChatDate = ({ text }) => {
   }, []);
   return (
     <div ref={ref} style={{ opacity: 0, textAlign: "center", padding: "8px 0 3px" }}>
-      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: N600, background:"#F9F9F9", borderRadius: 8, padding: "3px 10px" }}>{text}</span>
+      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N600, background:"#F9F9F9", borderRadius: 8, padding: "3px 10px" }}>{text}</span>
     </div>
   );
 };
@@ -361,7 +339,7 @@ const VariantB = ({ active }) => {
           <div style={{ width: 36, height: 36, borderRadius: 18, background: `linear-gradient(135deg, ${AMBER} 0%, #F5A500 100%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#fff", fontWeight: 700, fontFamily: "'REM', sans-serif" }}>M</div>
           <div>
             <div style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 15, color: N950, lineHeight: 1.2 }}>MoreHarvest</div>
-            <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, color: N600 }}>Property secretary</div>
+            <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N600 }}>Property secretary</div>
           </div>
         </div>
       </div>
@@ -371,9 +349,9 @@ const VariantB = ({ active }) => {
             {m.type === "date" ? (
               <ChatDate text={m.text} />
             ) : m.type === "sec" ? (
-              <ChatBubbleSec text={m.text} noiseId={`b-${i}`} />
+              <ChatBubbleSec text={m.text} />
             ) : (
-              <ChatBubbleTen text={m.text} id={i} />
+              <ChatBubbleTen text={m.text} />
             )}
           </div>
         ))}
