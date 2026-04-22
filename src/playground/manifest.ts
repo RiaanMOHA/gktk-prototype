@@ -204,6 +204,13 @@ export const STEPS: StepDrawer[] = [
         filename: "step-1-opening-transition.jsx",
         kind: "jsx",
         component: Step1OpeningTransition,
+        variants: [
+          { id: "A", label: "A: the mark" },
+          { id: "B", label: "B: the seal" },
+          { id: "C", label: "C: the pulse" },
+          { id: "D", label: "D: the thread" },
+          { id: "E", label: "E: the layered" },
+        ],
       },
     ],
   },

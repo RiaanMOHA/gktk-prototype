@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { STEPS } from '@/types/steps';
 
 interface StepNavProps {
@@ -11,6 +12,10 @@ interface StepNavProps {
   onReload: () => void;
 }
 
+type Pos = { x: number; y: number } | null;
+
+const STORAGE_KEY = 'gktk-stepnav-pos';
+
 export function StepNav({
   currentStep,
   totalSteps,
@@ -19,14 +24,88 @@ export function StepNav({
   onJumpTo,
   onReload,
 }: StepNavProps) {
+  const [pos, setPos] = useState<Pos>(null);
+  const [grabbing, setGrabbing] = useState(false);
+  const drag = useRef<{
+    startX: number;
+    startY: number;
+    origX: number;
+    origY: number;
+  } | null>(null);
+  const barRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) setPos(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  const beginDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!barRef.current) return;
+    e.preventDefault();
+    const rect = barRef.current.getBoundingClientRect();
+    drag.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: rect.left,
+      origY: rect.top,
+    };
+    setGrabbing(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const moveDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current) return;
+    const dx = e.clientX - drag.current.startX;
+    const dy = e.clientY - drag.current.startY;
+    const next = {
+      x: drag.current.origX + dx,
+      y: drag.current.origY + dy,
+    };
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const w = barRef.current?.offsetWidth ?? 0;
+    const h = barRef.current?.offsetHeight ?? 0;
+    next.x = Math.max(8, Math.min(next.x, vw - w - 8));
+    next.y = Math.max(8, Math.min(next.y, vh - h - 8));
+    setPos(next);
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current) return;
+    drag.current = null;
+    setGrabbing(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    try {
+      if (barRef.current) {
+        const rect = barRef.current.getBoundingClientRect();
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({ x: rect.left, y: rect.top })
+        );
+      }
+    } catch {}
+  };
+
+  const resetPos = () => {
+    setPos(null);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+  };
+
+  const positionStyle: React.CSSProperties = pos
+    ? { left: pos.x, top: pos.y, transform: 'none' }
+    : { left: '50%', bottom: 16, transform: 'translateX(-50%)' };
+
   return (
     <div
+      ref={barRef}
       data-qa
       style={{
         position: 'fixed',
-        bottom: 16,
-        left: '50%',
-        transform: 'translateX(-50%)',
+        ...positionStyle,
         zIndex: 99998,
         display: 'inline-flex',
         alignItems: 'center',
@@ -41,6 +120,36 @@ export function StepNav({
         fontSize: 12,
       }}
     >
+      <div
+        onPointerDown={beginDrag}
+        onPointerMove={moveDrag}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onDoubleClick={resetPos}
+        title="Drag to move. Double-click to reset."
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 3px)',
+          gridTemplateRows: 'repeat(3, 3px)',
+          gap: 3,
+          padding: '4px 6px',
+          cursor: grabbing ? 'grabbing' : 'grab',
+          touchAction: 'none',
+          userSelect: 'none',
+        }}
+      >
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: 3,
+              height: 3,
+              borderRadius: '50%',
+              background: '#8E8F8F',
+            }}
+          />
+        ))}
+      </div>
       <NavButton
         onClick={onPrev}
         disabled={currentStep === 1}
