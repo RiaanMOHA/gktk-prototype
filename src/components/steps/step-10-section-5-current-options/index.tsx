@@ -20,6 +20,7 @@ interface StepProps {
 const C = {
   bg: '#F9F9F9',
   n950: '#25272C',
+  n900: '#383A42',
   n800: '#40444C',
   n600: '#5B616E',
   n400: '#8B8F98',
@@ -31,6 +32,8 @@ const C = {
   eBd: 'rgba(0,0,0,0.06)',
   eSh: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)',
 };
+
+const NAV_BOTTOM_PAD = 100;
 
 const F = {
   h: 'var(--font-heading)',
@@ -340,7 +343,7 @@ function renderB1(s: RefSetter) {
       style={{
         position: 'absolute',
         inset: 0,
-        padding: 'calc(56px + env(safe-area-inset-top, 0px)) 24px calc(44px + env(safe-area-inset-bottom, 0px))',
+        padding: `calc(56px + env(safe-area-inset-top, 0px)) 24px calc(${NAV_BOTTOM_PAD}px + env(safe-area-inset-bottom, 0px))`,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -361,41 +364,49 @@ function renderB1(s: RefSetter) {
       >
         Market proof
       </span>
-      <Img
-        label="Kusunoki apartment complex"
-        h={200}
-        innerRef={s('1i') as (el: HTMLDivElement | null) => void}
-        style={{ opacity: 0, marginBottom: 16 }}
-      />
-      <div
-        ref={s('1s') as (el: HTMLDivElement | null) => void}
-        style={{ opacity: 0, marginBottom: 24, alignSelf: 'flex-start' }}
-      >
-        <Glass elev style={{ padding: '12px 16px', borderRadius: 12, display: 'flex', alignItems: 'baseline', gap: 6 }}>
-          <span
-            style={{
-              fontFamily: F.h,
-              fontSize: 48,
-              fontWeight: 600,
-              color: C.n950,
-              lineHeight: 1.1,
-              letterSpacing: '-0.025em',
-            }}
-          >
-            42
-          </span>
-          <span
-            style={{
-              fontFamily: F.b,
-              fontSize: 13,
-              fontWeight: 500,
-              color: C.n600,
-              letterSpacing: '0.01em',
-            }}
-          >
-            units
-          </span>
-        </Glass>
+      <div style={{ position: 'relative', marginBottom: 40 }}>
+        <Img
+          label="Kusunoki apartment complex"
+          h={200}
+          innerRef={s('1i') as (el: HTMLDivElement | null) => void}
+          style={{ opacity: 0 }}
+        />
+        <div
+          ref={s('1s') as (el: HTMLDivElement | null) => void}
+          style={{
+            opacity: 0,
+            position: 'absolute',
+            right: 16,
+            bottom: 0,
+            transform: 'translateY(40%)',
+          }}
+        >
+          <Glass elev style={{ padding: '12px 16px', borderRadius: 12, display: 'flex', alignItems: 'baseline', gap: 6 }}>
+            <span
+              style={{
+                fontFamily: F.h,
+                fontSize: 48,
+                fontWeight: 600,
+                color: C.n950,
+                lineHeight: 1.1,
+                letterSpacing: '-0.025em',
+              }}
+            >
+              42
+            </span>
+            <span
+              style={{
+                fontFamily: F.b,
+                fontSize: 13,
+                fontWeight: 500,
+                color: C.n600,
+                letterSpacing: '0.01em',
+              }}
+            >
+              units
+            </span>
+          </Glass>
+        </div>
       </div>
       <p
         ref={s('1h') as (el: HTMLParagraphElement | null) => void}
@@ -417,18 +428,17 @@ function renderB1(s: RefSetter) {
         style={{
           opacity: 0,
           fontFamily: F.b,
-          fontSize: 12,
-          color: C.n600,
+          fontSize: 14,
+          color: C.n900,
           margin: 0,
-          lineHeight: 1.45,
-          letterSpacing: '0.015em',
+          lineHeight: 1.6,
         }}
       >
         Kusunoki complex. Bulk-leased by JASM.
       </p>
       <div
         ref={s('1p') as (el: HTMLDivElement | null) => void}
-        style={{ opacity: 0, marginTop: 'auto' }}
+        style={{ opacity: 0, marginTop: 24 }}
       >
         <Glass elev style={{ padding: '14px 16px' }}>
           <p
@@ -455,7 +465,7 @@ function renderB2(s: RefSetter) {
       style={{
         position: 'absolute',
         inset: 0,
-        padding: 'calc(56px + env(safe-area-inset-top, 0px)) 24px calc(44px + env(safe-area-inset-bottom, 0px))',
+        padding: `calc(56px + env(safe-area-inset-top, 0px)) 24px calc(${NAV_BOTTOM_PAD}px + env(safe-area-inset-bottom, 0px))`,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -583,7 +593,7 @@ function TransformBeat({ solved, s }: { solved: boolean; s: RefSetter }) {
       style={{
         position: 'absolute',
         inset: 0,
-        padding: 'calc(56px + env(safe-area-inset-top, 0px)) 24px calc(44px + env(safe-area-inset-bottom, 0px))',
+        padding: `calc(56px + env(safe-area-inset-top, 0px)) 24px calc(${NAV_BOTTOM_PAD}px + env(safe-area-inset-bottom, 0px))`,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -600,11 +610,12 @@ function TransformBeat({ solved, s }: { solved: boolean; s: RefSetter }) {
           ref={s('thOld') as (el: HTMLParagraphElement | null) => void}
           style={{
             fontFamily: F.b,
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: 500,
             color: C.n600,
             margin: 0,
-            letterSpacing: '0.02em',
+            letterSpacing: '0.01em',
+            lineHeight: 1.4,
             position: 'absolute',
             top: 0,
             left: 0,
