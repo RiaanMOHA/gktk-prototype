@@ -40,7 +40,7 @@ function EntryWarmth() {
     <>
       <div className="entry-logo"><Logo id="warmth" size={48} /></div>
       <div style={{ position: "absolute", bottom: 100, left: 24, right: 24 }}>
-        <h1 className="entry-h1">Why Kumamoto,<br />why now?</h1>
+        <h1 className="entry-h1">Why Kumamoto,<br />Why Now?</h1>
         <p className="entry-sub" style={{ marginBottom: 24 }}>{"Japan's fastest-rising property market"}</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           <span className="fact-chip">Serviced apartments</span>
@@ -65,7 +65,7 @@ function EntryLayers() {
     <>
       <div className="entry-logo"><Logo id="layers" size={48} /></div>
       <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", padding: "0 24px", justifyContent: "center" }}>
-        <h1 className="entry-h1">Why Kumamoto,<br />why now?</h1>
+        <h1 className="entry-h1">Why Kumamoto,<br />Why Now?</h1>
         <p className="entry-sub" style={{ marginBottom: 28 }}>{"Japan's fastest-rising property market"}</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {bars.map((b, i) => (
@@ -86,7 +86,7 @@ function EntrySignal() {
       </div>
       <div className="entry-logo"><Logo id="signal" size={48} /></div>
       <div style={{ position: "absolute", bottom: 100, left: 24, right: 24 }}>
-        <h1 className="entry-h1">Why Kumamoto,<br />why now?</h1>
+        <h1 className="entry-h1">Why Kumamoto,<br />Why Now?</h1>
         <p className="entry-sub" style={{ marginBottom: 20 }}>{"Japan's fastest-rising property market"}</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <div style={{ display: "flex", gap: 8 }}>
@@ -116,7 +116,7 @@ function EntryStagger() {
       <div className="entry-logo"><Logo id="stagger" size={48} /></div>
       <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", padding: "0 24px" }}>
         <div style={{ marginTop: 110 }}>
-          <h1 className="entry-h1" style={{ fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.03em" }}>Why<br />Kumamoto,<br />why now?</h1>
+          <h1 className="entry-h1" style={{ fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.03em" }}>Why<br />Kumamoto,<br />Why Now?</h1>
           <div style={{ width: 40, height: 3, borderRadius: 2, background: `linear-gradient(90deg,${AMBER},#FF8660)`, margin: "0 0 16px 0" }} />
           <p className="entry-sub" style={{ fontSize: 14, marginBottom: 32, maxWidth: 240 }}>{"Japan's fastest-rising property market"}</p>
         </div>
@@ -264,14 +264,12 @@ export default function GKTKEntryTransitions({ variant } = {}) {
         }
       `}</style>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
-
         .entry-logo { position: absolute; top: 60px; left: 24px; }
-        .entry-h1 { font-family: 'REM', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.1; letter-spacing: -0.025em; color: ${N[950]}; margin: 0 0 8px 0; }
-        .entry-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 400; color: ${N[900]}; line-height: 1.5; margin: 0; }
-        .fact-chip { display: inline-block; padding: 6px 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; color: ${N[600]}; letter-spacing: 0.01em; line-height: 1.4; }
+        .entry-h1 { font-family: var(--font-heading); font-weight: 600; font-size: 36px; line-height: 1.1; letter-spacing: -0.025em; color: ${N[950]}; margin: 0 0 8px 0; }
+        .entry-sub { font-family: var(--font-body); font-size: 15px; font-weight: 400; color: ${N[900]}; line-height: 1.5; margin: 0; }
+        .fact-chip { display: inline-block; padding: 6px 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: var(--font-body); font-size: 13px; font-weight: 500; color: ${N[600]}; letter-spacing: 0.01em; line-height: 1.4; }
         .fact-chip.bold { font-weight: 600; color: ${N[950]}; }
-        .glass-bar { padding: 8px 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 400; color: ${N[800]}; line-height: 1.4; }
+        .glass-bar { padding: 8px 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); font-family: var(--font-body); font-size: 14px; font-weight: 400; color: ${N[800]}; line-height: 1.4; }
         .glass-bar.elev2 { padding: 10px 16px; background: #F9F9F9; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06); font-weight: 600; color: ${N[950]}; }
         @keyframes logoPulse { 0%, 100% { opacity: 0.12; transform: translateX(-50%) scale(1); } 50% { opacity: 0.18; transform: translateX(-50%) scale(1.03); } }
         @keyframes barSlideIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }

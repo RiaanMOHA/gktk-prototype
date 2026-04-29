@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "REM";
+  src: url("/fonts/REM-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans JP";
+  src: url("/fonts/NotoSansJP-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --color-base-bg: #F9F9F9;
   --color-base-white: #FEFEFE;
@@ -28,8 +44,8 @@
   --color-disabled: #8E8F8F;
   --color-hyperlink: #1282C0;
 
-  --font-heading: var(--font-rem), "REM", system-ui, -apple-system, sans-serif;
-  --font-body: var(--font-noto-sans-jp), "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  --font-heading: "REM", system-ui, -apple-system, sans-serif;
+  --font-body: "Noto Sans JP", system-ui, -apple-system, sans-serif;
 
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -52,25 +68,6 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
   --radius-full: 9999px;
-
-  /* Surface Level 1 */
-  --surface-1-bg: rgba(255, 255, 255, 0.70);
-  --surface-1-blur: blur(20px) saturate(1.4);
-  --surface-1-border: 1px solid rgba(255, 255, 255, 0.85);
-  --surface-1-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --surface-1-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-
-  /* Surface Level 2 */
-  --surface-2-bg: rgba(255, 255, 255, 0.88);
-  --surface-2-blur: blur(24px) saturate(1.6);
-  --surface-2-border: 1px solid rgba(255, 255, 255, 0.95);
-  --surface-2-shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
-  --surface-2-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.20);
-
-  /* Surface Level 3 */
-  --surface-3-bg: #FEFEFE;
-  --surface-3-border: 1px solid #EDEEF1;
-  --surface-3-shadow: 0 20px 60px rgba(0, 0, 0, 0.14), 0 4px 16px rgba(0, 0, 0, 0.08);
 
   /* Z-index scale */
   --z-background: 0;

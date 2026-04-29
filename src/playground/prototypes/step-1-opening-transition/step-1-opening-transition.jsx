@@ -177,9 +177,9 @@ const Step1Content = ({ onBlank, variant = "A" }) => {
             Enter
           </div>
           <div style={{
-            fontFamily: "'Noto Sans JP', sans-serif",
+            fontFamily: "var(--font-heading)",
             fontSize: 56,
-            fontWeight: 700,
+            fontWeight: 600,
             color: C.heading,
             letterSpacing: "-0.035em",
             lineHeight: 0.96,
@@ -187,9 +187,9 @@ const Step1Content = ({ onBlank, variant = "A" }) => {
             MoreHarvest
           </div>
           <div style={{
-            fontFamily: "'Noto Sans JP', sans-serif",
+            fontFamily: "var(--font-heading)",
             fontSize: 32,
-            fontWeight: 400,
+            fontWeight: 600,
             color: C.sub,
             letterSpacing: "-0.015em",
             marginTop: 6,
@@ -216,9 +216,9 @@ const Step1Content = ({ onBlank, variant = "A" }) => {
             left: 0,
             right: 0,
             textAlign: "center",
-            fontFamily: "'Noto Sans JP', sans-serif",
+            fontFamily: "var(--font-heading)",
             fontSize: 18,
-            fontWeight: 500,
+            fontWeight: 600,
             color: C.sub,
             margin: 0,
           }}>
@@ -267,9 +267,9 @@ const Step1Content = ({ onBlank, variant = "A" }) => {
             />
           )}
           <h1 style={{
-            fontFamily: "'Noto Sans JP', sans-serif",
+            fontFamily: "var(--font-heading)",
             fontSize: 18,
-            fontWeight: 500,
+            fontWeight: 600,
             color: C.sub,
             margin: isSeal ? 0 : "20px 0 0",
           }}>

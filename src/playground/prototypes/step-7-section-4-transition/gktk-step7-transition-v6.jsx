@@ -26,19 +26,6 @@ const an = (el, kf, opts) => {
 };
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
-const Noise = () => (
-  <svg width="0" height="0" style={{position:"absolute"}} aria-hidden="true">
-    <defs>
-      <filter id="ng">
-        <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
-        <feColorMatrix type="saturate" values="0" />
-        <feComponentTransfer><feFuncA type="linear" slope="0.08" /></feComponentTransfer>
-        <feBlend in="SourceGraphic" mode="overlay" />
-      </filter>
-    </defs>
-  </svg>
-);
-
 const MeshBg = () => (
   <div style={{
     position:"absolute",inset:0,zIndex:0,
@@ -65,11 +52,11 @@ const Resolve = ({ innerRef, headingRef, bodyRef }) => (
   }}>
     <MeshBg />
     <Glass style={{padding:"28px 24px",position:"relative",zIndex:2}}>
-      <div ref={headingRef} style={{fontFamily:"REM,sans-serif",fontWeight:600,fontSize:32,lineHeight:1.1,
+      <div ref={headingRef} style={{fontFamily:"var(--font-heading)",fontWeight:600,fontSize:32,lineHeight:1.1,
         letterSpacing:"-0.02em",color:C.heading,marginBottom:12,opacity:0}}>
         3 to 5 million yen
       </div>
-      <div ref={bodyRef} style={{fontFamily:"Noto Sans JP,sans-serif",fontWeight:400,fontSize:16,lineHeight:1.6,
+      <div ref={bodyRef} style={{fontFamily:"var(--font-body)",fontWeight:400,fontSize:16,lineHeight:1.6,
         color:C.body,maxWidth:"72ch",opacity:0}}>
         Estimated replacement cost per engineer who repatriates early due to family maladjustment.
       </div>
@@ -82,7 +69,7 @@ const Tap = ({ innerRef }) => (
     position:"absolute",bottom:48,left:0,right:0,display:"flex",
     justifyContent:"center",zIndex:20,opacity:0,
   }}>
-    <div style={{fontFamily:"Noto Sans JP,sans-serif",fontSize:13,color:C.caption,letterSpacing:"0.01em"}}>
+    <div style={{fontFamily:"var(--font-body)",fontSize:13,color:C.caption,letterSpacing:"0.01em"}}>
       Tap to continue
     </div>
   </div>
@@ -170,14 +157,14 @@ const MapFace = ({ style={} }) => (
       border:"1px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"12px",
       boxShadow:"0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
     }}>
-      <div style={{fontSize:12,color: C.caption,fontFamily:"Noto Sans JP,sans-serif",letterSpacing:"0.01em",marginBottom:4}}>
+      <div style={{fontSize:12,color: C.caption,fontFamily:"var(--font-body)",letterSpacing:"0.01em",marginBottom:4}}>
         Kumamoto semiconductor corridor
       </div>
       <div style={{display:"flex",gap:16}}>
         {[["JASM","12,800"],["TSMC","Phase 2"],["Workers","47,000"]].map(([l,v],i)=>(
           <div key={i}>
-            <div style={{fontSize:12,color: C.caption,fontFamily:"Noto Sans JP,sans-serif"}}>{l}</div>
-            <div style={{fontSize:12,color: C.heading,fontFamily:"REM,sans-serif",fontWeight:600}}>{v}</div>
+            <div style={{fontSize:12,color: C.caption,fontFamily:"var(--font-body)"}}>{l}</div>
+            <div style={{fontSize:12,color: C.heading,fontFamily:"var(--font-heading)",fontWeight:600}}>{v}</div>
           </div>
         ))}
       </div>
@@ -613,7 +600,7 @@ export default function Step7V6({ variant } = {}) {
     <div data-proto="step-7" style={{
       minHeight:"100vh",background:"#EDEEF1",display:"flex",flexDirection:"column",
       alignItems:"center",justifyContent:"center",padding:24,
-      fontFamily:"Noto Sans JP,sans-serif",
+      fontFamily:"var(--font-body)",
     }}>
       <style>{`
         @media (prefers-reduced-motion: reduce) {
@@ -628,7 +615,6 @@ export default function Step7V6({ variant } = {}) {
           }
         }
       `}</style>
-      <Noise />
       <Phone key={`${variant ?? "B"}-${k}`}>
         {v===0 && (
           <div

@@ -39,8 +39,8 @@ function EntrySnapshot() {
     <div style={{ position: "absolute", inset: 0, padding: "0 24px" }}>
       <div style={{ position: "absolute", top: 60, left: 24 }}><Logo /></div>
       <div style={{ position: "absolute", bottom: 120, left: 24, right: 24 }}>
-        <h1 style={{ fontFamily: "'REM',sans-serif", fontWeight: 600, fontSize: 36, lineHeight: 1.1, letterSpacing: "-0.025em", color: N[950], margin: "0 0 8px 0" }}>Why Kumamoto,<br />why now?</h1>
-        <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 15, color: N[900], margin: 0 }}>{"Japan's fastest-rising property market"}</p>
+        <h1 style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: 36, lineHeight: 1.1, letterSpacing: "-0.025em", color: N[950], margin: "0 0 8px 0" }}>Why Kumamoto,<br />Why Now?</h1>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: N[900], margin: 0 }}>{"Japan's fastest-rising property market"}</p>
       </div>
     </div>
   );
@@ -59,10 +59,10 @@ function BridgeSnapshot({ visible }) {
         transform: visible ? "translateY(0)" : "translateY(8px)",
         transition: "opacity 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 120ms, transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 120ms",
       }}>
-        <div style={{ fontFamily: "'REM',sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: N[950] }}>10</div>
-        <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: "0.875rem", color: N[600], margin: "8px 0 0", lineHeight: 1.6 }}>trillion yen. Japan is rebuilding its chip industry.</p>
+        <div style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: N[950] }}>10</div>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: N[600], margin: "8px 0 0", lineHeight: 1.6 }}>trillion yen. Japan is rebuilding its chip industry.</p>
       </div>
-      <p style={{ fontFamily: "'Noto Sans JP',sans-serif", fontSize: 12, color: N.dis, marginTop: 24, opacity: visible ? 1 : 0, transition: "opacity 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 700ms" }}>Tap to replay</p>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: N.dis, marginTop: 24, opacity: visible ? 1 : 0, transition: "opacity 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 700ms" }}>Tap to replay</p>
     </div>
   );
 }
@@ -123,7 +123,7 @@ export default function Step3TransitionV1({ variant } = {}) {
   };
 
   return (
-    <div data-proto="step-3" style={{ minHeight: "100vh", background: N[100], display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Noto Sans JP',sans-serif" }}>
+    <div data-proto="step-3" style={{ minHeight: "100vh", background: N[100], display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "var(--font-body)" }}>
       <style>{`
         @media (prefers-reduced-motion: reduce) {
           [data-proto="step-3"] *,
@@ -138,8 +138,6 @@ export default function Step3TransitionV1({ variant } = {}) {
         }
       `}</style>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
-
         @keyframes sweepOut    { 0% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
         @keyframes sweepBand   { 0% { clip-path: inset(0 100% 0 0); } 45% { clip-path: inset(0 0 0 0); } 55% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
         @keyframes scatterOut  { 0% { transform: scale(1); opacity: 1; } 60% { transform: scale(0.94); opacity: 0.6; } 100% { transform: scale(0.85); opacity: 0; } }
