@@ -37,7 +37,7 @@ const config: Config = {
       },
       fontFamily: {
         heading: ['"REM"', "sans-serif"],
-        body: ["var(--font-noto-sans-jp)", '"Noto Sans JP"', "sans-serif"],
+        body: ['"Noto Sans JP"', "sans-serif"],
       },
       borderRadius: {
         sm: "8px",

@@ -43,7 +43,7 @@ function Glass({ children, level = 2, z = 30, rx = 0, ry = 0, style = {} }) {
 function DNum({ children, arrived = false, z = 50, style = {} }) {
   return (
     <div style={{ transform: `translateZ(${arrived ? z : z - 20}px) scale(${arrived ? 1 : 0.88})`, transformStyle: "preserve-3d", transition: "transform 0.65s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)", opacity: arrived ? 1 : 0, position: "relative" }}>
-      <span style={{ display: "inline-block", fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: NEUTRAL_950, ...style }}>{children}</span>
+      <span style={{ display: "inline-block", fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "4.5rem", lineHeight: 1.05, letterSpacing: "-0.03em", color: NEUTRAL_950, ...style }}>{children}</span>
     </div>
   );
 }
@@ -51,7 +51,7 @@ function DNum({ children, arrived = false, z = 50, style = {} }) {
 function Cap({ children, vis = false, delay = 0, z = 10, style = {} }) {
   return (
     <div style={{ transform: `translateZ(${z}px) translateY(${vis ? 0 : 5}px)`, transformStyle: "preserve-3d", opacity: vis ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s, transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s` }}>
-      <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 400, fontSize: "0.875rem", lineHeight: 1.6, color: NEUTRAL_600, letterSpacing: "0.015em", margin: 0, ...style }}>{children}</p>
+      <p style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: "0.875rem", lineHeight: 1.6, color: NEUTRAL_600, letterSpacing: "0.015em", margin: 0, ...style }}>{children}</p>
     </div>
   );
 }
@@ -85,10 +85,10 @@ function AmberScreen({ visible }) {
       display: "flex", flexDirection: "column", alignItems: "flex-start",
       justifyContent: "center", padding: "48px 28px",
     }}>
-      <p style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "2rem", color: "#fff", lineHeight: 1.15, marginBottom: "12px" }}>
+      <p style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "2rem", color: "#fff", lineHeight: 1.15, marginBottom: "12px" }}>
         Enter Kumamoto
       </p>
-      <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.875rem", color: "#F9F9F9", lineHeight: 1.6 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "#F9F9F9", lineHeight: 1.6 }}>
         Trigger fired successfully. This is where the next section begins.
       </p>
     </div>
@@ -170,7 +170,7 @@ function TriggerSwipe({ visible, onFire }) {
         <div style={{ width: "48px", height: "3px", background: "rgba(0,0,0,0.08)", borderRadius: "2px", overflow: "hidden" }}>
           <div style={{ width: `${p * 100}%`, height: "100%", background: AMBER, borderRadius: "2px", transition: dragging ? "none" : "width 0.3s ease" }} />
         </div>
-        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.6875rem", color: NEUTRAL_600, opacity: 0.5, margin: 0 }}>swipe up</p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.6875rem", color: NEUTRAL_600, opacity: 0.5, margin: 0 }}>swipe up</p>
       </div>
     </div>
   );
@@ -223,7 +223,7 @@ function TriggerAuto({ visible, onFire }) {
           <path d="M5.5 3L10.5 8L5.5 13" stroke={progress >= 1 ? AMBER : NEUTRAL_800} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.625rem", color: NEUTRAL_600, opacity: 0.5, margin: 0, fontVariantNumeric: "tabular-nums" }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: "0.625rem", color: NEUTRAL_600, opacity: 0.5, margin: 0, fontVariantNumeric: "tabular-nums" }}>
         {progress >= 1 ? "done" : `${secs}s`}
       </p>
     </div>
@@ -259,7 +259,7 @@ function TriggerPull({ visible, onFire }) {
       }}>
         {displayY > 15 && (
           <p style={{
-            fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "1.1rem", color: NEUTRAL_950,
+            fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "1.1rem", color: NEUTRAL_950,
             opacity: Math.min(1, (displayY - 15) / 35),
           }}>
             Enter Kumamoto
@@ -288,7 +288,7 @@ function TriggerPull({ visible, onFire }) {
           background: p > 0.8 ? AMBER : NEUTRAL_200,
           transition: "background 0.2s", marginBottom: "5px",
         }} />
-        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.625rem", color: NEUTRAL_600, opacity: 0.5, margin: 0 }}>pull up</p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.625rem", color: NEUTRAL_600, opacity: 0.5, margin: 0 }}>pull up</p>
       </div>
     </>
   );
@@ -363,10 +363,10 @@ function TD({ target, rolling, duration = 1000, delay = 0 }) {
     r.current = requestAnimationFrame(a);
     return () => cancelAnimationFrame(r.current);
   }, [rolling, target, duration, delay]);
-  return <span style={{ display: "inline-block", fontFamily: "'REM', sans-serif", fontWeight: 600, fontVariantNumeric: "tabular-nums", minWidth: "0.62em", textAlign: "center" }}>{d}</span>;
+  return <span style={{ display: "inline-block", fontFamily: "var(--font-heading)", fontWeight: 600, fontVariantNumeric: "tabular-nums", minWidth: "0.62em", textAlign: "center" }}>{d}</span>;
 }
 function TN({ value, rolling, db = 0 }) {
-  return <span>{String(value).split("").map((c, i) => c === "," ? <span key={i} style={{ fontFamily: "'REM', sans-serif", fontWeight: 600 }}>,</span> : <TD key={i} target={parseInt(c)} rolling={rolling} duration={900 + i * 80} delay={db + i * 55} />)}</span>;
+  return <span>{String(value).split("").map((c, i) => c === "," ? <span key={i} style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>,</span> : <TD key={i} target={parseInt(c)} rolling={rolling} duration={900 + i * 80} delay={db + i * 55} />)}</span>;
 }
 function TW({ text, active, speed = 28, delay = 0 }) {
   const [ch, setCh] = useState(0);
@@ -456,13 +456,13 @@ function BridgeG({ playing, onDone }) {
               <Glass level={2} z={0} rx={0} style={{ padding: "28px" }}>
                 <ZLayer z={20}>
                   <div style={{ display: "inline-block", padding: "4px 10px", borderRadius: "8px", background: "#EDEEF1", border: "1px solid rgba(0,0,0,0.06)", marginBottom: "16px" }}>
-                    <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: "0.75rem", fontWeight: 500, color: NEUTRAL_600, letterSpacing: "0.02em" }}>{sl.label}</span>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 500, color: NEUTRAL_600, letterSpacing: "0.02em" }}>{sl.label}</span>
                   </div>
                 </ZLayer>
                 <div role="group" aria-live="polite" aria-label={sl.number ? `${sl.number}${sl.suffix || ""}. ${sl.text}` : sl.text}>
                   {sl.number && (
                     <DNum arrived={act} z={40}>
-                      {sl.number}{sl.suffix && <span style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: "2rem", color: NEUTRAL_800, marginLeft: "4px" }}>{sl.suffix}</span>}
+                      {sl.number}{sl.suffix && <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "2rem", color: NEUTRAL_800, marginLeft: "4px" }}>{sl.suffix}</span>}
                     </DNum>
                   )}
                   <Cap vis={act} delay={0.2} z={8}>{sl.text}</Cap>
@@ -497,7 +497,7 @@ export default function App({ variant } = {}) {
   const handleFire = useCallback(() => setTransitioned(true), []);
 
   return (
-    <div data-proto="step-4" style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Noto Sans JP', sans-serif" }}>
+    <div data-proto="step-4" style={{ minHeight: "100vh", background: "#EDEEF1", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "var(--font-body)" }}>
       <style>{`
         @media (prefers-reduced-motion: reduce) {
           [data-proto="step-4"] *,
@@ -512,7 +512,6 @@ export default function App({ variant } = {}) {
         }
       `}</style>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=REM:wght@600&family=Noto+Sans+JP:wght@400;500;600&display=swap');
         @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
         @keyframes chevronBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
       `}</style>

@@ -52,7 +52,7 @@ function ReadyPrompt() {
       display: "flex", alignItems: "center", gap: 8, zIndex: 10,
     }}>
       <GlowDot size={5} />
-      <span style={{ fontFamily: "'Noto Sans JP', sans-serif", fontWeight: 500, fontSize: 13, color: C.n400 }}>
+      <span style={{ fontFamily: "var(--font-body)", fontWeight: 500, fontSize: 13, color: C.n400 }}>
         Tap to continue</span>
     </div>
   );
@@ -62,22 +62,22 @@ function GhostBridge() {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "72px 24px 48px" }}>
       <GlassPanel level={2} style={{ padding: "28px 24px", marginBottom: 16 }}>
-        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 11, fontWeight: 500, color: C.n400, margin: "0 0 8px", letterSpacing: "0.04em" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 500, color: C.n400, margin: "0 0 8px", letterSpacing: "0.04em" }}>
           Semiconductor investment corridor</p>
-        <p style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 48, color: C.n950, margin: "0 0 4px", letterSpacing: "-0.03em", lineHeight: 1 }}>
+        <p style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: 48, color: C.n950, margin: "0 0 4px", letterSpacing: "-0.03em", lineHeight: 1 }}>
           10T</p>
-        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 14, fontWeight: 500, color: C.n600, margin: 0 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 500, color: C.n600, margin: 0 }}>
           yen in confirmed investment</p>
       </GlassPanel>
       <GlassPanel level={1} style={{ padding: "20px 24px", marginBottom: 16 }}>
-        <p style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 32, color: C.n950, margin: "0 0 4px", letterSpacing: "-0.02em", lineHeight: 1 }}>
+        <p style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: 32, color: C.n950, margin: "0 0 4px", letterSpacing: "-0.02em", lineHeight: 1 }}>
           47,000</p>
-        <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 13, fontWeight: 500, color: C.n600, margin: 0 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 500, color: C.n600, margin: 0 }}>
           new jobs projected by 2027</p>
       </GlassPanel>
       {["TSMC / JASM fab complex", "Sony semiconductor expansion", "Government infrastructure program"].map((t, i) => (
         <GlassPanel key={i} level={1} borderRadius={12} style={{ padding: "14px 20px", marginBottom: 8, opacity: 0.7 - i * 0.1 }}>
-          <p style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, fontWeight: 500, color: C.n800, margin: 0 }}>{t}</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 500, color: C.n800, margin: 0 }}>{t}</p>
         </GlassPanel>
       ))}
     </div>
@@ -139,7 +139,7 @@ function MapDestination({ onReplay, animate = true }) {
         background: "#F9F9F9",
         border: "1px solid rgba(0,0,0,0.06)", borderRadius: 12,
         padding: "8px 12px", cursor: "pointer",
-        fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, fontWeight: 500,
+        fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 500,
         color: C.n950, boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
       }}>Replay</button>
     </div>
@@ -548,7 +548,7 @@ export default function Step5TransitionV3({ variant } = {}) {
   return (
     <div data-proto="step-5" style={{
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      padding: 24, fontFamily: "'Noto Sans JP', sans-serif",
+      padding: 24, fontFamily: "var(--font-body)",
       background: "#EDEEF1", minHeight: "100vh",
     }}>
       <style>{`

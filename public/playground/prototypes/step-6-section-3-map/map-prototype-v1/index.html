@@ -73,6 +73,9 @@
       (function () {
         if (new URLSearchParams(location.search).get("embed") !== "1") return;
         document.documentElement.setAttribute("data-embed", "1");
+        if (new URLSearchParams(location.search).get("hidesheet") === "1") {
+          document.documentElement.setAttribute("data-hidesheet", "1");
+        }
         // Cover the screen with a solid F9F9F9 overlay during setup so
         // the user never sees the bundle's default map view or the
         // step-1 entry camera flash before the Tokyo-Kumamoto framing
@@ -128,6 +131,27 @@
           var panel = document.getElementById("right-panel");
           if (panel) panel.classList.add("sheet-peek");
         });
+
+        /* Last-step intercept: when the user is on the final internal map
+           step and taps #nav-forward, signal the parent React app to
+           advance out of the iframe instead of letting the bundle's
+           internal handler run. Uses delegated capture-phase so it
+           survives node re-creation and beats bundle handlers. */
+        document.addEventListener("click", function (e) {
+          var target = e.target && e.target.closest && e.target.closest("#nav-forward");
+          if (!target) return;
+          var stepsParam = new URLSearchParams(location.search).get("steps") || "";
+          var totalSteps = stepsParam.split(",").filter(Boolean).length;
+          if (!totalSteps) return;
+          var current = (window.App && window.App.state && window.App.state.currentStep) || 1;
+          if (current >= totalSteps) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            try {
+              window.parent.postMessage({ type: "gktk-map-complete" }, "*");
+            } catch (_e) {}
+          }
+        }, true);
       })();
     </script>
     <style>
@@ -144,6 +168,11 @@
       [data-embed="1"] #layers-toggle,
       [data-embed="1"] #time-toggle,
       [data-embed="1"] #journey-progress {
+        display: none !important;
+      }
+
+      [data-hidesheet="1"] #right-panel,
+      [data-hidesheet="1"] #nav-arrows {
         display: none !important;
       }
 

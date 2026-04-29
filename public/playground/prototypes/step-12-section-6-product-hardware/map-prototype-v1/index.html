@@ -90,6 +90,27 @@
           var panel = document.getElementById("right-panel");
           if (panel) panel.classList.add("sheet-peek");
         });
+
+        /* Last-step intercept: when the user is on the final internal map
+           step and taps #nav-forward, signal the parent React app to
+           advance out of the iframe instead of letting the bundle's
+           internal handler run. Uses delegated capture-phase so it
+           survives node re-creation and beats bundle handlers. */
+        document.addEventListener("click", function (e) {
+          var target = e.target && e.target.closest && e.target.closest("#nav-forward");
+          if (!target) return;
+          var stepsParam = new URLSearchParams(location.search).get("steps") || "";
+          var totalSteps = stepsParam.split(",").filter(Boolean).length;
+          if (!totalSteps) return;
+          var current = (window.App && window.App.state && window.App.state.currentStep) || 1;
+          if (current >= totalSteps) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            try {
+              window.parent.postMessage({ type: "gktk-map-complete" }, "*");
+            } catch (_e) {}
+          }
+        }, true);
       })();
     </script>
     <style>
