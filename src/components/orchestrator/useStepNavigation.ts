@@ -18,6 +18,15 @@ export function useStepNavigation() {
     setCurrentStep(Math.min(Math.max(n, 1), STEPS.length));
   }, []);
 
+  const goToPrevContent = useCallback(() => {
+    setCurrentStep((prev) => {
+      for (let i = prev - 1; i >= 1; i--) {
+        if (STEPS[i - 1].type === 'content') return i;
+      }
+      return 1;
+    });
+  }, []);
+
   const stepConfig = STEPS[currentStep - 1];
 
   return {
@@ -27,5 +36,6 @@ export function useStepNavigation() {
     goToNext,
     goToPrev,
     goToStep,
+    goToPrevContent,
   };
 }
