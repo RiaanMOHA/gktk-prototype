@@ -76,6 +76,10 @@
   --z-elevated: 30;
   --z-modal: 40;
   --z-chrome: 50;
+
+  /* Button — border variant (icon nav, modal/sheet secondary actions) */
+  --button-border: 1.5px solid var(--color-base-black);
+  --button-border-pressed: var(--color-amber);
 }
 
 *,

@@ -16,7 +16,6 @@ const PRESETS: Preset[] = [
   { key: '3', label: 'Desktop',       w: 1440, h: 900,  canRotate: false },
 ];
 
-const LS_ACTIVE  = 'gktk-qa-active';
 const LS_PRESET  = 'gktk-qa-preset';
 const LS_ROTATED = 'gktk-qa-rotated';
 
@@ -30,11 +29,13 @@ export function DevQaChrome({ children }: DevQaChromeProps) {
   const [preset, setPreset] = useState<Preset>(PRESETS[0]);
   const [rotated, setRotated] = useState(false);
 
+  // QA chrome MUST be visible by default on every page load. Preset
+  // and rotated state are user preferences and persist across sessions
+  // — `active` is not, so toggling off only hides it for the current
+  // session. A reload always brings it back.
   useEffect(() => {
-    const a = localStorage.getItem(LS_ACTIVE);
     const p = localStorage.getItem(LS_PRESET);
     const r = localStorage.getItem(LS_ROTATED);
-    if (a !== null) setActive(a === 'true');
     if (p) {
       const found = PRESETS.find((x) => x.key === p);
       if (found) setPreset(found);
@@ -43,7 +44,6 @@ export function DevQaChrome({ children }: DevQaChromeProps) {
     setHydrated(true);
   }, []);
 
-  useEffect(() => { if (hydrated) localStorage.setItem(LS_ACTIVE, String(active)); }, [active, hydrated]);
   useEffect(() => { if (hydrated) localStorage.setItem(LS_PRESET, preset.key); }, [preset, hydrated]);
   useEffect(() => { if (hydrated) localStorage.setItem(LS_ROTATED, String(rotated)); }, [rotated, hydrated]);
 
