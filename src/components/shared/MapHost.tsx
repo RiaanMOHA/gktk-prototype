@@ -45,12 +45,6 @@ export function useMapHost(): MapHostApi | null {
   return useContext(MapHostContext);
 }
 
-const VALID_MAP_STEPS = new Set([
-  'government-support',
-  'corporate-investment',
-  'transport-access',
-]);
-
 function buildMapUrl(): string {
   let stepId: string | null = null;
   if (typeof window !== 'undefined') {
@@ -124,6 +118,11 @@ export function MapHostProvider({ visible, children }: MapHostProviderProps) {
   const resetScene = useCallback(() => {
     const scene = sceneRef.current;
     if (!scene) return;
+    // Cancel any in-flight or completed `fill: 'forwards'` animations
+    // first — otherwise the WAAPI keyframe effect overrides the inline
+    // style we clear below, leaving the scene stuck at the descent
+    // end-state and the map appearing blank when the user returns.
+    scene.getAnimations().forEach((a) => a.cancel());
     scene.style.transform = '';
   }, []);
 

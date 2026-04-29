@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import NextButton from '@/components/shared/NextButton';
 
 interface StepProps {
   isActive: boolean;
@@ -10,11 +11,7 @@ interface StepProps {
 const C = {
   bg: '#F9F9F9',
   n100: '#EDEEF1',
-  n400: '#8A8F9A',
   n600: '#5B616E',
-  n800: '#40444C',
-  n950: '#25272C',
-  n200: '#D8DBDF',
   amber: '#FBB931',
 };
 
@@ -189,106 +186,56 @@ export default function Step5Section3Transition({ isActive, onComplete }: StepPr
       className="relative w-full h-full"
       style={{ background: C.bg, overflow: 'hidden' }}
     >
+      <div ref={ghostRef} style={{ position: 'absolute', inset: 0 }}>
+        <GhostBridge />
+      </div>
+
       <div
-        onClick={phase === 'ready' ? runShutter : undefined}
-        role={phase === 'ready' ? 'button' : undefined}
-        tabIndex={phase === 'ready' ? 0 : -1}
-        aria-label="Tap to continue"
-        onKeyDown={(e) => {
-          if (phase === 'ready' && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
-            runShutter();
-          }
-        }}
+        ref={topBandRef}
         style={{
           position: 'absolute',
-          inset: 0,
-          cursor: phase === 'ready' ? 'pointer' : 'default',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '50%',
+          background: C.n100,
+          transform: 'translateY(-100%)',
+          zIndex: 20,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
         }}
-      >
-        <div ref={ghostRef} style={{ position: 'absolute', inset: 0 }}>
-          <GhostBridge />
-        </div>
+      />
 
-        <div
-          ref={topBandRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '50%',
-            background: C.n100,
-            transform: 'translateY(-100%)',
-            zIndex: 20,
-            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-          }}
-        />
+      <div
+        ref={botBandRef}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '50%',
+          background: C.n100,
+          transform: 'translateY(100%)',
+          zIndex: 20,
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
+        }}
+      />
 
-        <div
-          ref={botBandRef}
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '50%',
-            background: C.n100,
-            transform: 'translateY(100%)',
-            zIndex: 20,
-            boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
-          }}
-        />
+      <div
+        ref={seamRef}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          right: 0,
+          height: 2,
+          transform: 'translateY(-50%)',
+          background: C.amber,
+          opacity: 0,
+          zIndex: 25,
+        }}
+      />
 
-        <div
-          ref={seamRef}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: 0,
-            right: 0,
-            height: 2,
-            transform: 'translateY(-50%)',
-            background: C.amber,
-            opacity: 0,
-            zIndex: 25,
-          }}
-        />
-
-        {phase === 'ready' && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
-              left: 32,
-              right: 32,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              zIndex: 10,
-            }}
-          >
-            <div
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: '50%',
-                background: C.amber,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontWeight: 500,
-                fontSize: 13,
-                color: C.n400,
-              }}
-            >
-              Tap to continue
-            </span>
-          </div>
-        )}
-      </div>
+      <NextButton onClick={runShutter} visible={phase === 'ready'} />
     </div>
   );
 }

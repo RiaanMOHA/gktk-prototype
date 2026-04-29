@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import NextButton from '@/components/shared/NextButton';
 
 interface StepProps {
   isActive: boolean;
@@ -273,47 +274,7 @@ export default function Step4Section2Bridge({ isActive, onComplete }: StepProps)
           </div>
         </div>
 
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 'calc(28px + env(safe-area-inset-bottom, 0px))',
-            right: 24,
-            opacity: bridgeDone ? 1 : 0,
-            transform: `scale(${bridgeDone ? 1 : 0.6})`,
-            transition:
-              'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
-            pointerEvents: bridgeDone ? 'auto' : 'none',
-          }}
-        >
-          <button
-            type="button"
-            onClick={advance}
-            aria-label="Continue to next step"
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 12,
-              background: '#F9F9F9',
-              border: '1px solid rgba(0,0,0,0.06)',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 0,
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M6.5 3.5L12 9L6.5 14.5"
-                stroke={N[800]}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
+        <NextButton onClick={advance} visible={bridgeDone} />
       </div>
     </div>
   );

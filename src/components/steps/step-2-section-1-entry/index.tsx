@@ -1,25 +1,21 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import NextButton from '@/components/shared/NextButton';
 
 interface StepProps {
   isActive: boolean;
   onComplete: () => void;
 }
 
-const AMBER = '#FBB931';
 const N = {
   950: '#25272C',
   900: '#383A42',
   800: '#40444C',
 };
 
-const HOLD_DURATION_MS = 800;
-const DECAY_DURATION_MS = 400;
 const EXIT_DELAY_MS = 150;
 const EXIT_DURATION_MS = 350;
-const RING_RADIUS = 26;
-const CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 const BARS = [
   { label: 'Serviced apartments', width: '78%', elev: 1, delay: 0 },
@@ -69,58 +65,14 @@ function Logo({ id, size }: { id: string; size: number }) {
 }
 
 export default function Step2Section1Entry({ isActive, onComplete }: StepProps) {
-  const [progress, setProgress] = useState(0);
-  const [pressing, setPressing] = useState(false);
-  const [done, setDone] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const raf = useRef<number | null>(null);
-  const startT = useRef<number | null>(null);
-  const prog = useRef(0);
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const startPress = useCallback(() => {
-    if (done) return;
-    setPressing(true);
-    startT.current = performance.now() - (prog.current / 100) * HOLD_DURATION_MS;
-    const tick = (now: number) => {
-      if (startT.current == null) return;
-      const p = Math.min((now - startT.current) / HOLD_DURATION_MS, 1);
-      prog.current = p * 100;
-      setProgress(p * 100);
-      if (p >= 1) {
-        setDone(true);
-        setTimeout(() => setExiting(true), EXIT_DELAY_MS);
-        return;
-      }
-      raf.current = requestAnimationFrame(tick);
-    };
-    raf.current = requestAnimationFrame(tick);
-  }, [done]);
-
-  const endPress = useCallback(() => {
-    setPressing(false);
-    if (raf.current) cancelAnimationFrame(raf.current);
-    if (done) return;
-    const sp = prog.current;
-    const t0 = performance.now();
-    const decay = (now: number) => {
-      const p = Math.max(sp - ((now - t0) / DECAY_DURATION_MS) * sp, 0);
-      prog.current = p;
-      setProgress(p);
-      if (p > 0.1) {
-        raf.current = requestAnimationFrame(decay);
-      } else {
-        prog.current = 0;
-        setProgress(0);
-      }
-    };
-    raf.current = requestAnimationFrame(decay);
-  }, [done]);
-
-  useEffect(() => {
-    return () => {
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, []);
+  const advance = useCallback(() => {
+    if (exiting) return;
+    if (exitTimer.current) clearTimeout(exitTimer.current);
+    exitTimer.current = setTimeout(() => setExiting(true), EXIT_DELAY_MS);
+  }, [exiting]);
 
   useEffect(() => {
     if (!exiting) return;
@@ -128,9 +80,13 @@ export default function Step2Section1Entry({ isActive, onComplete }: StepProps) 
     return () => clearTimeout(timer);
   }, [exiting, onComplete]);
 
-  if (!isActive) return null;
+  useEffect(() => {
+    return () => {
+      if (exitTimer.current) clearTimeout(exitTimer.current);
+    };
+  }, []);
 
-  const dashOffset = CIRCUMFERENCE * (1 - progress / 100);
+  if (!isActive) return null;
 
   return (
     <div data-step-2 className="relative w-full h-full" style={{ background: '#F9F9F9' }}>
@@ -229,86 +185,7 @@ export default function Step2Section1Entry({ isActive, onComplete }: StepProps) 
           </div>
         </div>
 
-        <div
-          onPointerDown={(e) => {
-            e.preventDefault();
-            startPress();
-          }}
-          onPointerUp={endPress}
-          onPointerLeave={endPress}
-          onPointerCancel={endPress}
-          role="button"
-          aria-label="Hold to enter"
-          style={{
-            position: 'absolute',
-            bottom: 'calc(32px + env(safe-area-inset-bottom, 0px))',
-            right: 24,
-            width: 56,
-            height: 56,
-            cursor: 'pointer',
-            touchAction: 'none',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            transform: pressing ? 'scale(0.92)' : 'scale(1)',
-            transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '50%',
-              background: '#F9F9F9',
-              border: '1px solid rgba(0,0,0,0.06)',
-              boxShadow: pressing
-                ? '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)'
-                : '0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
-              transition: 'box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            }}
-          />
-          <svg
-            style={{
-              position: 'absolute',
-              inset: 0,
-              transform: 'rotate(-90deg)',
-              pointerEvents: 'none',
-            }}
-            width="56"
-            height="56"
-          >
-            <circle
-              cx="28"
-              cy="28"
-              r={RING_RADIUS}
-              fill="none"
-              stroke={AMBER}
-              strokeWidth="2.5"
-              strokeDasharray={CIRCUMFERENCE}
-              strokeDashoffset={dashOffset}
-              strokeLinecap="round"
-              style={{
-                transition: pressing
-                  ? 'none'
-                  : 'stroke-dashoffset 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-              }}
-            />
-          </svg>
-          <svg
-            style={{ position: 'absolute', top: 18, left: 18, pointerEvents: 'none' }}
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <path
-              d="M7 4l6 6-6 6"
-              stroke={N[950]}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
+        <NextButton onClick={advance} />
       </div>
     </div>
   );
