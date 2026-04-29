@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 type Preset = {
   key: string;
@@ -51,6 +51,29 @@ export function DevQaChrome({ children }: DevQaChromeProps) {
   const frameW = rotated && canRotate ? preset.h : preset.w;
   const frameH = rotated && canRotate ? preset.w : preset.h;
 
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [stage, setStage] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      setStage({ w: r.width, h: r.height });
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const STAGE_PADDING = 24;
+  const fit = (() => {
+    const availW = Math.max(0, stage.w - STAGE_PADDING * 2);
+    const availH = Math.max(0, stage.h - STAGE_PADDING * 2);
+    if (availW <= 0 || availH <= 0) return 1;
+    return Math.min(1, availW / frameW, availH / frameH);
+  })();
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -96,30 +119,40 @@ export function DevQaChrome({ children }: DevQaChromeProps) {
       />
 
       <div
-        className="flex-1 flex items-start justify-center overflow-auto"
+        ref={stageRef}
+        className="flex-1 flex items-center justify-center overflow-hidden"
         style={{
           background: '#1E1F20',
           backgroundImage:
             'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
           backgroundSize: '20px 20px',
-          padding: 24,
         }}
       >
-        <iframe
-          key={`${frameW}x${frameH}`}
-          src="/?preview=1"
-          title="QA preview"
+        <div
           style={{
-            width: frameW,
-            height: frameH,
-            border: '1px solid #40444C',
-            borderRadius: 4,
-            background: '#F9F9F9',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+            width: frameW * fit,
+            height: frameH * fit,
             flexShrink: 0,
             transition: 'width 0.25s ease, height 0.25s ease',
           }}
-        />
+        >
+          <iframe
+            key={`${frameW}x${frameH}`}
+            src="/?preview=1"
+            title="QA preview"
+            style={{
+              width: frameW,
+              height: frameH,
+              border: '1px solid #40444C',
+              borderRadius: 4,
+              background: '#F9F9F9',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+              transform: `scale(${fit})`,
+              transformOrigin: 'top left',
+              display: 'block',
+            }}
+          />
+        </div>
       </div>
     </div>
   );

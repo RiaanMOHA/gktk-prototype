@@ -5,23 +5,27 @@ import { useEffect } from 'react';
 interface MapStepProps {
   isActive: boolean;
   onComplete: () => void;
+  onBack?: () => void;
   src: string;
   title: string;
 }
 
-export default function MapStep({ isActive, onComplete, src, title }: MapStepProps) {
+export default function MapStep({ isActive, onComplete, onBack, src, title }: MapStepProps) {
   useEffect(() => {
     if (!isActive) return;
     const onMessage = (event: MessageEvent) => {
       if (event.source !== window.parent && event.origin !== window.location.origin) return;
       const data = event.data;
-      if (data && typeof data === 'object' && data.type === 'gktk-map-complete') {
+      if (!data || typeof data !== 'object') return;
+      if (data.type === 'gktk-map-complete') {
         onComplete();
+      } else if (data.type === 'gktk-map-back-to-content' && onBack) {
+        onBack();
       }
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [isActive, onComplete]);
+  }, [isActive, onComplete, onBack]);
 
   if (!isActive) return null;
 

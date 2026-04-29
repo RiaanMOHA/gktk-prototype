@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useStepNavigation } from './useStepNavigation';
 import { DevQaChrome } from './DevQaChrome';
 import { StepNav } from './StepNav';
+import { MapHostProvider } from '../shared/MapHost';
 
 const stepComponents = [
   dynamic(() => import('../steps/step-1-opening-transition')),
@@ -32,7 +33,7 @@ const stepComponents = [
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
 export default function Orchestrator() {
-  const { currentStep, totalSteps, goToNext, goToPrev, goToStep } =
+  const { currentStep, totalSteps, goToNext, goToPrev, goToStep, goToPrevContent } =
     useStepNavigation();
   const [reloadKey, setReloadKey] = useState(0);
   const reloadStep = useCallback(() => setReloadKey((k) => k + 1), []);
@@ -50,22 +51,46 @@ export default function Orchestrator() {
       key={`${currentStep}-${reloadKey}`}
       isActive={true}
       onComplete={goToNext}
+      onBack={goToPrevContent}
     />
   );
 
+  // MapHost is rendered for steps 5–7 so it preloads during the
+  // step-5 transition, stays alive across the step-6 map, and
+  // continues into step-7's descent — eliminating the "blank map
+  // loading" frames the user used to see at each boundary.
+  const mapVisible = currentStep >= 5 && currentStep <= 7;
+
+  // Step 6 renders no foreground content; the prototype's nav arrows
+  // and sheet live inside the iframe behind it. Make the wrapping
+  // div transparent to clicks on step 6 so the forward/back arrows
+  // remain reachable. Other steps capture clicks normally.
+  const wrapperStyle =
+    currentStep === 6 ? ({ pointerEvents: 'none' } as const) : undefined;
+
   if (!IS_DEV) {
     return (
-      <div className="relative w-screen h-screen overflow-hidden">
-        {stepEl}
-      </div>
+      <MapHostProvider visible={mapVisible}>
+        <div
+          className="relative w-screen h-screen overflow-hidden"
+          style={wrapperStyle}
+        >
+          {stepEl}
+        </div>
+      </MapHostProvider>
     );
   }
 
   if (mode === 'loading') return null;
 
   const stepWithNav = (
-    <>
-      <div className="relative w-screen h-screen overflow-hidden">{stepEl}</div>
+    <MapHostProvider visible={mapVisible}>
+      <div
+        className="relative w-screen h-screen overflow-hidden"
+        style={wrapperStyle}
+      >
+        {stepEl}
+      </div>
       <StepNav
         currentStep={currentStep}
         totalSteps={totalSteps}
@@ -74,7 +99,7 @@ export default function Orchestrator() {
         onJumpTo={goToStep}
         onReload={reloadStep}
       />
-    </>
+    </MapHostProvider>
   );
 
   if (mode === 'preview') {

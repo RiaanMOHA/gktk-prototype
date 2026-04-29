@@ -26,7 +26,7 @@
     <script type="module" crossorigin src="./assets/index-B7dJENHx.js?v=1776679738"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BtxKHxrX.css?v=1776679738">
     <!-- Playground-only: mobile overrides layered on top of bundle's embed-mobile.css -->
-    <link rel="stylesheet" href="./assets/embed-mobile-overrides.css?v=1776679738">
+    <link rel="stylesheet" href="./assets/embed-mobile-overrides.css?v=1777953000">
   </head>
   <body>
     <!-- Narrow the drawer's step list without editing the upstream
@@ -76,6 +76,29 @@
         if (new URLSearchParams(location.search).get("hidesheet") === "1") {
           document.documentElement.setAttribute("data-hidesheet", "1");
         }
+        if (new URLSearchParams(location.search).get("chromeless") === "1") {
+          /* Chromeless mode: hides every interactive overlay so the map
+             reads as a pure visual surface. Used by step-7's descent
+             transition where the map face is a 3D plane being tilted
+             through the void — any UI on top breaks the illusion. */
+          document.documentElement.setAttribute("data-chromeless", "1");
+        }
+        /* Allow the parent React app to flip chromeless mode at runtime
+           via postMessage. This lets a single shared iframe be reused
+           by step-6 (full chrome) and step-7's descent (chromeless),
+           skipping the second iframe-load blank screen. */
+        window.addEventListener("message", function (e) {
+          if (e.origin !== window.location.origin) return;
+          var data = e.data;
+          if (!data || typeof data !== "object") return;
+          if (data.type === "gktk-set-chromeless") {
+            if (data.value) {
+              document.documentElement.setAttribute("data-chromeless", "1");
+            } else {
+              document.documentElement.removeAttribute("data-chromeless");
+            }
+          }
+        });
         // Cover the screen with a solid F9F9F9 overlay during setup so
         // the user never sees the bundle's default map view or the
         // step-1 entry camera flash before the Tokyo-Kumamoto framing
@@ -95,6 +118,24 @@
         function uncover() {
           if (cover && cover.parentNode) cover.parentNode.removeChild(cover);
           cover = null;
+          /* Slide the bottom sheet into view at the same moment the
+             setup cover lifts. CSS holds it at translateY(100%) until
+             this class is applied; the .is-presented rule eases it up
+             over ~520ms with the project's cinematic ease curve. */
+          var panel = document.getElementById("right-panel");
+          if (panel) {
+            requestAnimationFrame(function () {
+              panel.classList.add("is-presented");
+            });
+          }
+          /* Tell the parent React app that the map has reached its
+             initial framing and is now visible. Step-7's descent
+             transition uses this signal to gate the start of its 3D
+             camera animation so the user never sees a blank map face
+             tilt past them. */
+          try {
+            window.parent.postMessage({ type: "gktk-map-ready" }, "*");
+          } catch (_e) {}
         }
         window.__uncoverSetup = uncover;
         // Safety reveal in case the normal trigger never fires. Short
@@ -120,35 +161,123 @@
             });
           }
 
-          /* Custom persistent panel over the map. HIG does not name this
-             exact pattern — Apple's own iOS place-card is a sheet — but
-             this prototype deliberately diverges: the card shows one
-             summary per step with no hidden secondary content and no
-             reason to resize or dismiss. Pinned to the bottom at the peek
-             detent. The bundle does not manipulate sheet-* classes at
-             runtime (verified by source grep), so a one-shot add of
-             sheet-peek on load is sufficient. No drag, no grabber. */
+          /* iOS HIG sheet over the map. Two detents: expanded (default)
+             and peek (drag-down to expose more map). The bundle ships
+             the .sheet-handle-hit CSS but no markup or JS for it, so we
+             inject the grabber and drive drag here. translateY is
+             driven by --sheet-translate so CSS owns the rest states
+             (.is-presented = 0%, .is-peek = 70%) and JS only sets the
+             variable inline during an active drag. */
           var panel = document.getElementById("right-panel");
-          if (panel) panel.classList.add("sheet-peek");
+          if (panel) {
+            var handle = panel.querySelector(".sheet-handle-hit");
+            if (!handle) {
+              handle = document.createElement("button");
+              handle.type = "button";
+              handle.className = "sheet-handle-hit";
+              handle.setAttribute("aria-label", "Drag to resize sheet");
+              panel.insertBefore(handle, panel.firstChild);
+            }
+
+            var PEEK = 70;
+            var EXPANDED = 0;
+            var SNAP_THRESHOLD = 35;
+            var FLING = 0.5;
+            var TAP_PX = 5;
+            var drag = null;
+
+            function isPeek() { return panel.classList.contains("is-peek"); }
+            function setVar(p) { panel.style.setProperty("--sheet-translate", p + "%"); }
+            function clearVar() { panel.style.removeProperty("--sheet-translate"); }
+            function snap(toPeek) {
+              panel.classList.toggle("is-peek", toPeek);
+              panel.classList.remove("is-dragging");
+              clearVar();
+            }
+
+            handle.addEventListener("pointerdown", function (e) {
+              if (!panel.classList.contains("is-presented")) return;
+              e.preventDefault();
+              try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+              panel.classList.add("is-dragging");
+              var rect = panel.getBoundingClientRect();
+              drag = {
+                startY: e.clientY,
+                sheetH: rect.height,
+                startT: isPeek() ? PEEK : EXPANDED,
+                lastY: e.clientY,
+                lastT: e.timeStamp,
+                vel: 0,
+              };
+            });
+
+            handle.addEventListener("pointermove", function (e) {
+              if (!drag) return;
+              var dy = e.clientY - drag.startY;
+              var pct = drag.startT + (dy / drag.sheetH) * 100;
+              if (pct < 0) pct = 0;
+              if (pct > 100) pct = 100;
+              setVar(pct);
+              var dt = e.timeStamp - drag.lastT;
+              if (dt > 0) drag.vel = (e.clientY - drag.lastY) / dt;
+              drag.lastY = e.clientY;
+              drag.lastT = e.timeStamp;
+            });
+
+            function endDrag(e) {
+              if (!drag) return;
+              var dy = (e && typeof e.clientY === "number") ? e.clientY - drag.startY : 0;
+              var finalT = drag.startT + (dy / drag.sheetH) * 100;
+              var toPeek;
+              if (drag.vel > FLING) toPeek = true;
+              else if (drag.vel < -FLING) toPeek = false;
+              else toPeek = finalT > SNAP_THRESHOLD;
+              /* Tap (no real drag) on the peeked sheet expands it,
+                 matching iOS sheet tap-to-expand behavior. */
+              if (Math.abs(dy) < TAP_PX && isPeek()) toPeek = false;
+              snap(toPeek);
+              try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+              drag = null;
+            }
+            handle.addEventListener("pointerup", endDrag);
+            handle.addEventListener("pointercancel", endDrag);
+          }
         });
 
-        /* Last-step intercept: when the user is on the final internal map
-           step and taps #nav-forward, signal the parent React app to
-           advance out of the iframe instead of letting the bundle's
-           internal handler run. Uses delegated capture-phase so it
-           survives node re-creation and beats bundle handlers. */
+        /* Boundary intercepts: at the first internal step #nav-back
+           and at the last internal step #nav-forward, signal the
+           parent React app to navigate out of the iframe instead of
+           letting the bundle's internal handler run. Uses delegated
+           capture-phase so it survives node re-creation and beats
+           bundle handlers. */
         document.addEventListener("click", function (e) {
-          var target = e.target && e.target.closest && e.target.closest("#nav-forward");
-          if (!target) return;
+          var fwd = e.target && e.target.closest && e.target.closest("#nav-forward");
+          var back = e.target && e.target.closest && e.target.closest("#nav-back");
+          if (!fwd && !back) return;
           var stepsParam = new URLSearchParams(location.search).get("steps") || "";
           var totalSteps = stepsParam.split(",").filter(Boolean).length;
           if (!totalSteps) return;
           var current = (window.App && window.App.state && window.App.state.currentStep) || 1;
-          if (current >= totalSteps) {
+          if (fwd && current >= totalSteps) {
             e.preventDefault();
             e.stopImmediatePropagation();
             try {
+              /* Persist the current internal step id so the next-step
+                 transition (step-7) can boot its own iframe at the
+                 same step the user just left, instead of resetting to
+                 government-support. */
+              var stepId =
+                (window.STEPS && window.STEPS[current - 1] && window.STEPS[current - 1].id) || null;
+              if (stepId) {
+                try { localStorage.setItem("gktk-last-map-step", stepId); } catch (_) {}
+              }
               window.parent.postMessage({ type: "gktk-map-complete" }, "*");
+            } catch (_e) {}
+          } else if (back && current <= 1) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            try {
+              window.parent.postMessage({ type: "gktk-map-back-to-content" }, "*");
             } catch (_e) {}
           }
         }, true);
@@ -173,6 +302,13 @@
 
       [data-hidesheet="1"] #right-panel,
       [data-hidesheet="1"] #nav-arrows {
+        display: none !important;
+      }
+
+      [data-chromeless="1"] #right-panel,
+      [data-chromeless="1"] #nav-arrows,
+      [data-chromeless="1"] #view-mode-toggle,
+      [data-chromeless="1"] #lang-toggle {
         display: none !important;
       }
 
