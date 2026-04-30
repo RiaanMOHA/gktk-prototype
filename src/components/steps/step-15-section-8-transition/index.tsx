@@ -17,11 +17,10 @@ const C = {
 
 const EASE = {
   smooth: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-  settle: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
 };
 
-const ELEMENTS = [
+const SERVICES = [
   'Property secretary',
   'Medical navigation',
   'Education support',
@@ -29,6 +28,8 @@ const ELEMENTS = [
   'Mental wellness',
   'Cultural program',
 ];
+
+const HEADING = 'The investment case.';
 
 const EXIT_DELAY_MS = 150;
 const EXIT_DURATION_MS = 350;
@@ -39,9 +40,11 @@ export default function Step15Section8Transition({
   isActive,
   onComplete,
 }: StepProps) {
-  const elemRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const datumRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const dotRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const ledgerRuleRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const underlineRef = useRef<HTMLDivElement>(null);
 
   const [showNext, setShowNext] = useState(false);
   const [exiting, setExiting] = useState(false);
@@ -54,108 +57,112 @@ export default function Step15Section8Transition({
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const elemRefsSnapshot = elemRefs;
-    const datumRefSnapshot = datumRef;
-    const headingRefSnapshot = headingRef;
+    const rowSnap = rowRefs;
+    const dotSnap = dotRefs;
+    const ruleSnap = ledgerRuleRef;
+    const hSnap = headingRef;
+    const underSnap = underlineRef;
 
     let cancelled = false;
     const run = async () => {
-      const elems = elemRefsSnapshot.current.filter(
+      const rows = rowSnap.current.filter(
         (e): e is HTMLDivElement => Boolean(e)
       );
-      const datum = datumRefSnapshot.current;
-      const h = headingRefSnapshot.current;
+      const dots = dotSnap.current.filter(
+        (e): e is HTMLSpanElement => Boolean(e)
+      );
+      const rule = ruleSnap.current;
+      const h = hSnap.current;
+      const under = underSnap.current;
 
       if (reduced) {
-        elems.forEach((el) => {
-          el.style.opacity = '0';
+        rows.forEach((el) => {
+          el.style.opacity = '1';
         });
         if (h) h.style.opacity = '1';
+        if (under) under.style.transform = 'scaleX(1)';
         if (!cancelled) setShowNext(true);
         return;
       }
 
-      // Beat 1: snap to grid
-      elems.forEach((el, i) => {
+      // 1. rows fade and slide in
+      rows.forEach((el, i) => {
         el.animate(
           [
-            {
-              transform: 'translateX(0) translateY(0) scale(1)',
-              borderRadius: '12px',
-            },
-            {
-              transform: `translateX(${(i % 3 - 1) * 60}px) translateY(${
-                Math.floor(i / 3) * 50 - 25
-              }px) scale(0.7)`,
-              borderRadius: '4px',
-            },
+            { opacity: 0, transform: 'translateY(8px)' },
+            { opacity: 1, transform: 'translateY(0)' },
           ],
-          {
-            duration: 400,
-            delay: i * 60,
-            easing: EASE.smooth,
-            fill: 'forwards',
-          }
+          { duration: 320, delay: i * 80, easing: EASE.smooth, fill: 'forwards' }
         );
       });
-      await wait(600);
+      await wait(320 + (rows.length - 1) * 80 + 60);
       if (cancelled) return;
 
-      // Beat 2: compress to center, then datum point pulse
-      elems.forEach((el) => {
-        el.animate(
-          [
-            { opacity: 1 },
-            {
-              transform: 'translateX(0) translateY(0) scale(0.1)',
-              opacity: 0,
-            },
-          ],
-          { duration: 350, easing: EASE.smooth, fill: 'forwards' }
-        );
-      });
-      if (datum) {
-        try {
-          await datum.animate(
-            [
-              { opacity: 0, transform: 'translate(-50%,-50%) scale(0)' },
-              { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' },
-            ],
-            { duration: 300, easing: EASE.spring, fill: 'forwards' }
-          ).finished;
-        } catch {
-          /* cancelled */
-        }
-        if (cancelled) return;
-        await wait(200);
-        if (cancelled) return;
-        datum.animate(
-          [
-            { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' },
-            { opacity: 0, transform: 'translate(-50%,-50%) scale(3)' },
-          ],
-          { duration: 400, easing: EASE.smooth, fill: 'forwards' }
+      // 2. amber tally rule draws beneath rows (within row text bounds)
+      if (rule) {
+        rule.animate(
+          [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+          { duration: 480, easing: EASE.smooth, fill: 'forwards' }
         );
       }
-      await wait(400);
+      await wait(420);
       if (cancelled) return;
 
-      // Beat 3: resolve heading
+      // 3. dots pulse and settle
+      dots.forEach((d, i) => {
+        d.animate(
+          [
+            { transform: 'scale(1)', opacity: 1 },
+            { transform: 'scale(1.6)', opacity: 1, offset: 0.5 },
+            { transform: 'scale(1)', opacity: 1 },
+          ],
+          { duration: 420, delay: i * 40, easing: EASE.spring, fill: 'forwards' }
+        );
+      });
+      await wait(420 + (dots.length - 1) * 40);
+      if (cancelled) return;
+
+      // 4. hold — rows readable
+      await wait(1800);
+      if (cancelled) return;
+
+      // 5. fade ledger out (slower than the entrance so the loss is gentle)
+      rows.forEach((el) =>
+        el.animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          { duration: 520, easing: EASE.smooth, fill: 'forwards' }
+        )
+      );
+      if (rule)
+        rule.animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          { duration: 520, easing: EASE.smooth, fill: 'forwards' }
+        );
+      await wait(440);
+      if (cancelled) return;
+
+      // 6. heading fades in, underline draws (underline width = heading text width)
       if (h) {
         try {
           await h.animate(
             [
-              { opacity: 0, transform: 'translateY(12px)' },
+              { opacity: 0, transform: 'translateY(8px)' },
               { opacity: 1, transform: 'translateY(0)' },
             ],
-            { duration: 500, easing: EASE.settle, fill: 'forwards' }
+            { duration: 480, easing: EASE.smooth, fill: 'forwards' }
           ).finished;
         } catch {
           /* cancelled */
         }
       }
       if (cancelled) return;
-      await wait(600);
+      if (under) {
+        under.animate(
+          [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+          { duration: 520, easing: EASE.smooth, fill: 'forwards' }
+        );
+      }
+      await wait(520);
       if (cancelled) return;
       setShowNext(true);
     };
@@ -163,10 +170,13 @@ export default function Step15Section8Transition({
 
     return () => {
       cancelled = true;
-      const elems = elemRefsSnapshot.current.filter(
+      const rows = rowSnap.current.filter(
         (e): e is HTMLDivElement => Boolean(e)
       );
-      [...elems, datumRefSnapshot.current, headingRefSnapshot.current].forEach(
+      const dots = dotSnap.current.filter(
+        (e): e is HTMLSpanElement => Boolean(e)
+      );
+      [...rows, ...dots, ruleSnap.current, hSnap.current, underSnap.current].forEach(
         (node) => {
           node?.getAnimations().forEach((a) => a.cancel());
         }
@@ -202,90 +212,144 @@ export default function Step15Section8Transition({
         background: C.bg,
         opacity: exiting ? 0 : 1,
         transform: exiting ? 'scale(0.97)' : 'scale(1)',
-        transition: `opacity 350ms ${EASE.settle}, transform 350ms ${EASE.settle}`,
+        transition: `opacity 350ms ${EASE.smooth}, transform 350ms ${EASE.smooth}`,
       }}
     >
-      {/* software ghost elements */}
+      {/* centred phone-width column so the prototype's absolute positions survive on wider viewports */}
       <div
-        style={{
-          position: 'relative',
-          zIndex: 5,
-          paddingTop: 'calc(80px + env(safe-area-inset-top, 0px))',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 10,
-        }}
-      >
-        {ELEMENTS.map((s, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              elemRefs.current[i] = el;
-            }}
-            style={{
-              background: C.bg,
-              border: '1px solid rgba(0,0,0,0.06)',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-              borderRadius: 12,
-              padding: '10px 20px',
-              fontFamily: 'var(--font-body)',
-              fontSize: 12,
-              color: C.n800,
-            }}
-          >
-            {s}
-          </div>
-        ))}
-      </div>
-
-      {/* datum point */}
-      <div
-        ref={datumRef}
         style={{
           position: 'absolute',
-          top: '50%',
+          top: 0,
+          bottom: 0,
           left: '50%',
-          transform: 'translate(-50%,-50%) scale(0)',
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          background: C.amber,
-          zIndex: 10,
-          opacity: 0,
-        }}
-      />
-
-      {/* resolve heading */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 32px',
-          zIndex: 20,
-          pointerEvents: 'none',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: 393,
         }}
       >
-        <h1
-          ref={headingRef}
+        {/* ledger rows */}
+        <div
           style={{
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 600,
-            fontSize: 32,
-            lineHeight: 1.15,
-            color: C.n950,
-            letterSpacing: '-0.02em',
-            opacity: 0,
-            textAlign: 'left',
-            maxWidth: 280,
-            margin: 0,
+            position: 'absolute',
+            top: 'calc(120px + env(safe-area-inset-top, 0px))',
+            left: 32,
+            right: 32,
+            zIndex: 5,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 14,
           }}
         >
-          The investment case.
-        </h1>
+          {SERVICES.map((s, i) => (
+            <div
+              key={i}
+              ref={(el) => {
+                rowRefs.current[i] = el;
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                opacity: 0,
+                fontFamily: 'var(--font-body)',
+                fontSize: 13,
+                color: C.n800,
+              }}
+            >
+              <span style={{ whiteSpace: 'nowrap' }}>{s}</span>
+              <span
+                aria-hidden
+                style={{
+                  flex: 1,
+                  height: 1,
+                  background:
+                    'repeating-linear-gradient(90deg, rgba(0,0,0,0.18) 0 2px, transparent 2px 6px)',
+                }}
+              />
+              <span
+                ref={(el) => {
+                  dotRefs.current[i] = el;
+                }}
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: C.amber,
+                  flex: 'none',
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* amber tally rule — same horizontal bounds as the rows */}
+        <div
+          ref={ledgerRuleRef}
+          style={{
+            position: 'absolute',
+            top: 'calc(470px + env(safe-area-inset-top, 0px))',
+            left: 32,
+            right: 32,
+            height: 2,
+            background: C.amber,
+            borderRadius: 1,
+            transformOrigin: 'left center',
+            transform: 'scaleX(0)',
+            zIndex: 6,
+          }}
+        />
+
+        {/* heading + underline; inline-flex wrapper keeps underline width = text width */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0 32px',
+            zIndex: 20,
+            pointerEvents: 'none',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
+            }}
+          >
+            <h1
+              ref={headingRef}
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: 28,
+                lineHeight: 1.15,
+                color: C.n950,
+                letterSpacing: '-0.02em',
+                whiteSpace: 'nowrap',
+                margin: 0,
+                opacity: 0,
+                textAlign: 'left',
+              }}
+            >
+              {HEADING}
+            </h1>
+            <div
+              ref={underlineRef}
+              style={{
+                width: '100%',
+                height: 2,
+                background: C.amber,
+                borderRadius: 1,
+                marginTop: 8,
+                transformOrigin: 'left center',
+                transform: 'scaleX(0)',
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       <NextButton onClick={advance} visible={showNext && !exiting} />

@@ -336,7 +336,7 @@ const VariantB = ({ active }) => {
       <StatusBar />
       <div style={{ position: "absolute", top: 54, left: 0, right: 0, zIndex: 20, padding: "10px 16px", borderBottom: `1px solid ${N100}`, background: "rgba(249,249,249,0.85)", }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 18, background: `linear-gradient(135deg, ${AMBER} 0%, #F5A500 100%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#fff", fontWeight: 700, fontFamily: "'REM', sans-serif" }}>M</div>
+          <img src="/logos-and-icons/favicon.svg" alt="MoreHarvest" style={{ display: "block", width: 36, height: 36, borderRadius: 18 }} />
           <div>
             <div style={{ fontFamily: "'REM', sans-serif", fontWeight: 600, fontSize: 15, color: N950, lineHeight: 1.2 }}>MoreHarvest</div>
             <div style={{ fontFamily: "'Noto Sans JP', sans-serif", fontSize: 12, color: N600 }}>Property secretary</div>
