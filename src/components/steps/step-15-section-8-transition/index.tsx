@@ -42,7 +42,6 @@ export default function Step15Section8Transition({
 }: StepProps) {
   const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
   const dotRefs = useRef<Array<HTMLSpanElement | null>>([]);
-  const ledgerRuleRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const underlineRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +58,6 @@ export default function Step15Section8Transition({
 
     const rowSnap = rowRefs;
     const dotSnap = dotRefs;
-    const ruleSnap = ledgerRuleRef;
     const hSnap = headingRef;
     const underSnap = underlineRef;
 
@@ -71,7 +69,6 @@ export default function Step15Section8Transition({
       const dots = dotSnap.current.filter(
         (e): e is HTMLSpanElement => Boolean(e)
       );
-      const rule = ruleSnap.current;
       const h = hSnap.current;
       const under = underSnap.current;
 
@@ -98,17 +95,7 @@ export default function Step15Section8Transition({
       await wait(320 + (rows.length - 1) * 80 + 60);
       if (cancelled) return;
 
-      // 2. amber tally rule draws beneath rows (within row text bounds)
-      if (rule) {
-        rule.animate(
-          [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
-          { duration: 480, easing: EASE.smooth, fill: 'forwards' }
-        );
-      }
-      await wait(420);
-      if (cancelled) return;
-
-      // 3. dots pulse and settle
+      // 2. dots pulse and settle
       dots.forEach((d, i) => {
         d.animate(
           [
@@ -122,26 +109,21 @@ export default function Step15Section8Transition({
       await wait(420 + (dots.length - 1) * 40);
       if (cancelled) return;
 
-      // 4. hold — rows readable
+      // 3. hold — rows readable
       await wait(1800);
       if (cancelled) return;
 
-      // 5. fade ledger out (slower than the entrance so the loss is gentle)
+      // 4. fade ledger out (slower than the entrance so the loss is gentle)
       rows.forEach((el) =>
         el.animate(
           [{ opacity: 1 }, { opacity: 0 }],
           { duration: 520, easing: EASE.smooth, fill: 'forwards' }
         )
       );
-      if (rule)
-        rule.animate(
-          [{ opacity: 1 }, { opacity: 0 }],
-          { duration: 520, easing: EASE.smooth, fill: 'forwards' }
-        );
       await wait(440);
       if (cancelled) return;
 
-      // 6. heading fades in, underline draws (underline width = heading text width)
+      // 5. heading fades in, underline draws (underline width = heading text width)
       if (h) {
         try {
           await h.animate(
@@ -176,11 +158,9 @@ export default function Step15Section8Transition({
       const dots = dotSnap.current.filter(
         (e): e is HTMLSpanElement => Boolean(e)
       );
-      [...rows, ...dots, ruleSnap.current, hSnap.current, underSnap.current].forEach(
-        (node) => {
-          node?.getAnimations().forEach((a) => a.cancel());
-        }
-      );
+      [...rows, ...dots, hSnap.current, underSnap.current].forEach((node) => {
+        node?.getAnimations().forEach((a) => a.cancel());
+      });
     };
   }, [isActive]);
 
@@ -281,23 +261,6 @@ export default function Step15Section8Transition({
             </div>
           ))}
         </div>
-
-        {/* amber tally rule — same horizontal bounds as the rows */}
-        <div
-          ref={ledgerRuleRef}
-          style={{
-            position: 'absolute',
-            top: 'calc(470px + env(safe-area-inset-top, 0px))',
-            left: 32,
-            right: 32,
-            height: 2,
-            background: C.amber,
-            borderRadius: 1,
-            transformOrigin: 'left center',
-            transform: 'scaleX(0)',
-            zIndex: 6,
-          }}
-        />
 
         {/* heading + underline; inline-flex wrapper keeps underline width = text width */}
         <div

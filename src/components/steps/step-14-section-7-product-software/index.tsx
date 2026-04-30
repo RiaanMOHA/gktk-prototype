@@ -458,6 +458,7 @@ function DemoScreen({
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!active) {
@@ -482,22 +483,41 @@ function DemoScreen({
     };
   }, [active, onAllShown]);
 
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: reduced ? 'auto' : 'smooth',
+    });
+  }, [messages]);
+
   return (
     <div style={{ position: 'absolute', inset: 0, background: C.bg }}>
       <ChatHeader />
       <div
+        ref={scrollRef}
+        className="step-14-chat-scroll"
         style={{
           position: 'absolute',
           top: 'calc(env(safe-area-inset-top, 0px) + 70px)',
           left: 12,
           right: 12,
-          bottom: 'calc(28px + 56px + env(safe-area-inset-bottom, 0px))',
-          overflow: 'hidden',
+          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
           display: 'flex',
           flexDirection: 'column',
           gap: 7,
+          paddingBottom: 'calc(56px + 28px)',
+          scrollbarWidth: 'none',
         }}
       >
+        <style>{`.step-14-chat-scroll::-webkit-scrollbar{display:none;}`}</style>
         {messages.map((m, i) => (
           <div key={i}>
             {m.type === 'date' ? (
