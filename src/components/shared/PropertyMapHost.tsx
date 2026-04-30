@@ -30,6 +30,7 @@ type PropertyMapHostApi = {
   isReady: boolean;
   setChromeless: (value: boolean) => void;
   subscribe: (listener: (event: MapEvent) => void) => () => void;
+  getWrapper: () => HTMLDivElement | null;
 };
 
 const PropertyMapHostContext = createContext<PropertyMapHostApi | null>(null);
@@ -38,8 +39,12 @@ export function usePropertyMapHost(): PropertyMapHostApi | null {
   return useContext(PropertyMapHostContext);
 }
 
+// chromeless=1 starts the iframe with the sheet hidden so step 11 can
+// use the opaque tilt cover without the sheet pre-revealing under it,
+// and step 12's setChromeless(false) becomes the cue that plays the
+// slide-up animation right when the user lands on step 12.
 const MAP_URL =
-  '/playground/prototypes/step-12-section-6-product-hardware/map-prototype-v1/index.html?embed=1&lang=en&steps=properties&v=100';
+  '/playground/prototypes/step-12-section-6-product-hardware/map-prototype-v1/index.html?embed=1&lang=en&steps=properties&chromeless=1&v=101';
 
 interface PropertyMapHostProviderProps {
   visible: boolean;
@@ -51,6 +56,7 @@ export function PropertyMapHostProvider({
   children,
 }: PropertyMapHostProviderProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [isReady, setIsReady] = useState(false);
   const listenersRef = useRef<Set<(event: MapEvent) => void>>(new Set());
 
@@ -95,16 +101,20 @@ export function PropertyMapHostProvider({
     []
   );
 
+  const getWrapper = useCallback(() => wrapperRef.current, []);
+
   const api: PropertyMapHostApi = {
     isReady,
     setChromeless,
     subscribe,
+    getWrapper,
   };
 
   return (
     <PropertyMapHostContext.Provider value={api}>
       {visible && (
         <div
+          ref={wrapperRef}
           aria-hidden="true"
           style={{
             position: 'fixed',

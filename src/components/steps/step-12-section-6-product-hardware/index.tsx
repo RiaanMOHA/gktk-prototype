@@ -18,14 +18,25 @@ export default function Step12Section6ProductHardware({
 
   // Step 12 shows the shared property-map iframe with full chrome.
   // Forward and back-to-content events are emitted by the iframe
-  // (via postMessage) and dispatched to subscribers by
-  // PropertyMapHost. Sheet presentation is driven by the iframe
-  // itself (identical to step-6's pattern) — no parent timing.
+  // (via postMessage) and dispatched to subscribers by PropertyMapHost.
+  //
+  // Sheet reveal: the iframe loads chromeless (sheet hidden) and is
+  // held that way through step 11. setChromeless(false) is the cue
+  // that triggers the iframe's slide-up animation, so it must fire
+  // here on step-12 entry — but only once the iframe is actually
+  // ready, otherwise the postMessage lands before the iframe's
+  // listener is bound and the reveal never plays. Both paths handled:
+  //   - persistent (11 → 12): isReady is already true, fire immediately.
+  //   - fresh (direct jump to 12): wait for the ready event, then fire.
   useEffect(() => {
     if (!isActive || !propertyMapHost) return;
-    propertyMapHost.setChromeless(false);
+    if (propertyMapHost.isReady) {
+      propertyMapHost.setChromeless(false);
+    }
     const unsub = propertyMapHost.subscribe((event) => {
-      if (event.type === 'complete') {
+      if (event.type === 'ready') {
+        propertyMapHost.setChromeless(false);
+      } else if (event.type === 'complete') {
         onComplete();
       } else if (event.type === 'back-to-content') {
         onBack?.();

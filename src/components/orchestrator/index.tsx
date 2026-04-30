@@ -62,11 +62,12 @@ export default function Orchestrator() {
   // loading" frames the user used to see at each boundary.
   const mapVisible = currentStep >= 5 && currentStep <= 7;
 
-  // PropertyMapHost mirrors that pattern for steps 11–12: the
-  // property-map iframe preloads during step-11's tilt transition
-  // and stays alive across the step-12 boundary so the user never
-  // sees a reload between the transition and the map content step.
-  const propertyMapVisible = currentStep >= 11 && currentStep <= 12;
+  // PropertyMapHost mirrors that pattern for steps 11–13: the
+  // property-map iframe preloads during step-11's tilt transition,
+  // stays alive across the step-12 boundary so the user never sees
+  // a reload, and remains live through step 13 so the lift transition
+  // animates the actual map at its current state, not a duplicate.
+  const propertyMapVisible = currentStep >= 11 && currentStep <= 13;
 
   // Steps 6 and 12 render no foreground content; the prototype's
   // nav arrows and sheet live inside the iframe behind them. Make

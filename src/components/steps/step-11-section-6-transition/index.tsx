@@ -30,11 +30,12 @@ const GAPS = [
 
 const TILT_DURATION_MS = 2200;
 const TILT_BREATH_MS = 200;
-// The iframe fires gktk-map-ready at the same instant the sheet
-// starts its 520ms slide-up. Hold step-11 opaque for one full
-// slide-up + a small buffer so step-12 always mounts onto the
-// settled end-state — never onto a partial entrance.
-const SHEET_SETTLE_MS = 600;
+// With the iframe held in chromeless mode by step 11 (sheet display:none),
+// the slide-up reveal is owned by step 12's setChromeless(false). Step 11
+// only needs the iframe's camera to have framed itself before handing
+// off — it does NOT wait for the sheet to settle, because the sheet
+// shouldn't have moved yet.
+const SHEET_SETTLE_MS = 0;
 
 const animate = (
   el: HTMLElement | null,
@@ -99,6 +100,13 @@ export default function Step11Section6Transition({ isActive, onComplete }: StepP
 
   useEffect(() => {
     if (!isActive) return;
+
+    // Force the iframe into chromeless (sheet hidden) for the duration
+    // of step 11. If the user is looping back from step 12 the sheet
+    // would already be presented in the persistent iframe, so this
+    // also slides it back down under the bridge cover before the next
+    // step-12 reveal. Idempotent on first entry.
+    propertyMapHost?.setChromeless(true);
 
     const reduced =
       typeof window !== 'undefined' &&
