@@ -412,23 +412,16 @@ function ChatHeader() {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div
+        <img
+          src="/logos-and-icons/favicon.svg"
+          alt="MoreHarvest"
           style={{
+            display: 'block',
             width: 36,
             height: 36,
             borderRadius: 18,
-            background: `linear-gradient(135deg, ${C.amber} 0%, #F5A500 100%)`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 13,
-            color: '#fff',
-            fontWeight: 700,
-            fontFamily: 'var(--font-heading)',
           }}
-        >
-          M
-        </div>
+        />
         <div>
           <div
             style={{
