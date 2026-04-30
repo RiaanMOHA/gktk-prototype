@@ -76,16 +76,36 @@
         /* Allow the parent React app to flip chromeless mode at runtime
            via postMessage. This lets a single shared iframe be reused
            by step-11 (chromeless during the tilt) and step-12 (full
-           chrome), skipping the second iframe-load blank screen. */
+           chrome), skipping the second iframe-load blank screen.
+
+           When chromeless flips off the sheet's `is-presented` class is
+           added on the next frame so the CSS `transform 520ms` slide-up
+           plays right at step-12 entry. When chromeless flips on the
+           class is removed so the sheet rests off-screen ready for the
+           next reveal. */
         window.addEventListener("message", function (e) {
           if (e.origin !== window.location.origin) return;
           var data = e.data;
           if (!data || typeof data !== "object") return;
           if (data.type === "gktk-set-chromeless") {
+            var panel = document.getElementById("right-panel");
             if (data.value) {
               document.documentElement.setAttribute("data-chromeless", "1");
+              if (panel) panel.classList.remove("is-presented");
             } else {
               document.documentElement.removeAttribute("data-chromeless");
+              if (panel) {
+                /* Two RAFs: first paints the panel at translateY(100%)
+                   while still display:flex, second flips is-presented on
+                   so the transition sees a real value change and slides
+                   up. Without the double RAF the browser collapses both
+                   into one paint and the transition never fires. */
+                requestAnimationFrame(function () {
+                  requestAnimationFrame(function () {
+                    panel.classList.add("is-presented");
+                  });
+                });
+              }
             }
           }
         });
@@ -108,14 +128,21 @@
         function uncover() {
           if (cover && cover.parentNode) cover.parentNode.removeChild(cover);
           cover = null;
-          /* Slide the bottom sheet into view at the same moment the
-             setup cover lifts. Identical to step-6's iframe so the
-             two drawers behave the same way. */
-          var panel = document.getElementById("right-panel");
-          if (panel) {
-            requestAnimationFrame(function () {
-              panel.classList.add("is-presented");
-            });
+          /* The bottom sheet's slide-up is owned by the chromeless
+             toggle (handled in the gktk-set-chromeless listener above),
+             not by this uncover. That way step-11 can hold the iframe
+             in chromeless mode under its opaque tilt cover, and the
+             reveal animation plays exactly when step-12 mounts and
+             clears chromeless. If the iframe ever runs un-chromeless
+             from the start (no parent driving it) we fall back to the
+             original behaviour and present immediately. */
+          if (document.documentElement.getAttribute("data-chromeless") !== "1") {
+            var panel = document.getElementById("right-panel");
+            if (panel) {
+              requestAnimationFrame(function () {
+                panel.classList.add("is-presented");
+              });
+            }
           }
           try {
             window.parent.postMessage({ type: "gktk-map-ready" }, "*");
