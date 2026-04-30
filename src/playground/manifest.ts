@@ -395,7 +395,7 @@ export const STEPS: StepDrawer[] = [
         filename: "map-prototype-v1.html",
         kind: "html",
         publicPath:
-          "/playground/prototypes/step-12-section-6-product-hardware/map-prototype-v1/index.html?embed=1&lang=en&steps=properties",
+          "/playground/prototypes/step-12-section-6-product-hardware/map-prototype-v1/index.html?embed=1&lang=en&steps=properties&v=100",
       },
     ],
   },

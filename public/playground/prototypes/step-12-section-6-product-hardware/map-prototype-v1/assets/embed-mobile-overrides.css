@@ -333,30 +333,70 @@
   height: 38% !important;
   max-height: 38% !important;
   min-height: 0 !important;
-  transform: translate(0) !important;
+  /* iOS sheet presentation + drag: a CSS variable controls translate
+     so JS can drive intra-drag movement while CSS owns the rest state.
+     Default 100% = off-screen below. .is-presented = 0% (expanded).
+     .is-peek = 70% (only the title peek is visible above the bottom
+     edge). .is-dragging removes the transition so the sheet tracks
+     the finger 1:1; release re-applies the curve and snaps. */
+  --sheet-translate: 100%;
+  transform: translateY(var(--sheet-translate)) !important;
+  transition: transform 520ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border-radius: 24px 24px 0 0 !important;
   overflow: hidden !important;
   contain: layout paint;
+  touch-action: pan-y;
 }
-/* Content scrolls inside the fixed card — kill the bundle's
-   sheet-peek mask that fades the bottom 40px (used to hint at
-   more content when the sheet was resizable; unneeded now that
-   the card scrolls natively). */
+[data-embed="1"] #right-panel.is-presented {
+  --sheet-translate: 0%;
+}
+[data-embed="1"] #right-panel.is-presented.is-peek {
+  --sheet-translate: 70%;
+}
+[data-embed="1"] #right-panel.is-dragging {
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-embed="1"] #right-panel {
+    transition: none !important;
+  }
+}
+/* iOS scroll edge effect: content fades to transparent over the top
+   16px so anything scrolling past the grabber dissolves under it
+   rather than abruptly meeting the rounded top edge. Padding-top
+   keeps at-rest content clear of the grabber + fade zone. */
 [data-embed="1"] #right-panel #panel-content,
 [data-embed="1"] #right-panel.sheet-peek #panel-content {
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
+  mask-image: linear-gradient(to bottom, transparent 0, black 16px) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 16px) !important;
   max-height: none !important;
+  padding-top: 28px !important;
   padding-bottom: 24px !important;
   overscroll-behavior: contain !important;
 }
-/* Hide the grabber — there is no resize affordance. */
-[data-embed="1"] #right-panel .sheet-handle-hit,
-[data-embed="1"] #right-panel .sheet-handle-hit:before {
-  display: none !important;
+/* iOS HIG grabber. The bundle's CSS already styles .sheet-handle-hit
+   (28px hit area with a 40×5 capsule visual at top:8px). The element
+   is injected by the script in index.html since the bundle ships no
+   markup or JS for it. Slightly enlarged hit area for finger-friendly
+   dragging without breaking the visual position. */
+[data-embed="1"] #right-panel .sheet-handle-hit {
+  height: 32px !important;
+}
+[data-embed="1"] #right-panel.is-peek {
+  cursor: pointer;
+}
+
+/* Keep both nav arrows visible at the internal-step boundaries.
+   The bundle inline-sets display:none on #nav-back at step 1 and
+   on #nav-forward at the last step. Our boundary intercepts in
+   index.html (which post gktk-map-back-to-content / gktk-map-complete
+   to the parent) need the buttons to remain clickable. */
+[data-embed="1"] #nav-back,
+[data-embed="1"] #nav-forward {
+  display: flex !important;
 }
 
 /* ─── Reduced motion ───
