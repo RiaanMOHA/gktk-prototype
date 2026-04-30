@@ -26,22 +26,76 @@
     <script type="module" crossorigin src="./assets/index-B7dJENHx.js?v=1776679738"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BtxKHxrX.css?v=1776679738">
     <!-- Playground-only: mobile overrides layered on top of bundle's embed-mobile.css -->
-    <link rel="stylesheet" href="./assets/embed-mobile-overrides.css?v=1776679738">
+    <link rel="stylesheet" href="./assets/embed-mobile-overrides.css?v=1777953100">
   </head>
   <body>
+    <!-- Narrow the drawer's step list without editing the upstream
+         manifest.ts.
+
+         The playground manifest passes ?steps=properties on this
+         drawer's URL. The bundle reads ?steps= once at module load,
+         rewrites its internal K array to contain only those ids, and
+         reindexes them 1..N. Anything outside the KEEP set is dropped
+         before the deferred module script reads the URL. Order of
+         execution guarantees this works: classic inline scripts in
+         body run during parsing; module scripts in head are deferred
+         until parsing completes, so they see the rewritten URL. -->
+    <script>
+      (function () {
+        try {
+          var u = new URL(window.location.href);
+          var raw = u.searchParams.get("steps");
+          if (!raw) return;
+          var KEEP = ["properties"];
+          var filtered = raw
+            .split(",")
+            .map(function (s) { return s.trim(); })
+            .filter(function (s) { return s && KEEP.indexOf(s) !== -1; });
+          filtered.sort(function (a, b) { return KEEP.indexOf(a) - KEEP.indexOf(b); });
+          u.searchParams.set("steps", filtered.join(","));
+          history.replaceState(null, "", u.toString());
+        } catch (_e) {}
+      })();
+    </script>
+
     <!-- Embed mode: set by ?embed=1. Hides dev tools and the language toggle
          so the prototype can be iframed as a clean experience. -->
     <script>
       (function () {
         if (new URLSearchParams(location.search).get("embed") !== "1") return;
         document.documentElement.setAttribute("data-embed", "1");
+        if (new URLSearchParams(location.search).get("hidesheet") === "1") {
+          document.documentElement.setAttribute("data-hidesheet", "1");
+        }
+        if (new URLSearchParams(location.search).get("chromeless") === "1") {
+          /* Chromeless mode: hides every interactive overlay so the map
+             reads as a pure visual surface. Reserved for transitions
+             that need the map face as a clean visual plane. */
+          document.documentElement.setAttribute("data-chromeless", "1");
+        }
+        /* Allow the parent React app to flip chromeless mode at runtime
+           via postMessage. This lets a single shared iframe be reused
+           by step-11 (chromeless during the tilt) and step-12 (full
+           chrome), skipping the second iframe-load blank screen. */
+        window.addEventListener("message", function (e) {
+          if (e.origin !== window.location.origin) return;
+          var data = e.data;
+          if (!data || typeof data !== "object") return;
+          if (data.type === "gktk-set-chromeless") {
+            if (data.value) {
+              document.documentElement.setAttribute("data-chromeless", "1");
+            } else {
+              document.documentElement.removeAttribute("data-chromeless");
+            }
+          }
+        });
         // Cover the screen with a solid F9F9F9 overlay during setup so
         // the user never sees the bundle's default map view or the
-        // step-entry camera flash before the Ozu framing is applied.
-        // Using an overlay instead of opacity/visibility on <html>
-        // because some browsers pause WebGL context rendering in
-        // invisible elements, which would stop the map from finishing
-        // its setup. The map renders normally underneath.
+        // step-entry camera flash before the property framing is
+        // applied. Using an overlay instead of opacity/visibility on
+        // <html> because some browsers pause WebGL context rendering
+        // in invisible elements, which would stop the map from
+        // finishing its setup. The map renders normally underneath.
         var cover = document.createElement("div");
         cover.id = "__setup-cover";
         cover.style.cssText = [
@@ -54,6 +108,18 @@
         function uncover() {
           if (cover && cover.parentNode) cover.parentNode.removeChild(cover);
           cover = null;
+          /* Slide the bottom sheet into view at the same moment the
+             setup cover lifts. Identical to step-6's iframe so the
+             two drawers behave the same way. */
+          var panel = document.getElementById("right-panel");
+          if (panel) {
+            requestAnimationFrame(function () {
+              panel.classList.add("is-presented");
+            });
+          }
+          try {
+            window.parent.postMessage({ type: "gktk-map-ready" }, "*");
+          } catch (_e) {}
         }
         window.__uncoverSetup = uncover;
         // Safety reveal in case the normal trigger never fires. Short
@@ -79,35 +145,114 @@
             });
           }
 
-          /* Custom persistent panel over the map. HIG does not name this
-             exact pattern — Apple's own iOS place-card is a sheet — but
-             this prototype deliberately diverges: the card shows one
-             summary per step with no hidden secondary content and no
-             reason to resize or dismiss. Pinned to the bottom at the peek
-             detent. The bundle does not manipulate sheet-* classes at
-             runtime (verified by source grep), so a one-shot add of
-             sheet-peek on load is sufficient. No drag, no grabber. */
+          /* iOS HIG sheet over the map. Two detents: expanded (default)
+             and peek (drag-down to expose more map). The bundle ships
+             the .sheet-handle-hit CSS but no markup or JS for it, so we
+             inject the grabber and drive drag here. translateY is
+             driven by --sheet-translate so CSS owns the rest states
+             (.is-presented = 0%, .is-peek = 70%) and JS only sets the
+             variable inline during an active drag. */
           var panel = document.getElementById("right-panel");
-          if (panel) panel.classList.add("sheet-peek");
+          if (panel) {
+            var handle = panel.querySelector(".sheet-handle-hit");
+            if (!handle) {
+              handle = document.createElement("button");
+              handle.type = "button";
+              handle.className = "sheet-handle-hit";
+              handle.setAttribute("aria-label", "Drag to resize sheet");
+              panel.insertBefore(handle, panel.firstChild);
+            }
+
+            var PEEK = 70;
+            var EXPANDED = 0;
+            var SNAP_THRESHOLD = 35;
+            var FLING = 0.5;
+            var TAP_PX = 5;
+            var drag = null;
+
+            function isPeek() { return panel.classList.contains("is-peek"); }
+            function setVar(p) { panel.style.setProperty("--sheet-translate", p + "%"); }
+            function clearVar() { panel.style.removeProperty("--sheet-translate"); }
+            function snap(toPeek) {
+              panel.classList.toggle("is-peek", toPeek);
+              panel.classList.remove("is-dragging");
+              clearVar();
+            }
+
+            handle.addEventListener("pointerdown", function (e) {
+              if (!panel.classList.contains("is-presented")) return;
+              e.preventDefault();
+              try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+              panel.classList.add("is-dragging");
+              var rect = panel.getBoundingClientRect();
+              drag = {
+                startY: e.clientY,
+                sheetH: rect.height,
+                startT: isPeek() ? PEEK : EXPANDED,
+                lastY: e.clientY,
+                lastT: e.timeStamp,
+                vel: 0,
+              };
+            });
+
+            handle.addEventListener("pointermove", function (e) {
+              if (!drag) return;
+              var dy = e.clientY - drag.startY;
+              var pct = drag.startT + (dy / drag.sheetH) * 100;
+              if (pct < 0) pct = 0;
+              if (pct > 100) pct = 100;
+              setVar(pct);
+              var dt = e.timeStamp - drag.lastT;
+              if (dt > 0) drag.vel = (e.clientY - drag.lastY) / dt;
+              drag.lastY = e.clientY;
+              drag.lastT = e.timeStamp;
+            });
+
+            function endDrag(e) {
+              if (!drag) return;
+              var dy = (e && typeof e.clientY === "number") ? e.clientY - drag.startY : 0;
+              var finalT = drag.startT + (dy / drag.sheetH) * 100;
+              var toPeek;
+              if (drag.vel > FLING) toPeek = true;
+              else if (drag.vel < -FLING) toPeek = false;
+              else toPeek = finalT > SNAP_THRESHOLD;
+              /* Tap (no real drag) on the peeked sheet expands it,
+                 matching iOS sheet tap-to-expand behavior. */
+              if (Math.abs(dy) < TAP_PX && isPeek()) toPeek = false;
+              snap(toPeek);
+              try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+              drag = null;
+            }
+            handle.addEventListener("pointerup", endDrag);
+            handle.addEventListener("pointercancel", endDrag);
+          }
         });
 
-        /* Last-step intercept: when the user is on the final internal map
-           step and taps #nav-forward, signal the parent React app to
-           advance out of the iframe instead of letting the bundle's
-           internal handler run. Uses delegated capture-phase so it
-           survives node re-creation and beats bundle handlers. */
+        /* Boundary intercepts: at the first internal step #nav-back
+           and at the last internal step #nav-forward, signal the
+           parent React app to navigate out of the iframe instead of
+           letting the bundle's internal handler run. Uses delegated
+           capture-phase so it survives node re-creation and beats
+           bundle handlers. */
         document.addEventListener("click", function (e) {
-          var target = e.target && e.target.closest && e.target.closest("#nav-forward");
-          if (!target) return;
+          var fwd = e.target && e.target.closest && e.target.closest("#nav-forward");
+          var back = e.target && e.target.closest && e.target.closest("#nav-back");
+          if (!fwd && !back) return;
           var stepsParam = new URLSearchParams(location.search).get("steps") || "";
           var totalSteps = stepsParam.split(",").filter(Boolean).length;
           if (!totalSteps) return;
           var current = (window.App && window.App.state && window.App.state.currentStep) || 1;
-          if (current >= totalSteps) {
+          if (fwd && current >= totalSteps) {
             e.preventDefault();
             e.stopImmediatePropagation();
             try {
               window.parent.postMessage({ type: "gktk-map-complete" }, "*");
+            } catch (_e) {}
+          } else if (back && current <= 1) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            try {
+              window.parent.postMessage({ type: "gktk-map-back-to-content" }, "*");
             } catch (_e) {}
           }
         }, true);
@@ -127,6 +272,18 @@
       [data-embed="1"] #layers-toggle,
       [data-embed="1"] #time-toggle,
       [data-embed="1"] #journey-progress {
+        display: none !important;
+      }
+
+      [data-hidesheet="1"] #right-panel,
+      [data-hidesheet="1"] #nav-arrows {
+        display: none !important;
+      }
+
+      [data-chromeless="1"] #right-panel,
+      [data-chromeless="1"] #nav-arrows,
+      [data-chromeless="1"] #view-mode-toggle,
+      [data-chromeless="1"] #lang-toggle {
         display: none !important;
       }
 

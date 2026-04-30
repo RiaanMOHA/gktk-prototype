@@ -6,6 +6,7 @@ import { useStepNavigation } from './useStepNavigation';
 import { DevQaChrome } from './DevQaChrome';
 import { StepNav } from './StepNav';
 import { MapHostProvider } from '../shared/MapHost';
+import { PropertyMapHostProvider } from '../shared/PropertyMapHost';
 
 const stepComponents = [
   dynamic(() => import('../steps/step-1-opening-transition')),
@@ -61,22 +62,33 @@ export default function Orchestrator() {
   // loading" frames the user used to see at each boundary.
   const mapVisible = currentStep >= 5 && currentStep <= 7;
 
-  // Step 6 renders no foreground content; the prototype's nav arrows
-  // and sheet live inside the iframe behind it. Make the wrapping
-  // div transparent to clicks on step 6 so the forward/back arrows
-  // remain reachable. Other steps capture clicks normally.
+  // PropertyMapHost mirrors that pattern for steps 11–12: the
+  // property-map iframe preloads during step-11's tilt transition
+  // and stays alive across the step-12 boundary so the user never
+  // sees a reload between the transition and the map content step.
+  const propertyMapVisible = currentStep >= 11 && currentStep <= 12;
+
+  // Steps 6 and 12 render no foreground content; the prototype's
+  // nav arrows and sheet live inside the iframe behind them. Make
+  // the wrapping div transparent to clicks on those steps so the
+  // forward/back arrows remain reachable. Other steps capture
+  // clicks normally.
   const wrapperStyle =
-    currentStep === 6 ? ({ pointerEvents: 'none' } as const) : undefined;
+    currentStep === 6 || currentStep === 12
+      ? ({ pointerEvents: 'none' } as const)
+      : undefined;
 
   if (!IS_DEV) {
     return (
       <MapHostProvider visible={mapVisible}>
-        <div
-          className="relative w-screen h-screen overflow-hidden"
-          style={wrapperStyle}
-        >
-          {stepEl}
-        </div>
+        <PropertyMapHostProvider visible={propertyMapVisible}>
+          <div
+            className="relative w-screen h-screen overflow-hidden"
+            style={wrapperStyle}
+          >
+            {stepEl}
+          </div>
+        </PropertyMapHostProvider>
       </MapHostProvider>
     );
   }
@@ -85,20 +97,22 @@ export default function Orchestrator() {
 
   const stepWithNav = (
     <MapHostProvider visible={mapVisible}>
-      <div
-        className="relative w-screen h-screen overflow-hidden"
-        style={wrapperStyle}
-      >
-        {stepEl}
-      </div>
-      <StepNav
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onPrev={goToPrev}
-        onNext={goToNext}
-        onJumpTo={goToStep}
-        onReload={reloadStep}
-      />
+      <PropertyMapHostProvider visible={propertyMapVisible}>
+        <div
+          className="relative w-screen h-screen overflow-hidden"
+          style={wrapperStyle}
+        >
+          {stepEl}
+        </div>
+        <StepNav
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          onPrev={goToPrev}
+          onNext={goToNext}
+          onJumpTo={goToStep}
+          onReload={reloadStep}
+        />
+      </PropertyMapHostProvider>
     </MapHostProvider>
   );
 
