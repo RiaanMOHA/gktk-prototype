@@ -153,6 +153,14 @@ const Step15Transition = dynamic(
   { ssr: false }
 );
 
+const Step15TransitionV2 = dynamic(
+  () =>
+    import(
+      "./prototypes/step-15-section-8-transition/gktk-step15-transition-v2.jsx"
+    ),
+  { ssr: false }
+);
+
 const Step16Financials = dynamic(
   () =>
     import(
@@ -439,6 +447,11 @@ export const STEPS: StepDrawer[] = [
     label: "Section 8 — transition",
     status: "locked",
     prototypes: [
+      {
+        filename: "gktk-step15-transition-v2.jsx",
+        kind: "jsx",
+        component: Step15TransitionV2,
+      },
       {
         filename: "gktk-step15-transition.jsx",
         kind: "jsx",
